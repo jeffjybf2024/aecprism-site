@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEC Prism</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", sans-serif;
+      background: #0a0a0f;
+      color: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    .container { text-align: center; padding: 2rem; }
+    .logo {
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 35%, #f093fb 70%, #f5576c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .tagline {
+      margin-top: 1rem;
+      font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+      color: #888;
+      letter-spacing: 0.08em;
+      font-weight: 300;
+    }
+    .divider {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #667eea, transparent);
+      margin: 2rem auto;
+    }
+    .coming-soon {
+      font-size: 0.8rem;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+    }
+    .prism {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      height: 300px;
+      opacity: 0.03;
+      pointer-events: none;
+    }
+    .prism svg { width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+  <div class="prism">
+    <svg viewBox="0 0 100 100"><polygon points="50,5 95,75 5,75" fill="none" stroke="#fff" stroke-width="0.5"/></svg>
+  </div>
+  <div class="container">
+    <div class="logo">AEC PRISM</div>
+    <div class="tagline">讓建築數據折射出決策</div>
+    <div class="divider"></div>
+    <div class="coming-soon">Coming Soon</div>
+  </div>
+</body>
+</html>
