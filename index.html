@@ -15,210 +15,269 @@
       justify-content: center;
       min-height: 100vh;
       overflow: hidden;
-      position: relative;
     }
 
-    /* Full-page prism background */
+    /* === PRISM BACKGROUND === */
     .bg {
       position: fixed;
       inset: 0;
       z-index: 0;
-      opacity: 0.7;
+      overflow: hidden;
     }
 
-    /* Center content overlay */
+    /* Dark base */
+    .bg-base {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, #0a0a14 0%, #050508 70%);
+    }
+
+    /* White beam entering from left */
+    .beam-white {
+      position: absolute;
+      top: 45%;
+      left: -5%;
+      width: 40%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.1) 80%, transparent 100%);
+      box-shadow: 0 0 30px 8px rgba(255,255,255,0.08), 0 0 60px 16px rgba(255,255,255,0.04);
+      transform: rotate(2deg);
+    }
+    .beam-white::after {
+      content: '';
+      position: absolute;
+      top: -1px; left: 10%; right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+    }
+
+    /* Glass prism - triangle */
+    .prism-glass {
+      position: absolute;
+      top: 15%;
+      left: 35%;
+      width: 0;
+      height: 0;
+      border-left: 80px solid transparent;
+      border-right: 80px solid transparent;
+      border-bottom: 140px solid rgba(255,255,255,0.02);
+      filter: drop-shadow(0 0 20px rgba(255,255,255,0.03));
+    }
+    .prism-glass::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -80px;
+      width: 160px;
+      height: 140px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 50%, rgba(255,255,255,0.03) 100%);
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+    .prism-glass::after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: -75px;
+      width: 150px;
+      height: 130px;
+      background: linear-gradient(45deg, rgba(180,200,255,0.06) 0%, transparent 60%);
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+
+    /* Spectrum rays fanning out from prism right edge */
+    .spectrum {
+      position: absolute;
+      top: 48%;
+      left: 43%;
+      transform-origin: left center;
+    }
+    .ray {
+      position: absolute;
+      left: 0;
+      height: 2px;
+      border-radius: 1px;
+      filter: blur(1px);
+    }
+    .ray-1 {
+      width: 55vw;
+      background: linear-gradient(90deg, #ff4d4d 0%, rgba(255,77,77,0.1) 100%);
+      transform: rotate(-35deg);
+      opacity: 0.5;
+      box-shadow: 0 0 20px 4px rgba(255,77,77,0.1);
+    }
+    .ray-2 {
+      width: 55vw;
+      background: linear-gradient(90deg, #ff9f43 0%, rgba(255,159,67,0.1) 100%);
+      transform: rotate(-24deg);
+      opacity: 0.45;
+      box-shadow: 0 0 20px 4px rgba(255,159,67,0.08);
+    }
+    .ray-3 {
+      width: 55vw;
+      background: linear-gradient(90deg, #feca57 0%, rgba(254,202,87,0.1) 100%);
+      transform: rotate(-13deg);
+      opacity: 0.4;
+      box-shadow: 0 0 20px 4px rgba(254,202,87,0.08);
+    }
+    .ray-4 {
+      width: 55vw;
+      background: linear-gradient(90deg, #48dbfb 0%, rgba(72,219,251,0.1) 100%);
+      transform: rotate(-2deg);
+      opacity: 0.45;
+      box-shadow: 0 0 20px 4px rgba(72,219,251,0.08);
+    }
+    .ray-5 {
+      width: 55vw;
+      background: linear-gradient(90deg, #667eea 0%, rgba(102,126,234,0.1) 100%);
+      transform: rotate(9deg);
+      opacity: 0.5;
+      box-shadow: 0 0 20px 4px rgba(102,126,234,0.1);
+    }
+    .ray-6 {
+      width: 55vw;
+      background: linear-gradient(90deg, #a55eea 0%, rgba(165,94,234,0.1) 100%);
+      transform: rotate(20deg);
+      opacity: 0.45;
+      box-shadow: 0 0 20px 4px rgba(165,94,234,0.08);
+    }
+    .ray-7 {
+      width: 55vw;
+      background: linear-gradient(90deg, #f093fb 0%, rgba(240,147,251,0.1) 100%);
+      transform: rotate(31deg);
+      opacity: 0.4;
+      box-shadow: 0 0 20px 4px rgba(240,147,251,0.08);
+    }
+
+    /* Glow spots where rays spread */
+    .glow-spectrum {
+      position: absolute;
+      top: 10%;
+      right: 5%;
+      width: 60vw;
+      height: 80vh;
+      background: conic-gradient(
+        from 200deg at 0% 50%,
+        transparent 0deg,
+        rgba(255,77,77,0.03) 5deg,
+        rgba(255,159,67,0.03) 10deg,
+        rgba(254,202,87,0.03) 15deg,
+        rgba(72,219,251,0.03) 20deg,
+        rgba(102,126,234,0.04) 25deg,
+        rgba(165,94,234,0.03) 30deg,
+        rgba(240,147,251,0.03) 35deg,
+        transparent 40deg
+      );
+      filter: blur(40px);
+    }
+
+    /* Subtle vignette over text area */
+    .vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(5,5,8,0.6) 0%, rgba(5,5,8,0.2) 40%, transparent 70%);
+    }
+
+    /* === CONTENT === */
     .container {
-      position: relative;
-      z-index: 1;
       text-align: center;
       padding: 2rem;
+      position: relative;
+      z-index: 1;
     }
 
-    /* Logo lockup */
-    .logo-wrap {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0;
-    }
-
-    /* Prism icon (small, above text) */
+    /* Prism logo icon */
     .logo-icon {
-      width: 64px;
-      height: 64px;
-      margin-bottom: 0.8rem;
-      filter: drop-shadow(0 0 12px rgba(102,126,234,0.4));
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+    }
+    .logo-icon svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 16px rgba(102,126,234,0.3));
     }
 
-    .logo-text {
-      font-size: clamp(2.5rem, 8vw, 5rem);
+    .logo {
+      font-size: clamp(2rem, 7vw, 4rem);
       font-weight: 700;
-      letter-spacing: 0.2em;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 30%, #f093fb 60%, #f5576c 100%);
+      letter-spacing: 0.15em;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 35%, #f093fb 70%, #f5576c 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      text-shadow: none;
-      line-height: 1;
+      filter: drop-shadow(0 2px 8px rgba(102,126,234,0.3));
     }
-
     .tagline {
-      margin-top: 1rem;
-      font-size: clamp(0.8rem, 2vw, 1rem);
-      color: rgba(255,255,255,0.35);
-      letter-spacing: 0.12em;
+      margin-top: 0.8rem;
+      font-size: clamp(0.85rem, 2.2vw, 1.1rem);
+      color: #6a6a7a;
+      letter-spacing: 0.06em;
       font-weight: 300;
     }
-
     .divider {
-      width: 60px;
+      width: 80px;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(102,126,234,0.5), transparent);
-      margin: 1.5rem auto;
+      background: linear-gradient(90deg, transparent, #667eea, transparent);
+      margin: 1.8rem auto;
     }
-
     .coming-soon {
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.2);
+      font-size: 0.75rem;
+      color: #444;
       text-transform: uppercase;
-      letter-spacing: 0.4em;
-    }
-
-    /* Subtle vignette to keep text readable */
-    .vignette {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      background: radial-gradient(ellipse at center, transparent 20%, rgba(5,5,8,0.7) 80%);
-      pointer-events: none;
+      letter-spacing: 0.35em;
     }
   </style>
 </head>
 <body>
+  <div class="bg">
+    <div class="bg-base"></div>
+    <div class="beam-white"></div>
+    <div class="prism-glass"></div>
+    <div class="spectrum">
+      <div class="ray ray-1"></div>
+      <div class="ray ray-2"></div>
+      <div class="ray ray-3"></div>
+      <div class="ray ray-4"></div>
+      <div class="ray ray-5"></div>
+      <div class="ray ray-6"></div>
+      <div class="ray ray-7"></div>
+    </div>
+    <div class="glow-spectrum"></div>
+    <div class="vignette"></div>
+  </div>
 
-  <!-- Full-page prism refraction background -->
-  <svg class="bg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="spectrum" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#ff4d4d"/>
-        <stop offset="17%" stop-color="#ff9f43"/>
-        <stop offset="33%" stop-color="#feca57"/>
-        <stop offset="50%" stop-color="#48dbfb"/>
-        <stop offset="67%" stop-color="#667eea"/>
-        <stop offset="83%" stop-color="#a55eea"/>
-        <stop offset="100%" stop-color="#f093fb"/>
-      </linearGradient>
-      <linearGradient id="beam" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#fff" stop-opacity="0.8"/>
-        <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
-      </linearGradient>
-      <filter id="glow">
-        <feGaussianBlur stdDeviation="6" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-      <filter id="softGlow">
-        <feGaussianBlur stdDeviation="12" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-      <filter id="bigGlow">
-        <feGaussianBlur stdDeviation="20" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-
-    <!-- Ambient background glow -->
-    <rect width="1920" height="1080" fill="#050508"/>
-    <ellipse cx="800" cy="540" rx="600" ry="400" fill="rgba(102,126,234,0.03)" filter="url(#bigGlow)"/>
-
-    <!-- White light beam from far left -->
-    <line x1="-100" y1="540" x2="800" y2="540" stroke="url(#beam)" stroke-width="8" filter="url(#glow)"/>
-    <line x1="-100" y1="540" x2="800" y2="540" stroke="#fff" stroke-width="3"/>
-
-    <!-- Glass prism triangle -->
-    <polygon points="860,280 960,800 760,800"
-      fill="rgba(255,255,255,0.015)"
-      stroke="rgba(255,255,255,0.12)" stroke-width="2" filter="url(#softGlow)"/>
-    <polygon points="860,280 960,800 760,800"
-      fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-
-    <!-- Spectrum rays fanning out to the right -->
-    <g filter="url(#bigGlow)" opacity="0.35">
-      <line x1="880" y1="555" x2="2100" y2="200" stroke="#ff4d4d" stroke-width="6"/>
-      <line x1="880" y1="570" x2="2100" y2="300" stroke="#ff9f43" stroke-width="6"/>
-      <line x1="880" y1="585" x2="2100" y2="400" stroke="#feca57" stroke-width="6"/>
-      <line x1="880" y1="600" x2="2100" y2="500" stroke="#48dbfb" stroke-width="6"/>
-      <line x1="880" y1="615" x2="2100" y2="600" stroke="#667eea" stroke-width="6"/>
-      <line x1="880" y1="630" x2="2100" y2="700" stroke="#a55eea" stroke-width="6"/>
-      <line x1="880" y1="645" x2="2100" y2="800" stroke="#f093fb" stroke-width="6"/>
-    </g>
-
-    <!-- Sharper inner spectrum lines -->
-    <g opacity="0.25">
-      <line x1="880" y1="555" x2="2100" y2="200" stroke="#ff4d4d" stroke-width="2.5"/>
-      <line x1="880" y1="570" x2="2100" y2="300" stroke="#ff9f43" stroke-width="2.5"/>
-      <line x1="880" y1="585" x2="2100" y2="400" stroke="#feca57" stroke-width="2.5"/>
-      <line x1="880" y1="600" x2="2100" y2="500" stroke="#48dbfb" stroke-width="2.5"/>
-      <line x1="880" y1="615" x2="2100" y2="600" stroke="#667eea" stroke-width="2.5"/>
-      <line x1="880" y1="630" x2="2100" y2="700" stroke="#a55eea" stroke-width="2.5"/>
-      <line x1="880" y1="645" x2="2100" y2="800" stroke="#f093fb" stroke-width="2.5"/>
-    </g>
-
-    <!-- Subtle building wireframes (architectural hint) -->
-    <g opacity="0.04" stroke="#fff" stroke-width="1">
-      <line x1="100" y1="750" x2="100" y2="900"/>
-      <line x1="150" y1="720" x2="150" y2="900"/>
-      <line x1="100" y1="750" x2="150" y2="720"/>
-      <line x1="150" y1="720" x2="200" y2="760"/>
-      <line x1="200" y1="760" x2="200" y2="900"/>
-      <line x1="150" y1="780" x2="200" y2="760"/>
-
-      <line x1="250" y1="700" x2="250" y2="900"/>
-      <line x1="310" y1="670" x2="310" y2="900"/>
-      <line x1="250" y1="700" x2="310" y2="670"/>
-      <line x1="310" y1="670" x2="370" y2="720"/>
-      <line x1="370" y1="720" x2="370" y2="900"/>
-      <line x1="310" y1="750" x2="370" y2="720"/>
-
-      <line x1="1700" y1="680" x2="1700" y2="900"/>
-      <line x1="1760" y1="650" x2="1760" y2="900"/>
-      <line x1="1700" y1="680" x2="1760" y2="650"/>
-      <line x1="1760" y1="650" x2="1820" y2="700"/>
-      <line x1="1820" y1="700" x2="1820" y2="900"/>
-    </g>
-  </svg>
-
-  <!-- Vignette overlay for readability -->
-  <div class="vignette"></div>
-
-  <!-- Center content -->
   <div class="container">
-    <div class="logo-wrap">
-      <!-- Logo icon: small prism -->
-      <svg class="logo-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+    <!-- Logo icon: prism with light -->
+    <div class="logo-icon">
+      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Beam -->
+        <line x1="0" y1="42" x2="30" y2="42" stroke="url(#beam-grad)" stroke-width="2"/>
+        <!-- Prism -->
+        <polygon points="40,12 50,65 30,65" fill="rgba(255,255,255,0.03)" stroke="url(#prism-stroke)" stroke-width="1.5"/>
+        <!-- Spectrum -->
+        <line x1="42" y1="44" x2="78" y2="16" stroke="#ff4d4d" stroke-width="1.5" opacity="0.7"/>
+        <line x1="42" y1="47" x2="78" y2="28" stroke="#ff9f43" stroke-width="1.5" opacity="0.6"/>
+        <line x1="42" y1="50" x2="78" y2="40" stroke="#feca57" stroke-width="1.5" opacity="0.5"/>
+        <line x1="42" y1="53" x2="78" y2="52" stroke="#667eea" stroke-width="1.5" opacity="0.6"/>
+        <line x1="42" y1="56" x2="78" y2="64" stroke="#a55eea" stroke-width="1.5" opacity="0.5"/>
+        <line x1="42" y1="58" x2="78" y2="72" stroke="#f093fb" stroke-width="1.5" opacity="0.4"/>
         <defs>
-          <linearGradient id="iconGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#667eea"/>
-            <stop offset="50%" stop-color="#a55eea"/>
-            <stop offset="100%" stop-color="#f093fb"/>
+          <linearGradient id="beam-grad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="transparent"/>
+            <stop offset="100%" stop-color="white"/>
+          </linearGradient>
+          <linearGradient id="prism-stroke" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.2)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0.05)"/>
           </linearGradient>
         </defs>
-        <!-- Prism triangle -->
-        <polygon points="32,6 56,54 8,54" fill="none" stroke="url(#iconGrad)" stroke-width="2"/>
-        <!-- White beam entering -->
-        <line x1="0" y1="36" x2="30" y2="36" stroke="#fff" stroke-width="1.5" opacity="0.6"/>
-        <!-- Spectrum exit -->
-        <line x1="34" y1="38" x2="62" y2="22" stroke="#ff4d4d" stroke-width="1.5" opacity="0.6"/>
-        <line x1="34" y1="42" x2="62" y2="32" stroke="#feca57" stroke-width="1.5" opacity="0.6"/>
-        <line x1="34" y1="46" x2="62" y2="42" stroke="#667eea" stroke-width="1.5" opacity="0.6"/>
-        <line x1="34" y1="50" x2="62" y2="52" stroke="#f093fb" stroke-width="1.5" opacity="0.6"/>
       </svg>
-
-      <div class="logo-text">AEC PRISM</div>
     </div>
+
+    <div class="logo">AEC PRISM</div>
     <div class="tagline">Where Building Data Refracts Into Decisions</div>
     <div class="divider"></div>
     <div class="coming-soon">Coming Soon</div>
   </div>
-
 </body>
 </html>
