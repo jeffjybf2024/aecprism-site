@@ -632,17 +632,43 @@
 </div>
 
 
-<!-- ════════════ SLIDE 15: LIVE BIM MODEL ════════════ -->
+<!-- ════════════ SLIDE 15: 4D PAYMENT vs PROGRESS DASHBOARD ════════════ -->
 <div class="slide" data-slide="14">
   <div class="accent-bar"></div>
-  <div class="content" style="width:100%;max-width:1200px;text-align:center;">
-    <div class="phase-title">即時模型展示</div>
-    <h2 class="mb-8">🏗️ 真實 BIM 模型 — 線上可操作</h2>
-    <p class="tagline mb-16">旋轉、縮放、檢視構件屬性 — 所有資料都在模型裡</p>
-    <div style="position:relative;width:100%;max-width:1000px;margin:0 auto;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);box-shadow:0 8px 32px rgba(0,0,0,0.5);">
-      <iframe id="bim-viewer-iframe" src="https://viewer.ctc.com.tw/viewer.html?path=dxbim/5e8e349b28bc46e594c27b8e471fa5f2/f0c8eae8ec724540b3bcae3b21507958/a15f9d4ba2334a569b785898fe1c2781.rvt&props=1&language=zh-TW" style="width:100%;height:70vh;border:none;display:block;background:#111;" allowfullscreen loading="lazy"></iframe>
+  <div class="content" style="width:100%;max-width:1100px;text-align:center;">
+    <div class="phase-title">業界創舉 ② 核心邏輯</div>
+    <h2 class="mb-8">4D 進度 ↔ 付款 綁定關係</h2>
+    <p class="tagline mb-24">施工進度是「因」，付款進度是「果」——兩者必須同步</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;width:100%;max-width:1000px;margin:0 auto;">
+      <!-- Left: Construction Progress -->
+      <div class="card" style="border-left:3px solid var(--cyan);">
+        <h3 class="c" style="margin-bottom:16px;">🏗️ 施工進度</h3>
+        <canvas id="progress-canvas" width="450" height="400" style="width:100%;border-radius:8px;background:#0a0a12;"></canvas>
+      </div>
+
+      <!-- Right: Payment Schedule -->
+      <div class="card" style="border-left:3px solid var(--gold);">
+        <h3 class="g" style="margin-bottom:16px;">💰 付款進度</h3>
+        <canvas id="pay-dash-canvas" width="450" height="400" style="width:100%;border-radius:8px;background:#0a0a12;"></canvas>
+      </div>
     </div>
-    <p style="font-size:12px;color:#555;margin-top:12px;">BravoDX WebGL Viewer · 模型來源：NAS2 /volume1/BIM/</p>
+
+    <div style="max-width:1000px;margin:20px auto 0;">
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#2ec4b615;border:1px solid #2ec4b630;border-radius:20px;font-size:13px;">
+          <span style="width:10px;height:10px;background:#2ec4b6;border-radius:50%;"></span> 進度領先 → 可請款
+        </span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#e2b04a15;border:1px solid #e2b04a30;border-radius:20px;font-size:13px;">
+          <span style="width:10px;height:10px;background:#e2b04a;border-radius:50%;"></span> 進度同步 → 正常
+        </span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#ef444415;border:1px solid #ef444430;border-radius:20px;font-size:13px;">
+          <span style="width:10px;height:10px;background:#ef4444;border-radius:50%;"></span> 進度落後 → 暫停撥款
+        </span>
+      </div>
+    </div>
+
+    <p style="font-size:12px;color:#555;margin-top:20px;">消費者付的每一期款，都對應 BIM 模型驗證的真實進度。</p>
   </div>
 </div>
 
@@ -968,6 +994,124 @@ function initAR() {
   window._arAnim = animId;
 }
 
+// ===== Slide 14: 4D Progress vs Payment Dashboard =====
+function initProgressPayment() {
+  const pc = document.getElementById('progress-canvas');
+  const mc = document.getElementById('pay-dash-canvas');
+  if (!pc || !mc) return;
+  const ctxP = pc.getContext('2d');
+  const ctxM = mc.getContext('2d');
+  const W = pc.width, H = pc.height;
+  let t = 0;
+  let animId = null;
+
+  // 5 milestones
+  const milestones = [
+    { name: '基礎工程', progress: 100, payment: 100, amount: '12%' },
+    { name: '結構一樓', progress: 85, payment: 85, amount: '18%' },
+    { name: '結構二樓', progress: 65, payment: 65, amount: '20%' },
+    { name: '外牆工程', progress: 40, payment: 30, amount: '25%' }, // Payment lagging!
+    { name: '室內裝修', progress: 15, payment: 10, amount: '25%' },
+  ];
+
+  function drawProgress() {
+    ctxP.fillStyle = '#0a0a12'; ctxP.fillRect(0, 0, W, H);
+
+    const barW = 60, gap = 20, startX = 40;
+    const baseY = H - 40;
+    const maxH = H - 100;
+
+    milestones.forEach((m, i) => {
+      const x = startX + i * (barW + gap);
+      const h = (m.progress / 100) * maxH;
+      const y = baseY - h;
+
+      // Bar
+      ctxP.fillStyle = '#2ec4b640'; ctxP.fillRect(x, y, barW, h);
+      ctxP.strokeStyle = '#2ec4b6'; ctxP.lineWidth = 2; ctxP.strokeRect(x, y, barW, h);
+
+      // Progress fill
+      const animP = Math.min(1, t / 80) * m.progress;
+      const animH = (animP / 100) * maxH;
+      ctxP.fillStyle = '#2ec4b6'; ctxP.fillRect(x, baseY - animH, barW, animH);
+
+      // Percentage text
+      ctxP.fillStyle = '#fff'; ctxP.font = 'bold 13px sans-serif';
+      ctxP.fillText(`${m.progress}%`, x + 8, y - 8);
+
+      // Milestone name
+      ctxP.save();
+      ctxP.translate(x + barW / 2, baseY + 14);
+      ctxP.fillStyle = '#888'; ctxP.font = '10px sans-serif';
+      ctxP.textAlign = 'center';
+      ctxP.fillText(m.name, 0, 0);
+      ctxP.restore();
+    });
+
+    // Title
+    ctxP.fillStyle = '#2ec4b6'; ctxP.font = 'bold 12px sans-serif';
+    ctxP.fillText('BIM 模型驗證進度', 10, 20);
+  }
+
+  function drawPayment() {
+    ctxM.fillStyle = '#0a0a12'; ctxM.fillRect(0, 0, W, H);
+
+    const barW = 60, gap = 20, startX = 40;
+    const baseY = H - 40;
+    const maxH = H - 100;
+
+    milestones.forEach((m, i) => {
+      const x = startX + i * (barW + gap);
+      const h = (m.payment / 100) * maxH;
+      const y = baseY - h;
+
+      // Bar
+      ctxM.fillStyle = '#e2b04a40'; ctxM.fillRect(x, y, barW, h);
+      ctxM.strokeStyle = '#e2b04a'; ctxM.lineWidth = 2; ctxM.strokeRect(x, y, barW, h);
+
+      // Payment fill
+      const animP = Math.min(1, t / 80) * m.payment;
+      const animH = (animP / 100) * maxH;
+      ctxM.fillStyle = '#e2b04a'; ctxM.fillRect(x, baseY - animH, barW, animH);
+
+      // Amount text
+      ctxM.fillStyle = '#fff'; ctxM.font = 'bold 13px sans-serif';
+      ctxM.fillText(m.amount, x + 10, y - 8);
+
+      // Status indicator
+      const diff = m.progress - m.payment;
+      if (diff > 5) {
+        ctxM.fillStyle = '#ef4444'; ctxM.font = '10px sans-serif';
+        ctxM.fillText('⚠ 暫停', x + 8, baseY + 28);
+      } else {
+        ctxM.fillStyle = '#2ec4b6'; ctxM.font = '10px sans-serif';
+        ctxM.fillText('✓ 同步', x + 8, baseY + 28);
+      }
+
+      // Milestone name
+      ctxM.save();
+      ctxM.translate(x + barW / 2, baseY + 14);
+      ctxM.fillStyle = '#888'; ctxM.font = '10px sans-serif';
+      ctxM.textAlign = 'center';
+      ctxM.fillText(m.name, 0, 0);
+      ctxM.restore();
+    });
+
+    // Title
+    ctxM.fillStyle = '#e2b04a'; ctxM.font = 'bold 12px sans-serif';
+    ctxM.fillText('消費者付款進度', 10, 20);
+  }
+
+  function animate() {
+    drawProgress();
+    drawPayment();
+    t++;
+    animId = requestAnimationFrame(animate);
+  }
+  animate();
+  window._dashAnim = animId;
+}
+
 // ===== Master show() wrapper =====
 const _origShow = show;
 window.show = function(n) {
@@ -977,11 +1121,13 @@ window.show = function(n) {
         if (window._compAnim) cancelAnimationFrame(window._compAnim);
         if (window._payAnim) cancelAnimationFrame(window._payAnim);
         if (window._arAnim) cancelAnimationFrame(window._arAnim);
+        if (window._dashAnim) cancelAnimationFrame(window._dashAnim);
 
         // Trigger appropriate animation
         if (n === 5) initComparison();
         if (n === 6) initPayment();
         if (n === 7) initAR();
+        if (n === 14) initProgressPayment();
     }, 100);
 };
 setTimeout(() => show(0), 500);
