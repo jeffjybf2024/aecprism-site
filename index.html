@@ -513,6 +513,58 @@
       color: #5a5a64;
     }
 
+    /* === VIP PERSONALIZED CARD === */
+    .vip-card {
+      display: none;
+      margin-top: 2rem;
+      padding: 1.5rem 2rem;
+      background: rgba(255,255,255,0.015);
+      border: 1px solid rgba(102,126,234,0.15);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      animation: fadeIn 1s ease-out 0.2s both;
+      text-align: left;
+    }
+    .vip-card.visible {
+      display: block;
+    }
+    .vip-greeting {
+      font-size: 0.8rem;
+      color: #8899bb;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.3rem;
+    }
+    .vip-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.8rem;
+    }
+    .vip-message {
+      font-size: 0.72rem;
+      color: #6a6a7a;
+      line-height: 1.6;
+      letter-spacing: 0.03em;
+    }
+    .vip-action {
+      margin-top: 1rem;
+      display: inline-block;
+      font-size: 0.7rem;
+      color: #667eea;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      border-bottom: 1px solid rgba(102,126,234,0.2);
+    }
+    .vip-action:hover {
+      color: #8899ff;
+      border-color: rgba(102,126,234,0.5);
+    }
+
     /* === BIM MATRIX TEASER === */
     .matrix-teaser {
       position: fixed;
@@ -662,6 +714,14 @@
     </div>
     <div class="waitlist-msg" id="waitlistMsg"></div>
     <div class="waitlist-privacy">We'll only use your email to announce our launch. No spam, ever.</div>
+
+    <!-- VIP Personalized Card -->
+    <div class="vip-card" id="vipCard">
+      <div class="vip-greeting" id="vipGreeting"></div>
+      <div class="vip-name" id="vipName"></div>
+      <div class="vip-message" id="vipMessage"></div>
+      <span class="vip-action" id="vipAction">View Your Briefing ↓</span>
+    </div>
   </div>
 
   <div class="matrix-teaser" data-i18n="matrixTeaser">Powered by insights from 100+ BIM use cases. Full spectrum revealed soon.</div>
@@ -729,18 +789,88 @@
       animateLines();
     })();
 
-    /* ---- EMAIL WAITLIST (localStorage demo) ---- */
+    /* ---- EMAIL WAITLIST + VIP MATCHING ---- */
     (function() {
       var btn = document.getElementById('subscribeBtn');
       var input = document.getElementById('emailInput');
       var msg = document.getElementById('waitlistMsg');
+      var vipCard = document.getElementById('vipCard');
+      var vipGreeting = document.getElementById('vipGreeting');
+      var vipName = document.getElementById('vipName');
+      var vipMessage = document.getElementById('vipMessage');
+      var vipAction = document.getElementById('vipAction');
+      var waitlistForm = document.getElementById('waitlist');
+
+      // VIP contact map: email → personalized briefing
+      var contacts = {
+        'ceo@example.com': {
+          name: '呂董事長',
+          greeting: '敬愛的',
+          title: '董事長',
+          company: '玉霖建設',
+          message: 'AEC PRISM 為營建決策者打造的 AI 分析平台。從 BIM 模型出發，即時折射出工程進度、成本風險、品質指標，讓每個決策都有數據支撐。',
+          briefing: '為您準備的專屬簡報已上線，涵蓋：設計協調 AI、4D 排程預測、成本動態估算。'
+        },
+        'exec@yulin.com.tw': {
+          name: '巫執行長',
+          greeting: '敬愛的',
+          title: '執行長',
+          company: '玉霖建設',
+          message: 'AEC PRISM 將您的 BIM 模型轉化為可執行的營運洞察。從衝突檢測到進度追蹤，一個平台貫穿全生命週期。',
+          briefing: '專屬 Demo 已備妥：即時碰撞檢測、AI 數量計算、數位孿生同步。'
+        },
+        'demo@aecprism.com': {
+          name: '來賓',
+          greeting: '歡迎',
+          title: '',
+          company: 'AEC PRISM',
+          message: '這是 AEC PRISM 的 VIP 預覽模式。輸入您自己的 email 來建立專屬展示頁面。',
+          briefing: '完整 BIM Matrix 涵蓋 100+ 應用情境，從設計到營運全面覆蓋。'
+        }
+      };
+
+      function showVIP(contact) {
+        waitlistForm.style.display = 'none';
+        msg.textContent = '';
+        msg.className = 'waitlist-msg';
+        vipGreeting.textContent = contact.greeting + ' ' + contact.title;
+        vipName.textContent = contact.name + (contact.company ? ' · ' + contact.company : '');
+        vipMessage.textContent = contact.message;
+        vipAction.textContent = 'View Your Briefing ↓';
+        vipCard.classList.add('visible');
+        vipAction.onclick = function() {
+          var el = document.getElementById('vipBriefing');
+          if (el) {
+            el.style.display = el.style.display === 'block' ? 'none' : 'block';
+            vipAction.textContent = el.style.display === 'block' ? 'Hide Briefing ↑' : 'View Your Briefing ↓';
+          }
+        };
+        // Create briefing detail if not exists
+        if (!document.getElementById('vipBriefing')) {
+          var briefing = document.createElement('div');
+          briefing.id = 'vipBriefing';
+          briefing.style.cssText = 'margin-top:1rem;padding:1rem;background:rgba(102,126,234,0.04);border-radius:8px;font-size:0.68rem;color:#6a6a7a;line-height:1.7;display:none;animation:fadeIn 0.8s ease-out both;';
+          briefing.textContent = contact.briefing;
+          vipCard.appendChild(briefing);
+        }
+      }
+
       btn.addEventListener('click', function() {
-        var email = input.value.trim();
+        var email = input.value.trim().toLowerCase();
         if (!email || !email.includes('@') || !email.includes('.')) {
           msg.textContent = 'Please enter a valid email.';
           msg.className = 'waitlist-msg';
           return;
         }
+
+        // VIP check
+        if (contacts[email]) {
+          showVIP(contacts[email]);
+          input.value = '';
+          return;
+        }
+
+        // Normal waitlist
         var list = JSON.parse(localStorage.getItem('aecprism_waitlist') || '[]');
         if (list.indexOf(email) !== -1) {
           msg.textContent = 'You\'re already on the list.';
