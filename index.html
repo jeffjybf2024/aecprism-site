@@ -5,12 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AEC PRISM — Refracting Building Data Into Decisions</title>
   <meta name="description" content="AEC PRISM transforms your building information model into a spectrum of applications — planning, construction, operations, and beyond.">
+
+  <!-- Open Graph -->
   <meta property="og:title" content="AEC PRISM">
   <meta property="og:description" content="BIM Model → Prism → Decisions. Turning one building model into a spectrum of applications.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aecprism.com">
+  <meta property="og:image" content="https://aecprism.com/og-image.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
   <meta name="theme-color" content="#050508">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon points='16,2 22,28 10,28' fill='none' stroke='%23667eea' stroke-width='1.5'/%3E%3Cline x1='0' y1='16' x2='11' y2='16' stroke='white' stroke-width='1' opacity='0.5'/%3E%3C/svg%3E">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "AEC PRISM",
+    "description": "Refracting Building Data Into Decisions. Turning building information models into a spectrum of applications.",
+    "url": "https://aecprism.com",
+    "foundingDate": "2026",
+    "areaServed": "Worldwide"
+  }
+  </script>
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: #050508;
@@ -20,6 +42,8 @@
       justify-content: center;
       min-height: 100vh;
       overflow: hidden;
+      --mx: 0;
+      --my: 0;
     }
 
     /* === PAGE FADE IN === */
@@ -75,7 +99,6 @@
       mask-image: radial-gradient(ellipse at 50% 60%, black 10%, transparent 60%);
       -webkit-mask-image: radial-gradient(ellipse at 50% 60%, black 10%, transparent 60%);
     }
-    /* Slow pulse on ghost grid */
     @keyframes matrixPulse {
       0%, 100% { opacity: 0.6; }
       50% { opacity: 1; }
@@ -93,8 +116,9 @@
       height: 3px;
       background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.1) 80%, transparent 100%);
       box-shadow: 0 0 30px 8px rgba(255,255,255,0.08), 0 0 60px 16px rgba(255,255,255,0.04);
-      transform: rotate(2deg);
+      transform: rotate(calc(2deg + var(--mx) * 3deg));
       z-index: 1;
+      transition: transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
     .beam-white::after {
       content: '';
@@ -103,7 +127,6 @@
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
     }
-    /* Beam shimmer */
     @keyframes beamShimmer {
       0%, 100% { opacity: 0.8; }
       50% { opacity: 1; }
@@ -124,6 +147,8 @@
       border-bottom: 140px solid rgba(255,255,255,0.02);
       filter: drop-shadow(0 0 20px rgba(255,255,255,0.03));
       z-index: 2;
+      transform: translateX(calc(var(--mx) * 10px));
+      transition: transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
     .prism-glass::before {
       content: '';
@@ -145,7 +170,6 @@
       background: linear-gradient(45deg, rgba(180,200,255,0.06) 0%, transparent 60%);
       clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
     }
-    /* Prism subtle breathing */
     @keyframes prismBreathe {
       0%, 100% { filter: drop-shadow(0 0 20px rgba(255,255,255,0.03)); }
       50% { filter: drop-shadow(0 0 30px rgba(102,126,234,0.08)); }
@@ -161,6 +185,8 @@
       left: 43%;
       transform-origin: left center;
       z-index: 2;
+      transform: translateX(calc(var(--mx) * 20px));
+      transition: transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
     .ray {
       position: absolute;
@@ -168,54 +194,55 @@
       height: 2px;
       border-radius: 1px;
       filter: blur(1px);
+      transition: opacity 0.8s ease;
     }
     .ray-1 {
       width: 55vw;
       background: linear-gradient(90deg, #ff4d4d 0%, rgba(255,77,77,0.1) 100%);
       transform: rotate(-35deg);
-      opacity: 0.5;
+      opacity: calc(0.3 + var(--my) * 0.4);
       box-shadow: 0 0 20px 4px rgba(255,77,77,0.1);
     }
     .ray-2 {
       width: 55vw;
       background: linear-gradient(90deg, #ff9f43 0%, rgba(255,159,67,0.1) 100%);
       transform: rotate(-24deg);
-      opacity: 0.45;
+      opacity: calc(0.25 + var(--my) * 0.4);
       box-shadow: 0 0 20px 4px rgba(255,159,67,0.08);
     }
     .ray-3 {
       width: 55vw;
       background: linear-gradient(90deg, #feca57 0%, rgba(254,202,87,0.1) 100%);
       transform: rotate(-13deg);
-      opacity: 0.4;
+      opacity: calc(0.2 + var(--my) * 0.4);
       box-shadow: 0 0 20px 4px rgba(254,202,87,0.08);
     }
     .ray-4 {
       width: 55vw;
       background: linear-gradient(90deg, #48dbfb 0%, rgba(72,219,251,0.1) 100%);
       transform: rotate(-2deg);
-      opacity: 0.45;
+      opacity: calc(0.25 + var(--my) * 0.4);
       box-shadow: 0 0 20px 4px rgba(72,219,251,0.08);
     }
     .ray-5 {
       width: 55vw;
       background: linear-gradient(90deg, #667eea 0%, rgba(102,126,234,0.1) 100%);
       transform: rotate(9deg);
-      opacity: 0.5;
+      opacity: calc(0.3 + var(--my) * 0.4);
       box-shadow: 0 0 20px 4px rgba(102,126,234,0.1);
     }
     .ray-6 {
       width: 55vw;
       background: linear-gradient(90deg, #a55eea 0%, rgba(165,94,234,0.1) 100%);
       transform: rotate(20deg);
-      opacity: 0.45;
+      opacity: calc(0.25 + var(--my) * 0.4);
       box-shadow: 0 0 20px 4px rgba(165,94,234,0.08);
     }
     .ray-7 {
       width: 55vw;
       background: linear-gradient(90deg, #f093fb 0%, rgba(240,147,251,0.1) 100%);
       transform: rotate(31deg);
-      opacity: 0.4;
+      opacity: calc(0.2 + var(--my) * 0.4);
       box-shadow: 0 0 20px 4px rgba(240,147,251,0.08);
     }
 
@@ -241,7 +268,7 @@
       filter: blur(40px);
     }
 
-    /* Subtle vignette over text area */
+    /* Vignette */
     .vignette {
       position: absolute;
       inset: 0;
@@ -253,7 +280,7 @@
     /* === CONTENT === */
     .container {
       text-align: center;
-      padding: 2rem;
+      padding: 2rem 2rem 5rem;
       position: relative;
       z-index: 4;
     }
@@ -310,6 +337,64 @@
       letter-spacing: 0.35em;
     }
 
+    /* === EMAIL WAITLIST === */
+    .waitlist {
+      margin-top: 2rem;
+      display: inline-flex;
+      gap: 0.5rem;
+      align-items: center;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 100px;
+      padding: 0.35rem 0.35rem 0.35rem 1rem;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: border-color 0.4s ease;
+    }
+    .waitlist:focus-within {
+      border-color: rgba(102,126,234,0.3);
+    }
+    .waitlist input {
+      background: transparent;
+      border: none;
+      color: #888;
+      font-size: 0.8rem;
+      font-family: inherit;
+      outline: none;
+      width: 200px;
+      letter-spacing: 0.04em;
+    }
+    .waitlist input::placeholder {
+      color: #333;
+    }
+    .waitlist button {
+      background: rgba(102,126,234,0.15);
+      border: none;
+      color: #667eea;
+      font-size: 0.75rem;
+      font-family: inherit;
+      padding: 0.5rem 1.2rem;
+      border-radius: 100px;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+    .waitlist button:hover {
+      background: rgba(102,126,234,0.25);
+      color: #8899ff;
+    }
+    .waitlist-msg {
+      margin-top: 0.6rem;
+      font-size: 0.7rem;
+      color: #1a3a1a;
+      min-height: 1rem;
+      transition: color 0.5s ease;
+    }
+    .waitlist-msg.success {
+      color: #2a5a2a;
+    }
+
     /* === BIM MATRIX TEASER === */
     .matrix-teaser {
       position: fixed;
@@ -326,6 +411,30 @@
     }
     .matrix-teaser:hover {
       color: #2a2a3a;
+    }
+
+    /* === LANGUAGE TOGGLE === */
+    .lang-toggle {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 10;
+      display: flex;
+      gap: 0.6rem;
+    }
+    .lang-toggle span {
+      font-size: 0.7rem;
+      color: #333;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+      transition: color 0.3s ease;
+      user-select: none;
+    }
+    .lang-toggle span.active {
+      color: #667eea;
+    }
+    .lang-toggle span:hover {
+      color: #8899ff;
     }
   </style>
 </head>
@@ -350,15 +459,18 @@
     <div class="vignette"></div>
   </div>
 
+  <!-- Language Toggle -->
+  <div class="lang-toggle">
+    <span class="active" data-lang="en">EN</span>
+    <span data-lang="zh">繁中</span>
+  </div>
+
   <div class="container">
     <!-- Logo icon: prism with light -->
     <div class="logo-icon">
       <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Beam -->
         <line x1="0" y1="42" x2="30" y2="42" stroke="url(#beam-grad)" stroke-width="2"/>
-        <!-- Prism -->
         <polygon points="40,12 50,65 30,65" fill="rgba(255,255,255,0.03)" stroke="url(#prism-stroke)" stroke-width="1.5"/>
-        <!-- Spectrum -->
         <line x1="42" y1="44" x2="78" y2="16" stroke="#ff4d4d" stroke-width="1.5" opacity="0.7"/>
         <line x1="42" y1="47" x2="78" y2="28" stroke="#ff9f43" stroke-width="1.5" opacity="0.6"/>
         <line x1="42" y1="50" x2="78" y2="40" stroke="#feca57" stroke-width="1.5" opacity="0.5"/>
@@ -379,12 +491,96 @@
     </div>
 
     <div class="logo">AEC PRISM</div>
-    <div class="tagline">Refracting Building Data Into Decisions</div>
+    <div class="tagline" data-i18n="tagline">Refracting Building Data Into Decisions</div>
     <div class="formula">BIM Model <span>→</span> Prism <span>→</span> Decisions</div>
     <div class="divider"></div>
     <div class="coming-soon">Coming Soon</div>
+
+    <!-- Email Waitlist -->
+    <div class="waitlist" id="waitlist">
+      <input type="email" placeholder="Your email" id="emailInput">
+      <button id="subscribeBtn">Stay Tuned</button>
+    </div>
+    <div class="waitlist-msg" id="waitlistMsg"></div>
   </div>
 
-  <div class="matrix-teaser">Powered by insights from 100+ BIM use cases. Full spectrum revealed soon.</div>
+  <div class="matrix-teaser" data-i18n="matrixTeaser">Powered by insights from 100+ BIM use cases. Full spectrum revealed soon.</div>
+
+  <script>
+    /* ---- MOUSE PARALLAX ---- */
+    (function() {
+      var mx = 0, my = 0, tmx = 0, tmy = 0;
+      document.addEventListener('mousemove', function(e) {
+        tmx = (e.clientX / window.innerWidth - 0.5) * 2;  // -1 to 1
+        tmy = (e.clientY / window.innerHeight - 0.5) * 2; // -1 to 1
+      });
+      function lerp() {
+        mx += (tmx - mx) * 0.04;
+        my += (tmy - my) * 0.04;
+        document.body.style.setProperty('--mx', mx.toFixed(3));
+        document.body.style.setProperty('--my', my.toFixed(3));
+        requestAnimationFrame(lerp);
+      }
+      lerp();
+    })();
+
+    /* ---- EMAIL WAITLIST (localStorage demo) ---- */
+    (function() {
+      var btn = document.getElementById('subscribeBtn');
+      var input = document.getElementById('emailInput');
+      var msg = document.getElementById('waitlistMsg');
+      btn.addEventListener('click', function() {
+        var email = input.value.trim();
+        if (!email || !email.includes('@') || !email.includes('.')) {
+          msg.textContent = 'Please enter a valid email.';
+          msg.className = 'waitlist-msg';
+          return;
+        }
+        var list = JSON.parse(localStorage.getItem('aecprism_waitlist') || '[]');
+        if (list.indexOf(email) !== -1) {
+          msg.textContent = 'You\'re already on the list.';
+          msg.className = 'waitlist-msg success';
+          return;
+        }
+        list.push(email);
+        localStorage.setItem('aecprism_waitlist', JSON.stringify(list));
+        msg.textContent = '✓ You\'re on the list. We\'ll be in touch.';
+        msg.className = 'waitlist-msg success';
+        input.value = '';
+      });
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') btn.click();
+      });
+    })();
+
+    /* ---- LANGUAGE TOGGLE (structure ready) ---- */
+    (function() {
+      var i18n = {
+        en: {
+          tagline: 'Refracting Building Data Into Decisions',
+          matrixTeaser: 'Powered by insights from 100+ BIM use cases. Full spectrum revealed soon.'
+        },
+        zh: {
+          tagline: '將建築數據折射為決策',
+          matrixTeaser: 'Powered by BIM Matrix · 近百項 BIM 應用情境 · 完整光譜即將揭曉'
+        }
+      };
+      var current = 'en';
+      document.querySelectorAll('.lang-toggle span').forEach(function(span) {
+        span.addEventListener('click', function() {
+          current = this.dataset.lang;
+          document.querySelectorAll('.lang-toggle span').forEach(function(s) {
+            s.classList.toggle('active', s.dataset.lang === current);
+          });
+          document.querySelectorAll('[data-i18n]').forEach(function(el) {
+            var key = el.dataset.i18n;
+            if (i18n[current] && i18n[current][key]) {
+              el.textContent = i18n[current][key];
+            }
+          });
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
