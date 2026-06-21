@@ -206,118 +206,145 @@
       animation: prismBreathe 5s ease-in-out infinite;
     }
 
-    /* Spectrum rays fanning out from prism right edge */
+    /* === CONTINUOUS SPECTRUM FAN === */
     .spectrum {
       position: absolute;
-      top: 48%;
-      left: 43%;
-      transform-origin: left center;
+      top: 30%;
+      left: 42%;
+      width: 70vw;
+      height: 70vh;
       z-index: 2;
       transform: translateX(calc(var(--mx) * 20px));
       transition: transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+      pointer-events: auto;
+      cursor: crosshair;
     }
-    .ray {
+    .spectrum-fan {
       position: absolute;
+      top: 0;
       left: 0;
-      height: 2px;
-      border-radius: 1px;
-      filter: blur(1px);
-      transition: opacity 0.8s ease;
+      width: 100%;
+      height: 100%;
+      opacity: 0.35;
+      background: conic-gradient(
+        from -55deg at 0% 15%,
+        #ff4d4d 0deg,
+        #ff6b6b 2deg,
+        #ff9f43 4deg,
+        #feca57 6deg,
+        #ffdd59 8deg,
+        #a8e063 10deg,
+        #48dbfb 12deg,
+        #0abde3 14deg,
+        #667eea 16deg,
+        #764ba2 18deg,
+        #a55eea 20deg,
+        #c56cf0 22deg,
+        #f093fb 24deg,
+        #f5576c 26deg,
+        #ff4d4d 28deg,
+        transparent 35deg
+      );
+      filter: blur(8px);
+      animation: spectrumShift 12s ease-in-out infinite;
     }
-    .ray-1 {
-      width: 55vw;
-      background: linear-gradient(90deg, #ff4d4d 0%, rgba(255,77,77,0.1) 100%);
-      transform: rotate(-35deg);
-      opacity: calc(0.3 + var(--my) * 0.4);
-      box-shadow: 0 0 20px 4px rgba(255,77,77,0.1);
+    /* Sharper inner fan */
+    .spectrum-fan-sharp {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.25;
+      background: conic-gradient(
+        from -50deg at 0% 15.5%,
+        transparent 0deg,
+        #ff4d4d 1deg, transparent 2.5deg,
+        #ff9f43 3deg, transparent 4.5deg,
+        #feca57 5deg, transparent 6.5deg,
+        #a8e063 7deg, transparent 8.5deg,
+        #48dbfb 9deg, transparent 10.5deg,
+        #667eea 11deg, transparent 12.5deg,
+        #a55eea 13deg, transparent 14.5deg,
+        #f093fb 15deg, transparent 16.5deg,
+        #f5576c 17deg, transparent 18.5deg,
+        #ff4d4d 19deg, transparent 25deg
+      );
+      animation: spectrumShift 12s ease-in-out infinite reverse;
     }
-    .ray-2 {
-      width: 55vw;
-      background: linear-gradient(90deg, #ff9f43 0%, rgba(255,159,67,0.1) 100%);
-      transform: rotate(-24deg);
-      opacity: calc(0.25 + var(--my) * 0.4);
-      box-shadow: 0 0 20px 4px rgba(255,159,67,0.08);
+    /* Spectrum grain texture */
+    .spectrum-grain {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.06;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      animation: grainShift 0.5s steps(3) infinite;
     }
-    .ray-3 {
-      width: 55vw;
-      background: linear-gradient(90deg, #feca57 0%, rgba(254,202,87,0.1) 100%);
-      transform: rotate(-13deg);
-      opacity: calc(0.2 + var(--my) * 0.4);
-      box-shadow: 0 0 20px 4px rgba(254,202,87,0.08);
+    @keyframes spectrumShift {
+      0%, 100% { filter: blur(8px) hue-rotate(0deg); }
+      25% { filter: blur(10px) hue-rotate(15deg); }
+      50% { filter: blur(9px) hue-rotate(-10deg); }
+      75% { filter: blur(11px) hue-rotate(5deg); }
     }
-    .ray-4 {
-      width: 55vw;
-      background: linear-gradient(90deg, #48dbfb 0%, rgba(72,219,251,0.1) 100%);
-      transform: rotate(-2deg);
-      opacity: calc(0.25 + var(--my) * 0.4);
-      box-shadow: 0 0 20px 4px rgba(72,219,251,0.08);
-    }
-    .ray-5 {
-      width: 55vw;
-      background: linear-gradient(90deg, #667eea 0%, rgba(102,126,234,0.1) 100%);
-      transform: rotate(9deg);
-      opacity: calc(0.3 + var(--my) * 0.4);
-      box-shadow: 0 0 20px 4px rgba(102,126,234,0.1);
-    }
-    .ray-6 {
-      width: 55vw;
-      background: linear-gradient(90deg, #a55eea 0%, rgba(165,94,234,0.1) 100%);
-      transform: rotate(20deg);
-      opacity: calc(0.25 + var(--my) * 0.4);
-      box-shadow: 0 0 20px 4px rgba(165,94,234,0.08);
-    }
-    .ray-7 {
-      width: 55vw;
-      background: linear-gradient(90deg, #f093fb 0%, rgba(240,147,251,0.1) 100%);
-      transform: rotate(31deg);
-      opacity: calc(0.2 + var(--my) * 0.4);
-      box-shadow: 0 0 20px 4px rgba(240,147,251,0.08);
+    @keyframes grainShift {
+      0% { transform: translate(0, 0); }
+      33% { transform: translate(-1px, 1px); }
+      66% { transform: translate(1px, -1px); }
     }
 
-    /* === BIM MATRIX LABELS on spectrum === */
+    /* === BIM MATRIX DYNAMIC LABELS === */
+    .bim-labels {
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+    }
     .bim-label {
       position: absolute;
-      left: calc(var(--lx) * 1px);
-      top: calc(var(--ly) * 1px);
-      font-size: 0.65rem;
-      color: var(--lc, #667eea);
+      font-size: 0.62rem;
       letter-spacing: 0.06em;
       font-weight: 300;
       white-space: nowrap;
       opacity: 0;
-      transform: translateY(4px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      pointer-events: none;
-      text-shadow: 0 0 12px var(--lc, #667eea);
+      transform: translate(-50%, -50%) translateY(6px);
+      transition: opacity 0.6s ease, transform 0.6s ease, color 0.6s ease;
+      text-shadow: 0 0 14px currentColor;
     }
     .bim-label.visible {
-      opacity: 0.7;
-      transform: translateY(0);
-    }
-    .bim-label.visible:hover {
-      opacity: 0.95;
+      opacity: 0.75;
+      transform: translate(-50%, -50%) translateY(0);
+      pointer-events: auto;
     }
 
-    /* Glow spots where rays spread */
+    /* Glow halo around spectrum fan */
     .glow-spectrum {
       position: absolute;
       top: 10%;
       right: 5%;
-      width: 60vw;
+      width: 70vw;
       height: 80vh;
       background: conic-gradient(
         from 200deg at 0% 50%,
         transparent 0deg,
-        rgba(255,77,77,0.03) 5deg,
-        rgba(255,159,67,0.03) 10deg,
+        rgba(255,77,77,0.04) 5deg,
+        rgba(255,159,67,0.04) 10deg,
         rgba(254,202,87,0.03) 15deg,
-        rgba(72,219,251,0.03) 20deg,
-        rgba(102,126,234,0.04) 25deg,
-        rgba(165,94,234,0.03) 30deg,
+        rgba(72,219,251,0.04) 20deg,
+        rgba(102,126,234,0.05) 25deg,
+        rgba(165,94,234,0.04) 30deg,
         rgba(240,147,251,0.03) 35deg,
         transparent 40deg
       );
-      filter: blur(40px);
+      filter: blur(50px);
+      animation: glowPulse 8s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1.2; }
     }
 
     /* Vignette */
@@ -557,22 +584,11 @@
     </div>
     <div class="prism-glass"></div>
     <div class="spectrum">
-      <div class="ray ray-1"></div>
-      <div class="ray ray-2"></div>
-      <div class="ray ray-3"></div>
-      <div class="ray ray-4"></div>
-      <div class="ray ray-5"></div>
-      <div class="ray ray-6"></div>
-      <div class="ray ray-7"></div>
-      <!-- BIM Matrix labels -->
-      <div class="bim-label" style="--lx:60;--ly:-120;--lc:#ff4d4d" data-ray="0">Design Coordination</div>
-      <div class="bim-label" style="--lx:120;--ly:-90;--lc:#ff9f43" data-ray="1">Clash Detection</div>
-      <div class="bim-label" style="--lx:170;--ly:-55;--lc:#feca57" data-ray="2">Quantity Takeoff</div>
-      <div class="bim-label" style="--lx:195;--ly:-10;--lc:#48dbfb" data-ray="3">4D Scheduling</div>
-      <div class="bim-label" style="--lx:190;--ly:35;--lc:#667eea" data-ray="4">Cost Estimation</div>
-      <div class="bim-label" style="--lx:160;--ly:75;--lc:#a55eea" data-ray="5">Facility Mgmt</div>
-      <div class="bim-label" style="--lx:105;--ly:105;--lc:#f093fb" data-ray="6">Energy Analysis</div>
+      <div class="spectrum-fan"></div>
+      <div class="spectrum-fan-sharp"></div>
+      <div class="spectrum-grain"></div>
     </div>
+    <div class="bim-labels" id="bimLabels"></div>
     <div class="glow-spectrum"></div>
     <div class="vignette"></div>
   </div>
@@ -702,15 +718,48 @@
       });
     })();
 
-    /* ---- BIM INTERACTIVE: beam spotlight + matrix labels ---- */
+    /* ---- BIM INTERACTIVE: beam spotlight + dynamic matrix labels ---- */
     (function() {
       var bimReveal = document.getElementById('bimReveal');
       var bimSpotlight = document.getElementById('bimSpotlight');
-      var labels = document.querySelectorAll('.bim-label');
-      var spectrum = document.querySelector('.spectrum');
+      var labelsContainer = document.getElementById('bimLabels');
+      var activeLabels = [];
 
-      // Define beam zone: roughly 0-38% of viewport width
-      // Spectrum zone: roughly 43-100% of viewport width
+      // BIM Matrix use case pool — rotates based on cursor position
+      var useCases = [
+        'Design Coordination', 'Clash Detection', 'Quantity Takeoff',
+        '4D Scheduling', 'Cost Estimation', 'Energy Analysis',
+        'Facility Management', 'Structural Analysis', 'MEP Coordination',
+        'Laser Scan to BIM', 'Digital Twin Sync', 'Progress Tracking',
+        'Risk Assessment', 'Sustainability Audit', 'Asset Lifecycle',
+        'Code Compliance', 'Prefab Planning', 'Site Logistics',
+        'Reality Capture', 'AR Inspection'
+      ];
+
+      var spectrumColors = [
+        '#ff4d4d','#ff6b6b','#ff9f43','#feca57','#ffdd59',
+        '#a8e063','#48dbfb','#0abde3','#667eea','#764ba2',
+        '#a55eea','#c56cf0','#f093fb','#f5576c'
+      ];
+
+      function getColorAt(x, y) {
+        // Map x,y in spectrum zone to a color index
+        var idx = Math.floor(((x - 40) / 60 + (y / 100)) * spectrumColors.length);
+        return spectrumColors[Math.abs(idx) % spectrumColors.length];
+      }
+
+      function createLabel() {
+        var el = document.createElement('div');
+        el.className = 'bim-label';
+        labelsContainer.appendChild(el);
+        return el;
+      }
+
+      // Pre-create label pool
+      for (var i = 0; i < 5; i++) {
+        activeLabels.push({ el: createLabel(), text: '', visible: false, timer: 0 });
+      }
+
       document.addEventListener('mousemove', function(e) {
         var xPct = (e.clientX / window.innerWidth) * 100;
         var yPct = (e.clientY / window.innerHeight) * 100;
@@ -724,35 +773,43 @@
           bimReveal.classList.remove('active');
         }
 
-        // --- Spectrum zone: show BIM Matrix labels ---
-        if (xPct > 43) {
-          var specRect = spectrum.getBoundingClientRect();
-          var relX = e.clientX - specRect.left;
-          var relY = e.clientY - specRect.top;
-          var distFromOrigin = Math.sqrt(relX * relX + relY * relY);
+        // --- Spectrum zone: dynamic labels appear near cursor ---
+        if (xPct > 40) {
+          var seed = Math.floor((e.clientX * 13 + e.clientY * 7) % 100);
+          activeLabels.forEach(function(label, i) {
+            var offset = seed + i * 17;
+            var ucIdx = offset % useCases.length;
+            var spreadX = (Math.cos(offset * 0.4) * 80) - 40;
+            var spreadY = (Math.sin(offset * 0.4) * 50) - 25;
 
-          labels.forEach(function(label) {
-            var lx = parseFloat(label.style.getPropertyValue('--lx')) || 0;
-            var ly = parseFloat(label.style.getPropertyValue('--ly')) || 0;
-            var labelDist = Math.sqrt(Math.pow(relX - lx, 2) + Math.pow(relY - ly, 2));
-            var threshold = 60;
-            if (labelDist < threshold) {
-              var opacity = 1 - (labelDist / threshold);
-              label.classList.add('visible');
-              label.style.opacity = (opacity * 0.85).toFixed(2);
-            } else {
-              label.classList.remove('visible');
-            }
+            label.el.style.left = (e.clientX + spreadX) + 'px';
+            label.el.style.top = (e.clientY + spreadY) + 'px';
+            label.el.style.color = getColorAt(xPct + spreadX * 0.02, yPct + spreadY * 0.02);
+            label.el.textContent = useCases[ucIdx];
+            label.el.classList.add('visible');
+            label.visible = true;
+            label.timer = Date.now();
           });
-        } else {
-          labels.forEach(function(l) { l.classList.remove('visible'); });
         }
       });
 
-      // Hide on mouse leave
+      // Slowly fade labels when cursor leaves spectrum
+      setInterval(function() {
+        var now = Date.now();
+        activeLabels.forEach(function(label) {
+          if (label.visible && now - label.timer > 800) {
+            label.el.classList.remove('visible');
+            label.visible = false;
+          }
+        });
+      }, 400);
+
       document.addEventListener('mouseleave', function() {
         bimReveal.classList.remove('active');
-        labels.forEach(function(l) { l.classList.remove('visible'); });
+        activeLabels.forEach(function(l) {
+          l.el.classList.remove('visible');
+          l.visible = false;
+        });
       });
     })();
   </script>
