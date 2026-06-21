@@ -136,6 +136,33 @@
       animation: beamShimmer 6s ease-in-out infinite;
     }
 
+    /* === BIM MODEL REVEAL on white beam === */
+    .bim-reveal {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    .bim-reveal.active {
+      opacity: 1;
+    }
+    .bim-reveal-spotlight {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at var(--spot-x, 30%) var(--spot-y, 45%), rgba(180,200,240,0.06) 0%, transparent 50%);
+    }
+    .bim-wireframe {
+      position: absolute;
+      inset: 0;
+      opacity: 0.12;
+    }
+    .bim-wireframe svg {
+      width: 100%;
+      height: 100%;
+    }
+
     /* Glass prism - triangle */
     .prism-glass {
       position: absolute;
@@ -245,6 +272,30 @@
       transform: rotate(31deg);
       opacity: calc(0.2 + var(--my) * 0.4);
       box-shadow: 0 0 20px 4px rgba(240,147,251,0.08);
+    }
+
+    /* === BIM MATRIX LABELS on spectrum === */
+    .bim-label {
+      position: absolute;
+      left: calc(var(--lx) * 1px);
+      top: calc(var(--ly) * 1px);
+      font-size: 0.65rem;
+      color: var(--lc, #667eea);
+      letter-spacing: 0.06em;
+      font-weight: 300;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      text-shadow: 0 0 12px var(--lc, #667eea);
+    }
+    .bim-label.visible {
+      opacity: 0.7;
+      transform: translateY(0);
+    }
+    .bim-label.visible:hover {
+      opacity: 0.95;
     }
 
     /* Glow spots where rays spread */
@@ -477,6 +528,33 @@
       <div class="matrix-grid"></div>
     </div>
     <div class="beam-white"></div>
+    <div class="bim-reveal" id="bimReveal">
+      <div class="bim-reveal-spotlight" id="bimSpotlight"></div>
+      <div class="bim-wireframe">
+        <svg viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <g stroke="rgba(180,200,240,0.5)" stroke-width="1.5" fill="none">
+            <!-- Main building -->
+            <rect x="80" y="200" width="280" height="500"/>
+            <line x1="80" y1="360" x2="360" y2="360"/>
+            <line x1="80" y1="520" x2="360" y2="520"/>
+            <line x1="220" y1="200" x2="220" y2="700"/>
+            <!-- Roof -->
+            <polygon points="60,200 220,60 380,200"/>
+            <line x1="220" y1="60" x2="220" y2="200"/>
+            <!-- Floors -->
+            <line x1="80" y1="280" x2="360" y2="280"/>
+            <line x1="80" y1="440" x2="360" y2="440"/>
+            <line x1="80" y1="600" x2="360" y2="600"/>
+            <!-- Grid dots at intersections -->
+            <circle cx="220" cy="280" r="2" fill="rgba(180,200,240,0.3)"/>
+            <circle cx="220" cy="360" r="2" fill="rgba(180,200,240,0.3)"/>
+            <circle cx="220" cy="440" r="2" fill="rgba(180,200,240,0.3)"/>
+            <circle cx="220" cy="520" r="2" fill="rgba(180,200,240,0.3)"/>
+            <circle cx="220" cy="600" r="2" fill="rgba(180,200,240,0.3)"/>
+          </g>
+        </svg>
+      </div>
+    </div>
     <div class="prism-glass"></div>
     <div class="spectrum">
       <div class="ray ray-1"></div>
@@ -486,6 +564,14 @@
       <div class="ray ray-5"></div>
       <div class="ray ray-6"></div>
       <div class="ray ray-7"></div>
+      <!-- BIM Matrix labels -->
+      <div class="bim-label" style="--lx:60;--ly:-120;--lc:#ff4d4d" data-ray="0">Design Coordination</div>
+      <div class="bim-label" style="--lx:120;--ly:-90;--lc:#ff9f43" data-ray="1">Clash Detection</div>
+      <div class="bim-label" style="--lx:170;--ly:-55;--lc:#feca57" data-ray="2">Quantity Takeoff</div>
+      <div class="bim-label" style="--lx:195;--ly:-10;--lc:#48dbfb" data-ray="3">4D Scheduling</div>
+      <div class="bim-label" style="--lx:190;--ly:35;--lc:#667eea" data-ray="4">Cost Estimation</div>
+      <div class="bim-label" style="--lx:160;--ly:75;--lc:#a55eea" data-ray="5">Facility Mgmt</div>
+      <div class="bim-label" style="--lx:105;--ly:105;--lc:#f093fb" data-ray="6">Energy Analysis</div>
     </div>
     <div class="glow-spectrum"></div>
     <div class="vignette"></div>
@@ -613,6 +699,60 @@
             }
           });
         });
+      });
+    })();
+
+    /* ---- BIM INTERACTIVE: beam spotlight + matrix labels ---- */
+    (function() {
+      var bimReveal = document.getElementById('bimReveal');
+      var bimSpotlight = document.getElementById('bimSpotlight');
+      var labels = document.querySelectorAll('.bim-label');
+      var spectrum = document.querySelector('.spectrum');
+
+      // Define beam zone: roughly 0-38% of viewport width
+      // Spectrum zone: roughly 43-100% of viewport width
+      document.addEventListener('mousemove', function(e) {
+        var xPct = (e.clientX / window.innerWidth) * 100;
+        var yPct = (e.clientY / window.innerHeight) * 100;
+
+        // --- Beam zone: show BIM wireframe spotlight ---
+        if (xPct < 38) {
+          bimReveal.classList.add('active');
+          bimSpotlight.style.setProperty('--spot-x', xPct + '%');
+          bimSpotlight.style.setProperty('--spot-y', yPct + '%');
+        } else {
+          bimReveal.classList.remove('active');
+        }
+
+        // --- Spectrum zone: show BIM Matrix labels ---
+        if (xPct > 43) {
+          var specRect = spectrum.getBoundingClientRect();
+          var relX = e.clientX - specRect.left;
+          var relY = e.clientY - specRect.top;
+          var distFromOrigin = Math.sqrt(relX * relX + relY * relY);
+
+          labels.forEach(function(label) {
+            var lx = parseFloat(label.style.getPropertyValue('--lx')) || 0;
+            var ly = parseFloat(label.style.getPropertyValue('--ly')) || 0;
+            var labelDist = Math.sqrt(Math.pow(relX - lx, 2) + Math.pow(relY - ly, 2));
+            var threshold = 60;
+            if (labelDist < threshold) {
+              var opacity = 1 - (labelDist / threshold);
+              label.classList.add('visible');
+              label.style.opacity = (opacity * 0.85).toFixed(2);
+            } else {
+              label.classList.remove('visible');
+            }
+          });
+        } else {
+          labels.forEach(function(l) { l.classList.remove('visible'); });
+        }
+      });
+
+      // Hide on mouse leave
+      document.addEventListener('mouseleave', function() {
+        bimReveal.classList.remove('active');
+        labels.forEach(function(l) { l.classList.remove('visible'); });
       });
     })();
   </script>
