@@ -759,7 +759,6 @@ document.addEventListener('keydown',e=>{
 
 <!-- Three.js CDN -->
 <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
 <script>
 // ===== Scene managers =====
 const scenes = {};
@@ -778,12 +777,8 @@ function createScene(containerId, setupFn) {
   renderer.setSize(w, h);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   container.appendChild(renderer.domElement);
-  const controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.05;
-  controls.target.set(0, 0, 0);
-  setupFn(scene, camera, renderer, controls);
-  scenes[containerId] = { scene, camera, renderer, controls, container };
+  setupFn(scene, camera, renderer);
+  scenes[containerId] = { scene, camera, renderer, container };
   return scenes[containerId];
 }
 
@@ -799,7 +794,13 @@ function animateLoop() {
   for (const key in scenes) {
     const s = scenes[key];
     if (!s) continue;
-    s.controls.update();
+    if (s.update) s.update();
+    // Auto-rotate camera slightly
+    if (s.autoRotate) {
+      s.camera.position.x = Math.sin(Date.now() * 0.0003) * s.cameraDist;
+      s.camera.position.z = Math.cos(Date.now() * 0.0003) * s.cameraDist;
+      s.camera.lookAt(s.lookAt || new THREE.Vector3(0, 0, 0));
+    }
     if (s.renderer && s.scene && s.camera) s.renderer.render(s.scene, s.camera);
   }
 }
@@ -807,8 +808,10 @@ animateLoop();
 
 // ===== Slide 5: Point Cloud 3D =====
 function initPointCloud() {
-  createScene('pointcloud-3d', (scene, camera) => {
+  createScene('pointcloud-3d', (scene, camera, renderer) => {
     camera.position.set(0, 2, 5);
+    scenes['pointcloud-3d'].autoRotate = true;
+    scenes['pointcloud-3d'].cameraDist = 5;
     // Room wireframe
     const roomGeo = new THREE.BoxGeometry(4, 3, 3);
     const roomMat = new THREE.MeshBasicMaterial({ color: 0x222222, wireframe: true });
@@ -868,8 +871,10 @@ function initPointCloud() {
 
 // ===== Slide 5: BIM Model 3D =====
 function initBIMModel() {
-  createScene('bim-3d', (scene, camera) => {
+  createScene('bim-3d', (scene, camera, renderer) => {
     camera.position.set(0, 3, 6);
+    scenes['bim-3d'].autoRotate = true;
+    scenes['bim-3d'].cameraDist = 6;
     // Grid
     const gridHelper = new THREE.GridHelper(6, 12, 0x111111, 0x0a0a0a);
     scene.add(gridHelper);
@@ -933,8 +938,10 @@ function initBIMModel() {
 
 // ===== Slide 6: 4D Payment Progress 3D =====
 function init4DPayment() {
-  createScene('payment-3d', (scene, camera) => {
+  createScene('payment-3d', (scene, camera, renderer) => {
     camera.position.set(0, 3, 8);
+    scenes['payment-3d'].autoRotate = true;
+    scenes['payment-3d'].cameraDist = 8;
     // Grid
     scene.add(new THREE.GridHelper(10, 10, 0x111111, 0x0a0a0a));
     scene.add(new THREE.AmbientLight(0x404040, 1));
@@ -997,10 +1004,12 @@ function init4DPayment() {
 
 // ===== Slide 7: AR/MR Room 3D =====
 function initARRoom() {
-  createScene('ar-3d', (scene, camera) => {
+  createScene('ar-3d', (scene, camera, renderer) => {
     camera.position.set(0, 2, 5);
+    scenes['ar-3d'].autoRotate = true;
+    scenes['ar-3d'].cameraDist = 5;
     scene.add(new THREE.AmbientLight(0x404040, 0.5));
-    scene.add(new THREE.DirectionalLight(0xffffff, 0.6).translateX(2).translateY(3).translateZ(2));
+    scene.add(new THREE.DirectionalLight(0xffffff, 0.6).position.set(2, 3, 2));
     // Room walls
     const wallMat = new THREE.MeshBasicMaterial({ color: 0x333333, side: THREE.DoubleSide });
     // Floor
@@ -1084,8 +1093,10 @@ function initARRoom() {
 
 // ===== Slide 14: Dashboard 3D =====
 function initDashboard() {
-  createScene('dash-3d', (scene, camera) => {
+  createScene('dash-3d', (scene, camera, renderer) => {
     camera.position.set(0, 3, 7);
+    scenes['dash-3d'].autoRotate = true;
+    scenes['dash-3d'].cameraDist = 7;
     scene.add(new THREE.GridHelper(8, 8, 0x111111, 0x0a0a0a));
     scene.add(new THREE.AmbientLight(0x404040, 1));
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
