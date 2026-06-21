@@ -237,6 +237,10 @@
       videos.forEach((v, i) => i === idx ? v.play() : v.pause());
     }
     tabs.forEach((tab, i) => tab.addEventListener('click', () => showSlide(i)));
+    // Replay buttons
+    document.getElementById('lidar-replay')?.addEventListener('click', () => { const v = document.querySelectorAll('video')[0]; v.currentTime = 0; v.play(); });
+    document.getElementById('payment-replay')?.addEventListener('click', () => { const v = document.querySelectorAll('video')[1]; v.currentTime = 0; v.play(); });
+    document.getElementById('ar-replay')?.addEventListener('click', () => { const v = document.querySelectorAll('video')[2]; v.currentTime = 0; v.play(); });
     showSlide(0);
     </script>
 </body>
