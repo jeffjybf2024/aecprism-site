@@ -8,62 +8,89 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #07070c;
+      background: #050508;
       color: #e0e0e0;
-      min-height: 100vh;
-      overflow: hidden;
-    }
-
-    /* Full-page background SVG */
-    .bg {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    /* Foreground content */
-    .container {
-      position: relative;
-      z-index: 1;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Full-page prism background */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.7;
+    }
+
+    /* Center content overlay */
+    .container {
+      position: relative;
+      z-index: 1;
       text-align: center;
       padding: 2rem;
     }
-    .logo {
+
+    /* Logo lockup */
+    .logo-wrap {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* Prism icon (small, above text) */
+    .logo-icon {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 0.8rem;
+      filter: drop-shadow(0 0 12px rgba(102,126,234,0.4));
+    }
+
+    .logo-text {
       font-size: clamp(2.5rem, 8vw, 5rem);
       font-weight: 700;
-      letter-spacing: 0.18em;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 35%, #f093fb 70%, #f5576c 100%);
+      letter-spacing: 0.2em;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 30%, #f093fb 60%, #f5576c 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      text-shadow: 0 0 80px rgba(102,126,234,0.15);
+      text-shadow: none;
+      line-height: 1;
     }
+
     .tagline {
-      margin-top: 0.8rem;
-      font-size: clamp(0.85rem, 2.2vw, 1.1rem);
-      color: #5a5a6e;
-      letter-spacing: 0.08em;
+      margin-top: 1rem;
+      font-size: clamp(0.8rem, 2vw, 1rem);
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.12em;
       font-weight: 300;
     }
+
     .divider {
-      width: 80px;
+      width: 60px;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(102,126,234,0.6), transparent);
-      margin: 1.8rem auto;
+      background: linear-gradient(90deg, transparent, rgba(102,126,234,0.5), transparent);
+      margin: 1.5rem auto;
     }
+
     .coming-soon {
-      font-size: 0.75rem;
-      color: #3a3a4a;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.2);
       text-transform: uppercase;
-      letter-spacing: 0.35em;
+      letter-spacing: 0.4em;
+    }
+
+    /* Subtle vignette to keep text readable */
+    .vignette {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: radial-gradient(ellipse at center, transparent 20%, rgba(5,5,8,0.7) 80%);
+      pointer-events: none;
     }
   </style>
 </head>
@@ -72,94 +99,122 @@
   <!-- Full-page prism refraction background -->
   <svg class="bg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
     <defs>
+      <linearGradient id="spectrum" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#ff4d4d"/>
+        <stop offset="17%" stop-color="#ff9f43"/>
+        <stop offset="33%" stop-color="#feca57"/>
+        <stop offset="50%" stop-color="#48dbfb"/>
+        <stop offset="67%" stop-color="#667eea"/>
+        <stop offset="83%" stop-color="#a55eea"/>
+        <stop offset="100%" stop-color="#f093fb"/>
+      </linearGradient>
       <linearGradient id="beam" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#fff" stop-opacity="0.85"/>
-        <stop offset="70%" stop-color="#fff" stop-opacity="0.1"/>
+        <stop offset="0%" stop-color="#fff" stop-opacity="0.8"/>
+        <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
       </linearGradient>
       <filter id="glow">
         <feGaussianBlur stdDeviation="6" result="blur"/>
         <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
-      <filter id="soft">
-        <feGaussianBlur stdDeviation="2"/>
+      <filter id="softGlow">
+        <feGaussianBlur stdDeviation="12" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="bigGlow">
+        <feGaussianBlur stdDeviation="20" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
     </defs>
 
-    <!-- White light beam entering from left edge -->
-    <line x1="-20" y1="540" x2="750" y2="540" stroke="url(#beam)" stroke-width="6" filter="url(#glow)"/>
-    <line x1="-20" y1="540" x2="750" y2="540" stroke="#fff" stroke-width="2" opacity="0.9"/>
+    <!-- Ambient background glow -->
+    <rect width="1920" height="1080" fill="#050508"/>
+    <ellipse cx="800" cy="540" rx="600" ry="400" fill="rgba(102,126,234,0.03)" filter="url(#bigGlow)"/>
+
+    <!-- White light beam from far left -->
+    <line x1="-100" y1="540" x2="800" y2="540" stroke="url(#beam)" stroke-width="8" filter="url(#glow)"/>
+    <line x1="-100" y1="540" x2="800" y2="540" stroke="#fff" stroke-width="3"/>
 
     <!-- Glass prism triangle -->
-    <polygon points="850,120 950,960 750,960"
-      fill="rgba(255,255,255,0.012)"
-      stroke="rgba(255,255,255,0.12)"
-      stroke-width="2"/>
-    <polygon points="850,120 950,960 750,960"
-      fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/>
+    <polygon points="860,280 960,800 760,800"
+      fill="rgba(255,255,255,0.015)"
+      stroke="rgba(255,255,255,0.12)" stroke-width="2" filter="url(#softGlow)"/>
+    <polygon points="860,280 960,800 760,800"
+      fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
 
-    <!-- Refracted spectrum rays fanning out to the right -->
-    <g filter="url(#glow)" opacity="0.45">
-      <!-- Red -->
-      <line x1="880" y1="580" x2="2100" y2="50"  stroke="#ff4d4d" stroke-width="8" opacity="0.6"/>
-      <!-- Orange -->
-      <line x1="890" y1="595" x2="2100" y2="170" stroke="#ff9f43" stroke-width="7" opacity="0.55"/>
-      <!-- Yellow -->
-      <line x1="900" y1="610" x2="2100" y2="290" stroke="#feca57" stroke-width="7" opacity="0.5"/>
-      <!-- Green -->
-      <line x1="910" y1="625" x2="2100" y2="420" stroke="#2ed573" stroke-width="7" opacity="0.5"/>
-      <!-- Cyan -->
-      <line x1="920" y1="640" x2="2100" y2="550" stroke="#48dbfb" stroke-width="7" opacity="0.5"/>
-      <!-- Blue -->
-      <line x1="930" y1="655" x2="2100" y2="690" stroke="#667eea" stroke-width="7" opacity="0.55"/>
-      <!-- Violet -->
-      <line x1="940" y1="670" x2="2100" y2="830" stroke="#a55eea" stroke-width="7" opacity="0.5"/>
-      <!-- Pink -->
-      <line x1="945" y1="685" x2="2100" y2="970" stroke="#f093fb" stroke-width="6" opacity="0.4"/>
+    <!-- Spectrum rays fanning out to the right -->
+    <g filter="url(#bigGlow)" opacity="0.35">
+      <line x1="880" y1="555" x2="2100" y2="200" stroke="#ff4d4d" stroke-width="6"/>
+      <line x1="880" y1="570" x2="2100" y2="300" stroke="#ff9f43" stroke-width="6"/>
+      <line x1="880" y1="585" x2="2100" y2="400" stroke="#feca57" stroke-width="6"/>
+      <line x1="880" y1="600" x2="2100" y2="500" stroke="#48dbfb" stroke-width="6"/>
+      <line x1="880" y1="615" x2="2100" y2="600" stroke="#667eea" stroke-width="6"/>
+      <line x1="880" y1="630" x2="2100" y2="700" stroke="#a55eea" stroke-width="6"/>
+      <line x1="880" y1="645" x2="2100" y2="800" stroke="#f093fb" stroke-width="6"/>
     </g>
 
-    <!-- Sharper core lines inside each ray -->
-    <g opacity="0.2">
-      <line x1="880" y1="580" x2="2100" y2="50"  stroke="#ff4d4d" stroke-width="1.5"/>
-      <line x1="890" y1="595" x2="2100" y2="170" stroke="#ff9f43" stroke-width="1.5"/>
-      <line x1="900" y1="610" x2="2100" y2="290" stroke="#feca57" stroke-width="1.5"/>
-      <line x1="910" y1="625" x2="2100" y2="420" stroke="#2ed573" stroke-width="1.5"/>
-      <line x1="920" y1="640" x2="2100" y2="550" stroke="#48dbfb" stroke-width="1.5"/>
-      <line x1="930" y1="655" x2="2100" y2="690" stroke="#667eea" stroke-width="1.5"/>
-      <line x1="940" y1="670" x2="2100" y2="830" stroke="#a55eea" stroke-width="1.5"/>
-      <line x1="945" y1="685" x2="2100" y2="970" stroke="#f093fb" stroke-width="1.5"/>
+    <!-- Sharper inner spectrum lines -->
+    <g opacity="0.25">
+      <line x1="880" y1="555" x2="2100" y2="200" stroke="#ff4d4d" stroke-width="2.5"/>
+      <line x1="880" y1="570" x2="2100" y2="300" stroke="#ff9f43" stroke-width="2.5"/>
+      <line x1="880" y1="585" x2="2100" y2="400" stroke="#feca57" stroke-width="2.5"/>
+      <line x1="880" y1="600" x2="2100" y2="500" stroke="#48dbfb" stroke-width="2.5"/>
+      <line x1="880" y1="615" x2="2100" y2="600" stroke="#667eea" stroke-width="2.5"/>
+      <line x1="880" y1="630" x2="2100" y2="700" stroke="#a55eea" stroke-width="2.5"/>
+      <line x1="880" y1="645" x2="2100" y2="800" stroke="#f093fb" stroke-width="2.5"/>
     </g>
 
-    <!-- Subtle building wireframe on the far left -->
-    <g opacity="0.035" stroke="#fff" stroke-width="0.6">
-      <!-- Building 1 -->
-      <rect x="100" y="700" width="60" height="280"/>
-      <line x1="100" y1="740" x2="160" y2="740"/>
-      <line x1="100" y1="780" x2="160" y2="780"/>
-      <line x1="100" y1="820" x2="160" y2="820"/>
-      <line x1="100" y1="860" x2="160" y2="860"/>
-      <line x1="100" y1="900" x2="160" y2="900"/>
-      <!-- Building 2 (taller) -->
-      <rect x="180" y="620" width="50" height="360"/>
-      <line x1="180" y1="660" x2="230" y2="660"/>
-      <line x1="180" y1="700" x2="230" y2="700"/>
-      <line x1="180" y1="740" x2="230" y2="740"/>
-      <line x1="180" y1="780" x2="230" y2="780"/>
-      <line x1="180" y1="820" x2="230" y2="820"/>
-      <line x1="180" y1="860" x2="230" y2="860"/>
-      <line x1="180" y1="900" x2="230" y2="900"/>
-      <!-- Building 3 -->
-      <rect x="250" y="680" width="70" height="300"/>
-      <line x1="250" y1="720" x2="320" y2="720"/>
-      <line x1="250" y1="760" x2="320" y2="760"/>
-      <line x1="250" y1="800" x2="320" y2="800"/>
-      <line x1="250" y1="840" x2="320" y2="840"/>
-      <line x1="250" y1="880" x2="320" y2="880"/>
+    <!-- Subtle building wireframes (architectural hint) -->
+    <g opacity="0.04" stroke="#fff" stroke-width="1">
+      <line x1="100" y1="750" x2="100" y2="900"/>
+      <line x1="150" y1="720" x2="150" y2="900"/>
+      <line x1="100" y1="750" x2="150" y2="720"/>
+      <line x1="150" y1="720" x2="200" y2="760"/>
+      <line x1="200" y1="760" x2="200" y2="900"/>
+      <line x1="150" y1="780" x2="200" y2="760"/>
+
+      <line x1="250" y1="700" x2="250" y2="900"/>
+      <line x1="310" y1="670" x2="310" y2="900"/>
+      <line x1="250" y1="700" x2="310" y2="670"/>
+      <line x1="310" y1="670" x2="370" y2="720"/>
+      <line x1="370" y1="720" x2="370" y2="900"/>
+      <line x1="310" y1="750" x2="370" y2="720"/>
+
+      <line x1="1700" y1="680" x2="1700" y2="900"/>
+      <line x1="1760" y1="650" x2="1760" y2="900"/>
+      <line x1="1700" y1="680" x2="1760" y2="650"/>
+      <line x1="1760" y1="650" x2="1820" y2="700"/>
+      <line x1="1820" y1="700" x2="1820" y2="900"/>
     </g>
   </svg>
 
-  <!-- Centered text content -->
+  <!-- Vignette overlay for readability -->
+  <div class="vignette"></div>
+
+  <!-- Center content -->
   <div class="container">
-    <div class="logo">AEC PRISM</div>
+    <div class="logo-wrap">
+      <!-- Logo icon: small prism -->
+      <svg class="logo-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="iconGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#667eea"/>
+            <stop offset="50%" stop-color="#a55eea"/>
+            <stop offset="100%" stop-color="#f093fb"/>
+          </linearGradient>
+        </defs>
+        <!-- Prism triangle -->
+        <polygon points="32,6 56,54 8,54" fill="none" stroke="url(#iconGrad)" stroke-width="2"/>
+        <!-- White beam entering -->
+        <line x1="0" y1="36" x2="30" y2="36" stroke="#fff" stroke-width="1.5" opacity="0.6"/>
+        <!-- Spectrum exit -->
+        <line x1="34" y1="38" x2="62" y2="22" stroke="#ff4d4d" stroke-width="1.5" opacity="0.6"/>
+        <line x1="34" y1="42" x2="62" y2="32" stroke="#feca57" stroke-width="1.5" opacity="0.6"/>
+        <line x1="34" y1="46" x2="62" y2="42" stroke="#667eea" stroke-width="1.5" opacity="0.6"/>
+        <line x1="34" y1="50" x2="62" y2="52" stroke="#f093fb" stroke-width="1.5" opacity="0.6"/>
+      </svg>
+
+      <div class="logo-text">AEC PRISM</div>
+    </div>
     <div class="tagline">Where Building Data Refracts Into Decisions</div>
     <div class="divider"></div>
     <div class="coming-soon">Coming Soon</div>
