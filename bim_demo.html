@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>學府案 · 真實 BIM 模型展示</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
+  :root { --bg: #0a0a0f; --card: #16161f; --orange: #f0883e; --cyan: #2ec4b6; --gold: #e2b04a; --purple: #a78bfa; --white: #e8e8ec; --gray: #888; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--white); min-height: 100vh; }
+
+  .tabs {
+    display: flex; gap: 4px; padding: 12px 16px; background: #111118;
+    border-bottom: 1px solid rgba(255,255,255,0.06); position: sticky; top: 0; z-index: 100;
+    justify-content: center;
+  }
+  .tab {
+    padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600;
+    cursor: pointer; border: 1px solid transparent; transition: all .3s; color: var(--gray);
+    letter-spacing: 0.5px;
+  }
+  .tab:hover { color: var(--white); background: rgba(255,255,255,0.05); }
+  .tab.active { color: var(--white); border-color: var(--orange); background: rgba(240,136,62,0.15); }
+
+  .viewer-container {
+    width: 100%; height: calc(100vh - 60px); position: relative;
+  }
+  .viewer-container iframe {
+    width: 100%; height: 100%; border: none;
+  }
+
+  .overlay-panel {
+    position: absolute; top: 16px; left: 16px; z-index: 50;
+    background: rgba(10,10,15,0.92); backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+    padding: 20px 24px; max-width: 320px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .overlay-panel h2 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .overlay-panel p { font-size: 13px; line-height: 1.6; color: var(--gray); }
+  .overlay-panel .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px;
+    font-weight: 600; letter-spacing: 0.5px; margin-bottom: 8px;
+  }
+  .badge-o { background: rgba(240,136,62,0.2); color: var(--orange); border: 1px solid rgba(240,136,62,0.3); }
+  .badge-c { background: rgba(46,196,182,0.2); color: var(--cyan); border: 1px solid rgba(46,196,182,0.3); }
+  .badge-p { background: rgba(167,139,250,0.2); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+
+  .status-bar {
+    position: absolute; bottom: 16px; left: 16px; z-index: 50;
+    background: rgba(10,10,15,0.92); backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+    padding: 10px 16px; display: flex; gap: 16px; align-items: center;
+  }
+  .status-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--gray); }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-green { background: #2ec4b6; }
+  .dot-orange { background: #f0883e; }
+
+  .slide { display: none; }
+  .slide.active { display: block; }
+
+  @media (max-width: 768px) {
+    .overlay-panel { max-width: 260px; padding: 14px 16px; }
+    .overlay-panel h2 { font-size: 14px; }
+    .overlay-panel p { font-size: 12px; }
+    .tab { padding: 8px 16px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="tabs">
+  <div class="tab active" data-slide="0">📡 LiDAR 施工查驗</div>
+  <div class="tab" data-slide="1">💰 4D 付款進度</div>
+  <div class="tab" data-slide="2">🥽 AR/MR 交屋驗收</div>
+</div>
+
+<!-- Slide 0: LiDAR -->
+<div class="slide active" data-slide="0">
+  <div class="viewer-container">
+    <iframe id="viewer-0" src="http://viewer.ctc.com.tw/viewer.html?path=dxbim/5e8e349b28bc46e594c27b8e471fa5f2/f0c8eae8ec724540b3bcae3b21507958/a15f9d4ba2334a569b785898fe1c2781.rvt&props=1&language=zh-TW" allowfullscreen></iframe>
+    <div class="overlay-panel">
+      <span class="badge badge-o">業界創舉 ①</span>
+      <h2>LiDAR 光打施工查驗</h2>
+      <p>左側為真實 BIM 模型，可旋轉、放大、檢視構件屬性。<br><br>🔴 <strong>概念展示：</strong>現場 LiDAR 掃瞄產生點雲，AI 自動與 BIM 模型比對，偏差 &gt;2cm 自動標示。</p>
+    </div>
+    <div class="status-bar">
+      <div class="status-item"><span class="status-dot dot-green"></span> BIM 模型載入中</div>
+      <div class="status-item"><span class="status-dot dot-orange"></span> 點雲比對待觸發</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 1: 4D Payment -->
+<div class="slide" data-slide="1">
+  <div class="viewer-container">
+    <iframe id="viewer-1" src="" allowfullscreen></iframe>
+    <div class="overlay-panel">
+      <span class="badge badge-c">業界創舉 ②</span>
+      <h2>4D 付款進度比對</h2>
+      <p>🔗 BIM 4D 模擬 + 付款里程碑綁定。<br><br>📱 消費者可在 App 看到「實際進度 vs 付款進度」，每一塊錢都對應模型驗證的真實進度。</p>
+    </div>
+    <div class="status-bar">
+      <div class="status-item"><span class="status-dot dot-green"></span> 4D 進度: 62%</div>
+      <div class="status-item"><span class="status-dot dot-green"></span> 付款進度: 60%</div>
+      <div class="status-item" style="color: var(--cyan);">✓ 同步</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 2: AR/MR -->
+<div class="slide" data-slide="2">
+  <div class="viewer-container">
+    <iframe id="viewer-2" src="" allowfullscreen></iframe>
+    <div class="overlay-panel">
+      <span class="badge badge-p">業界創舉 ③</span>
+      <h2>AR / MR 交屋驗收</h2>
+      <p>🥽 消費者戴上 AR 眼鏡，BIM 模型疊加在真實空間上。<br><br>📏 管線位置、插座高度、牆面平整 → 毫米級自動比對<br>🔴 偏差超容許值 → 即時紅色標記</p>
+    </div>
+    <div class="status-bar">
+      <div class="status-item"><span class="status-dot dot-green"></span> AR 疊加模式</div>
+      <div class="status-item"><span class="status-dot dot-green"></span> 4/4 檢查項目通過</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const tabs = document.querySelectorAll('.tab');
+const slides = document.querySelectorAll('.slide');
+const viewerBase = 'http://viewer.ctc.com.tw/viewer.html?path=dxbim/5e8e349b28bc46e594c27b8e471fa5f2/f0c8eae8ec724540b3bcae3b21507958/a15f9d4ba2334a569b785898fe1c2781.rvt&props=1&language=zh-TW';
+
+tabs.forEach((tab, i) => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    slides.forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    slides[i].classList.add('active');
+    // Load viewer on first visit
+    const iframe = document.getElementById(`viewer-${i}`);
+    if (!iframe.src || iframe.src === '' || iframe.src === window.location.href) {
+      iframe.src = viewerBase;
+    }
+  });
+});
+</script>
+
+</body>
+</html>
