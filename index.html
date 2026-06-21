@@ -11,9 +11,10 @@
   <meta property="og:description" content="BIM Model → Prism → Decisions. Turning one building model into a spectrum of applications.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://aecprism.com">
-  <meta property="og:image" content="https://aecprism.com/og-image.svg">
+  <meta property="og:image" content="https://aecprism.com/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
 
   <meta name="theme-color" content="#050508">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon points='16,2 22,28 10,28' fill='none' stroke='%23667eea' stroke-width='1.5'/%3E%3Cline x1='0' y1='16' x2='11' y2='16' stroke='white' stroke-width='1' opacity='0.5'/%3E%3C/svg%3E">
@@ -317,12 +318,12 @@
     .formula {
       margin-top: 1.2rem;
       font-size: clamp(0.7rem, 1.6vw, 0.85rem);
-      color: #3a3a4a;
+      color: #5a5a6a;
       letter-spacing: 0.08em;
       font-weight: 300;
     }
     .formula span {
-      color: #555;
+      color: #7a7a8a;
     }
     .divider {
       width: 80px;
@@ -332,7 +333,7 @@
     }
     .coming-soon {
       font-size: 0.75rem;
-      color: #444;
+      color: #6a6a7a;
       text-transform: uppercase;
       letter-spacing: 0.35em;
     }
@@ -354,10 +355,17 @@
     .waitlist:focus-within {
       border-color: rgba(102,126,234,0.3);
     }
+    .waitlist-label {
+      display: block;
+      font-size: 0.65rem;
+      color: #5a5a6a;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+    }
     .waitlist input {
       background: transparent;
       border: none;
-      color: #888;
+      color: #aaa;
       font-size: 0.8rem;
       font-family: inherit;
       outline: none;
@@ -365,12 +373,12 @@
       letter-spacing: 0.04em;
     }
     .waitlist input::placeholder {
-      color: #333;
+      color: #555;
     }
     .waitlist button {
       background: rgba(102,126,234,0.15);
       border: none;
-      color: #667eea;
+      color: #9eaaff;
       font-size: 0.75rem;
       font-family: inherit;
       padding: 0.5rem 1.2rem;
@@ -382,17 +390,26 @@
     }
     .waitlist button:hover {
       background: rgba(102,126,234,0.25);
-      color: #8899ff;
+      color: #b8c4ff;
     }
     .waitlist-msg {
       margin-top: 0.6rem;
       font-size: 0.7rem;
-      color: #1a3a1a;
+      color: #5a8a5a;
       min-height: 1rem;
       transition: color 0.5s ease;
     }
     .waitlist-msg.success {
-      color: #2a5a2a;
+      color: #6aaa6a;
+    }
+    .waitlist-privacy {
+      margin-top: 0.5rem;
+      font-size: 0.58rem;
+      color: #3a3a44;
+      letter-spacing: 0.04em;
+    }
+    .waitlist-privacy:hover {
+      color: #5a5a64;
     }
 
     /* === BIM MATRIX TEASER === */
@@ -404,13 +421,13 @@
       text-align: center;
       z-index: 4;
       font-size: 0.65rem;
-      color: #1a1a28;
+      color: #2a2a3a;
       letter-spacing: 0.12em;
       font-weight: 300;
       transition: color 1s ease;
     }
     .matrix-teaser:hover {
-      color: #2a2a3a;
+      color: #4a4a5a;
     }
 
     /* === LANGUAGE TOGGLE === */
@@ -424,7 +441,7 @@
     }
     .lang-toggle span {
       font-size: 0.7rem;
-      color: #333;
+      color: #555;
       cursor: pointer;
       letter-spacing: 0.06em;
       transition: color 0.3s ease;
@@ -435,6 +452,21 @@
     }
     .lang-toggle span:hover {
       color: #8899ff;
+    }
+    /* === MOBILE: disable parallax, adjust layout === */
+    @media (hover: none) and (pointer: coarse) {
+      body { --mx: 0; --my: 0; }
+      .beam-white { transform: rotate(2deg); }
+      .prism-glass { transform: none; }
+      .spectrum { transform: none; }
+    }
+    @media (max-width: 480px) {
+      .container { padding: 1.5rem 1rem 4rem; }
+      .waitlist { flex-direction: column; gap: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 12px; }
+      .waitlist input { width: 100%; text-align: center; }
+      .waitlist button { width: 100%; }
+      .matrix-teaser { bottom: 1rem; font-size: 0.55rem; }
+      .lang-toggle { top: 0.75rem; right: 0.75rem; }
     }
   </style>
 </head>
@@ -497,11 +529,13 @@
     <div class="coming-soon">Coming Soon</div>
 
     <!-- Email Waitlist -->
+    <div class="waitlist-label">Be the first to know when we launch.</div>
     <div class="waitlist" id="waitlist">
-      <input type="email" placeholder="Your email" id="emailInput">
+      <input type="email" placeholder="Your email" id="emailInput" aria-label="Email address">
       <button id="subscribeBtn">Stay Tuned</button>
     </div>
     <div class="waitlist-msg" id="waitlistMsg"></div>
+    <div class="waitlist-privacy">We'll only use your email to announce our launch. No spam, ever.</div>
   </div>
 
   <div class="matrix-teaser" data-i18n="matrixTeaser">Powered by insights from 100+ BIM use cases. Full spectrum revealed soon.</div>
