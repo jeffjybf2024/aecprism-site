@@ -290,6 +290,29 @@
       50% { filter: blur(9px) hue-rotate(-10deg); }
       75% { filter: blur(11px) hue-rotate(5deg); }
     }
+    /* Fine spectrum rays (hundreds of thin lines) */
+    .spectrum-lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .spectrum-line {
+      position: absolute;
+      left: 0;
+      top: 53%;
+      height: 1px;
+      transform-origin: left center;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+    .spectrum-line.visible {
+      opacity: var(--sl-opacity, 0.4);
+    }
+
     @keyframes grainShift {
       0% { transform: translate(0, 0); }
       33% { transform: translate(-1px, 1px); }
@@ -586,6 +609,7 @@
     <div class="spectrum">
       <div class="spectrum-fan"></div>
       <div class="spectrum-fan-sharp"></div>
+      <div class="spectrum-lines" id="spectrumLines"></div>
       <div class="spectrum-grain"></div>
     </div>
     <div class="bim-labels" id="bimLabels"></div>
@@ -658,6 +682,51 @@
         requestAnimationFrame(lerp);
       }
       lerp();
+    })();
+
+    /* ---- SPECTRUM THIN RAYS: hundreds of lines in 7 colors ---- */
+    (function() {
+      var container = document.getElementById('spectrumLines');
+      var colors = [
+        '#ff4d4d', '#ff9f43', '#feca57',
+        '#48dbfb', '#667eea', '#a55eea', '#f093fb'
+      ];
+      var linesPerColor = 16; // 112 total lines
+      var allLines = [];
+
+      colors.forEach(function(color, ci) {
+        var baseAngle = -35 + ci * 10.5; // Spread across spectrum angular range
+        for (var i = 0; i < linesPerColor; i++) {
+          var line = document.createElement('div');
+          line.className = 'spectrum-line';
+          var angle = baseAngle + (i - (linesPerColor - 1) / 2) * 0.6;
+          var length = 40 + Math.random() * 55; // vw, vary each line
+          var opacity = 0.15 + Math.random() * 0.45;
+          line.style.width = length + 'vw';
+          line.style.transform = 'rotate(' + angle.toFixed(1) + 'deg)';
+          line.style.background = 'linear-gradient(90deg, ' + color + ' 0%, rgba(255,255,255,0.01) 100%)';
+          line.style.setProperty('--sl-opacity', opacity.toFixed(2));
+          line.style.boxShadow = '0 0 ' + (2 + Math.random() * 6) + 'px ' + (1 + Math.random() * 2) + 'px ' + color.replace(')', ',0.08)').replace('rgb', 'rgba');
+          container.appendChild(line);
+          allLines.push(line);
+        }
+      });
+
+      // Animate lines: shimmer + slight angle wobble
+      var time = 0;
+      function animateLines() {
+        time += 0.02;
+        allLines.forEach(function(line, i) {
+          var wobble = Math.sin(time * 0.8 + i * 0.3) * 0.5;
+          var flicker = 0.5 + 0.5 * Math.sin(time * 1.3 + i * 0.7);
+          line.style.opacity = parseFloat(line.style.getPropertyValue('--sl-opacity')) * (0.6 + flicker * 0.4);
+          if (line.classList.contains('visible') || true) { // All lines visible by default
+            line.classList.add('visible');
+          }
+        });
+        requestAnimationFrame(animateLines);
+      }
+      animateLines();
     })();
 
     /* ---- EMAIL WAITLIST (localStorage demo) ---- */
