@@ -758,21 +758,11 @@ document.addEventListener('keydown',e=>{
 </script>
 
 <!-- Three.js CDN -->
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-  }
-}
-</script>
-<script type="module">
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
+<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+<script src="https://unpkg.com/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+<script>
 // ===== Scene managers =====
 const scenes = {};
-let activeScene = null;
 
 function createScene(containerId, setupFn) {
   if (scenes[containerId]) { disposeScene(scenes[containerId]); }
@@ -788,18 +778,17 @@ function createScene(containerId, setupFn) {
   renderer.setSize(w, h);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   container.appendChild(renderer.domElement);
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
   controls.target.set(0, 0, 0);
   setupFn(scene, camera, renderer, controls);
-  scenes[containerId] = { scene, camera, renderer, controls, container, animate: true };
+  scenes[containerId] = { scene, camera, renderer, controls, container };
   return scenes[containerId];
 }
 
 function disposeScene(s) {
   if (!s) return;
-  s.animate = false;
   s.renderer.dispose();
   s.container.querySelectorAll('canvas').forEach(c => c.remove());
   delete scenes[s.container.id];
@@ -809,7 +798,7 @@ function animateLoop() {
   requestAnimationFrame(animateLoop);
   for (const key in scenes) {
     const s = scenes[key];
-    if (!s || !s.animate) continue;
+    if (!s) continue;
     s.controls.update();
     if (s.renderer && s.scene && s.camera) s.renderer.render(s.scene, s.camera);
   }
