@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>業界創舉 · 模擬動畫</title>
+  <title>業界創舉 · 模擬動畫 | AEC PRISM</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -12,19 +12,15 @@
       color: #e0e0e0;
       overflow: hidden;
     }
-    
-    /* Navigation */
     .nav {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       display: flex;
       justify-content: center;
       gap: 12px;
       padding: 16px;
       z-index: 100;
-      background: linear-gradient(180deg, rgba(5,5,8,0.9) 0%, transparent 100%);
+      background: linear-gradient(180deg, rgba(5,5,8,0.95) 0%, transparent 100%);
     }
     .nav-btn {
       padding: 8px 20px;
@@ -41,93 +37,43 @@
       color: #fff;
       background: rgba(255,255,255,0.1);
     }
-    
-    /* Slides container */
     .slides { position: relative; height: 100vh; }
     .slide {
       position: absolute;
       inset: 0;
       height: 100vh;
       opacity: 0;
-      transition: opacity 0.8s;
+      transition: opacity 0.6s;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 80px 20px 20px;
+      pointer-events: none;
     }
-    .slide.active { opacity: 1; }
-    
-    /* Title */
-    .slide-title {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-    .slide-title h1 {
-      font-size: clamp(24px, 5vw, 36px);
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .slide-title p {
-      font-size: 16px;
-      color: #888;
-    }
-    
-    /* Canvas container */
-    .video-wrap {
+    .slide.active { opacity: 1; pointer-events: auto; }
+    .slide-title { text-align: center; margin-bottom: 20px; }
+    .slide-title h1 { font-size: clamp(22px, 4vw, 32px); font-weight: 700; margin-bottom: 6px; }
+    .slide-title p { font-size: 15px; color: #888; }
+    .canvas-wrap {
       position: relative;
       width: min(900px, 95vw);
       height: min(506px, 53vw);
-      aspect-ratio: 16/9;
       background: #0a0a12;
       border-radius: 12px;
       border: 1px solid rgba(255,255,255,0.1);
       overflow: hidden;
     }
-    .video-wrap video {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-    
-    /* Legend */
+    canvas { width: 100%; height: 100%; display: block; }
     .legend {
-      margin-top: 16px;
+      margin-top: 14px;
       display: flex;
       gap: 24px;
       font-size: 13px;
       color: #888;
     }
     .legend-item { display: flex; align-items: center; gap: 8px; }
-    .legend-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-    }
-    
-    /* Controls */
-    .controls {
-      margin-top: 16px;
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-    .ctrl-btn {
-      padding: 6px 16px;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: transparent;
-      color: #ccc;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-    .ctrl-btn:hover { border-color: #fff; color: #fff; }
-    
-    /* Colors per slide */
-    :root { --accent: #f0883e; }
-    .slide:nth-child(2) { --accent: #667eea; }
-    .slide:nth-child(3) { --accent: #a55eea; }
-    
-    /* Progress bar */
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
     .progress {
       position: fixed;
       bottom: 20px;
@@ -142,106 +88,567 @@
       background: rgba(255,255,255,0.2);
       transition: all 0.3s;
     }
-    .progress-dot.active {
-      background: #fff;
-      transform: scale(1.3);
-    }
+    .progress-dot.active { background: #fff; transform: scale(1.3); }
+    :root { --accent: #f0883e; }
   </style>
 </head>
 <body>
   <div class="nav">
     <button class="nav-btn active" data-slide="0">① LiDAR 光打施工查驗</button>
-    <button class="nav-btn" data-slide="1">② 4D 付款進度比對</button>
+    <button class="nav-btn" data-slide="1">② 4D 付款進度對照</button>
     <button class="nav-btn" data-slide="2">③ AR/MR 交屋驗收</button>
   </div>
-  
+
   <div class="slides">
     <!-- Slide 1: LiDAR -->
     <div class="slide active">
       <div class="slide-title">
         <h1>📡 LiDAR 光打施工查驗</h1>
-        <p>定期掃瞄 → 點雲生成 → BIM 自動比對</p>
+        <p>現場掃瞄 → 點雲生成 → BIM 自動比對</p>
       </div>
-      <div class="video-wrap">
-        <video autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
-          <source src="videos/lidar_inspection.mp4" type="video/mp4">
-        </video>
+      <div class="canvas-wrap">
+        <canvas id="c-lidar" width="900" height="506"></canvas>
       </div>
       <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#f0883e"></div>LiDAR 掃瞄光束</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f0883e"></div>LiDAR 掃描光束</div>
         <div class="legend-item"><div class="legend-dot" style="background:#667eea"></div>BIM 模型</div>
         <div class="legend-item"><div class="legend-dot" style="background:#ff4d4d"></div>偏差警示</div>
       </div>
-      <div class="controls">
-        <button class="ctrl-btn" id="lidar-replay">重新播放</button>
-      </div>
     </div>
-    
+
     <!-- Slide 2: 4D Payment -->
     <div class="slide">
       <div class="slide-title">
-        <h1>💰 4D 付款進度比對</h1>
-        <p>BIM 模型驗證進度 → 綁定消費者繳款</p>
+        <h1>💰 4D 付款進度對照</h1>
+        <p>SBMS 儀表板 · BIM 驗證進度 → 綁定消費者繳款</p>
       </div>
-      <div class="video-wrap">
-        <video autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
-          <source src="videos/payment_progress.mp4" type="video/mp4">
-        </video>
+      <div class="canvas-wrap">
+        <canvas id="c-payment" width="900" height="506"></canvas>
       </div>
       <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#667eea"></div>已完成</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#333"></div>未完成</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#4caf50"></div>已驗證付款</div>
-      </div>
-      <div class="controls">
-        <button class="ctrl-btn" id="payment-replay">重新播放</button>
+        <div class="legend-item"><div class="legend-dot" style="background:#667eea"></div>BIM 進度</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2ec4b6"></div>已驗證付款</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f0883e"></div>當前里程碑</div>
       </div>
     </div>
-    
+
     <!-- Slide 3: AR Handover -->
     <div class="slide">
       <div class="slide-title">
         <h1>🥽 AR/MR 交屋驗收</h1>
         <p>BIM 疊加真實空間 → 毫米級自動比對</p>
       </div>
-      <div class="video-wrap">
-        <video autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
-          <source src="videos/ar_handover.mp4" type="video/mp4">
-        </video>
+      <div class="canvas-wrap">
+        <canvas id="c-ar" width="900" height="506"></canvas>
       </div>
       <div class="legend">
         <div class="legend-item"><div class="legend-dot" style="background:#4caf50"></div>合格</div>
         <div class="legend-item"><div class="legend-dot" style="background:#ff4d4d"></div>偏差警示</div>
         <div class="legend-item"><div class="legend-dot" style="background:rgba(102,126,234,0.5)"></div>BIM 疊加層</div>
       </div>
-      <div class="controls">
-        <button class="ctrl-btn" id="ar-replay">重新播放</button>
-      </div>
     </div>
   </div>
-  
+
   <div class="progress">
     <div class="progress-dot active"></div>
     <div class="progress-dot"></div>
     <div class="progress-dot"></div>
   </div>
-  
+
   <script>
     const slides = document.querySelectorAll('.slide');
-    const tabs = document.querySelectorAll('.tab');
+    const navBtns = document.querySelectorAll('.nav-btn');
+    const dots = document.querySelectorAll('.progress-dot');
+    let animIds = {};
+
+    function stopAll() {
+      Object.values(animIds).forEach(id => cancelAnimationFrame(id));
+      animIds = {};
+    }
+    function reg(name, id) { animIds[name] = id; }
+
     function showSlide(idx) {
       slides.forEach((s, i) => s.classList.toggle('active', i === idx));
-      tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
-      // Play video for active slide
-      const videos = document.querySelectorAll('video');
-      videos.forEach((v, i) => i === idx ? v.play() : v.pause());
+      navBtns.forEach((b, i) => b.classList.toggle('active', i === idx));
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      stopAll();
+      if (idx === 0) initLidar();
+      if (idx === 1) initPayment();
+      if (idx === 2) initAR();
     }
-    tabs.forEach((tab, i) => tab.addEventListener('click', () => showSlide(i)));
-    // Replay buttons
-    document.getElementById('lidar-replay')?.addEventListener('click', () => { const v = document.querySelectorAll('video')[0]; v.currentTime = 0; v.play(); });
-    document.getElementById('payment-replay')?.addEventListener('click', () => { const v = document.querySelectorAll('video')[1]; v.currentTime = 0; v.play(); });
-    document.getElementById('ar-replay')?.addEventListener('click', () => { const v = document.querySelectorAll('video')[2]; v.currentTime = 0; v.play(); });
+
+    navBtns.forEach((b, i) => b.addEventListener('click', () => showSlide(i)));
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') showSlide((current + 1) % 3);
+      if (e.key === 'ArrowLeft') showSlide((current + 2) % 3);
+    });
+
+    let current = 0;
+    const _origShow = showSlide;
+    window.showSlide = function(n) { current = n; _origShow(n); };
+
+    // ===== LiDAR Animation =====
+    function initLidar() {
+      const c = document.getElementById('c-lidar');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      let t = 0;
+
+      const elements = [
+        { type: 'duct', x: 0.10, y: 0.15, w: 0.75, h: 0.08, color: '#22c55e' },
+        { type: 'duct', x: 0.30, y: 0.35, w: 0.55, h: 0.06, color: '#22c55e' },
+        { type: 'pipe', x: 0.08, y: 0.52, w: 0.70, h: 0.025, color: '#ef4444' },
+        { type: 'pipe', x: 0.62, y: 0.20, w: 0.025, h: 0.52, color: '#3b82f6' },
+        { type: 'equip', x: 0.70, y: 0.10, w: 0.15, h: 0.15, color: '#a855f7' },
+      ];
+
+      const points = [];
+      for (let i = 0; i < 2000; i++) {
+        const el = elements[Math.floor(Math.random() * elements.length)];
+        const clustered = Math.random() > 0.4;
+        points.push({
+          x: clustered ? (el.x + Math.random() * el.w + (Math.random()-0.5)*0.05) * W : Math.random() * W,
+          y: clustered ? (el.y + Math.random() * el.h + (Math.random()-0.5)*0.05) * H : Math.random() * H,
+          size: Math.random() * 2 + 0.5,
+          base: Math.random() * 0.5 + 0.15,
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+
+      function draw() {
+        ctx.fillStyle = '#08080a';
+        ctx.fillRect(0, 0, W, H);
+
+        // Split line
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(W/2, 20); ctx.lineTo(W/2, H-20); ctx.stroke();
+
+        // Point cloud side
+        const scannerX = W * 0.25;
+        const scannerY = H * 0.85;
+        const beamAngle = (t * 0.03) % (Math.PI * 2);
+        const beamLen = W * 0.6;
+        const endX = scannerX + Math.cos(beamAngle) * beamLen;
+        const endY = scannerY + Math.sin(beamAngle) * beamLen;
+
+        points.forEach(p => {
+          const dx = p.x - scannerX, dy = p.y - scannerY;
+          const pa = Math.atan2(dy, dx);
+          const diff = Math.abs(((pa - beamAngle + Math.PI) % (Math.PI * 2)) - Math.PI);
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          const inBeam = diff < 0.22 && dist < beamLen * 0.85;
+          const flicker = 0.75 + Math.sin(t*0.08 + p.phase)*0.15;
+          const alpha = inBeam ? Math.min(1, p.base * flicker * 2.5 + 0.3) : p.base * flicker;
+          ctx.fillStyle = inBeam ? `rgba(255,255,255,${alpha})` : `rgba(180,180,180,${alpha})`;
+          ctx.fillRect(p.x, p.y, p.size, p.size);
+        });
+
+        const grad = ctx.createLinearGradient(scannerX, scannerY, endX, endY);
+        grad.addColorStop(0, 'rgba(240,136,62,0.5)');
+        grad.addColorStop(0.5, 'rgba(240,136,62,0.15)');
+        grad.addColorStop(1, 'rgba(240,136,62,0)');
+        ctx.strokeStyle = grad; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.moveTo(scannerX, scannerY); ctx.lineTo(endX, endY); ctx.stroke();
+
+        ctx.fillStyle = '#f0883e';
+        ctx.beginPath(); ctx.arc(scannerX, scannerY, 7, 0, Math.PI*2); ctx.fill();
+        ctx.strokeStyle = '#f0883e'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(scannerX, scannerY, 14, 0, Math.PI*2); ctx.stroke();
+
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.fillText('現場 LiDAR 掃描 · 點雲', 30, 40);
+
+        // BIM side
+        ctx.strokeStyle = '#151515'; ctx.lineWidth = 1;
+        for (let x = W/2 + 20; x < W; x += 50) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+        for (let y = 0; y < H; y += 50) { ctx.beginPath(); ctx.moveTo(W/2, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+        elements.forEach(el => {
+          const ex = W/2 + el.x * W/2, ey = el.y * H, ew = el.w * W/2, eh = el.h * H;
+          ctx.shadowColor = el.color; ctx.shadowBlur = 12;
+          if (el.type === 'duct') {
+            ctx.fillStyle = el.color + '30';
+            ctx.fillRect(ex, ey, ew, eh);
+            ctx.strokeStyle = el.color; ctx.lineWidth = 2;
+            ctx.strokeRect(ex, ey, ew, eh);
+          } else if (el.type === 'pipe') {
+            ctx.strokeStyle = el.color; ctx.lineWidth = 5; ctx.lineCap = 'round';
+            ctx.beginPath(); ctx.moveTo(ex, ey + eh/2); ctx.lineTo(ex + ew, ey + eh/2); ctx.stroke();
+            ctx.lineCap = 'butt';
+          } else {
+            ctx.fillStyle = el.color + '25';
+            ctx.fillRect(ex, ey, ew, eh);
+            ctx.strokeStyle = el.color; ctx.lineWidth = 2;
+            ctx.strokeRect(ex, ey, ew, eh);
+          }
+          ctx.shadowBlur = 0;
+        });
+
+        const flash = (Math.sin(t * 0.12) + 1) / 2;
+        const dx = W/2 + W * 0.18, dy = H * 0.12, dw = W * 0.12, dh = H * 0.15;
+        ctx.strokeStyle = `rgba(240,136,62,${0.5 + flash * 0.5})`;
+        ctx.lineWidth = 3; ctx.setLineDash([6, 6]);
+        ctx.strokeRect(dx, dy, dw, dh); ctx.setLineDash([]);
+
+        ctx.font = 'bold 16px sans-serif';
+        const tw = ctx.measureText('+2.3cm 偏差').width;
+        ctx.fillStyle = 'rgba(240,136,62,0.9)';
+        ctx.fillRect(dx + 6, dy - 22, tw + 10, 20);
+        ctx.fillStyle = '#000';
+        ctx.fillText('+2.3cm 偏差', dx + 10, dy - 7);
+
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.fillText('BIM 設計模型 · AI 自動比對', W/2 + 30, 40);
+
+        t++;
+        reg('lidar', requestAnimationFrame(draw));
+      }
+      draw();
+    }
+
+    // ===== 4D Payment Animation =====
+    function initPayment() {
+      const c = document.getElementById('c-payment');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      let t = 0;
+
+      const milestones = [
+        { name: '開工', date: '2026/01', payment: '訂金 5%', amount: '40萬', gantt: 0.10, color: '#f0883e' },
+        { name: '基礎完成', date: '2026/03', payment: '10%', amount: '80萬', gantt: 0.22, color: '#f0883e' },
+        { name: '結構封頂', date: '2026/06', payment: '20%', amount: '160萬', gantt: 0.40, color: '#feca57' },
+        { name: '外牆完成', date: '2026/09', payment: '20%', amount: '160萬', gantt: 0.58, color: '#feca57' },
+        { name: '室內裝修', date: '2026/12', payment: '25%', amount: '200萬', gantt: 0.75, color: '#2ec4b6' },
+        { name: '交屋驗收', date: '2027/02', payment: '20%', amount: '160萬', gantt: 0.92, color: '#667eea' },
+      ];
+
+      function roundRect(x, y, w, h, r, fill, stroke) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+        if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+        if (stroke) { ctx.strokeStyle = stroke; ctx.stroke(); }
+      }
+
+      function donut(cx, cy, r, p, color, label, val) {
+        ctx.strokeStyle = '#222'; ctx.lineWidth = 12;
+        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke();
+        ctx.strokeStyle = color; ctx.lineWidth = 12; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.arc(cx, cy, r, -Math.PI/2, -Math.PI/2 + Math.PI*2 * p); ctx.stroke();
+        ctx.lineCap = 'butt';
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(val, cx, cy + 5);
+        ctx.fillStyle = '#888'; ctx.font = '10px sans-serif';
+        ctx.fillText(label, cx, cy + r + 18);
+        ctx.textAlign = 'left';
+      }
+
+      function draw() {
+        ctx.fillStyle = '#08080a'; ctx.fillRect(0, 0, W, H);
+        const cycle = 420;
+        const progress = (t % cycle) / cycle;
+        const currentIdx = Math.min(milestones.length - 1, Math.floor(progress * milestones.length));
+
+        // Sidebar
+        const sbW = 140;
+        ctx.fillStyle = '#111117'; ctx.fillRect(0, 0, sbW, H);
+        ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.beginPath(); ctx.moveTo(sbW, 0); ctx.lineTo(sbW, H); ctx.stroke();
+        ctx.fillStyle = '#888'; ctx.font = '10px sans-serif'; ctx.fillText('協勤資訊有限公司', 16, 24);
+        ctx.fillStyle = '#555'; ctx.font = '8px sans-serif'; ctx.fillText('Concord Tech Co., Ltd', 16, 36);
+        ['Dashboard', '進度管理', '圖資時程', 'BIM 模型'].forEach((m, i) => {
+          const my = 65 + i * 32;
+          const active = i === 1;
+          if (active) { ctx.fillStyle = 'rgba(102,126,234,0.15)'; ctx.fillRect(10, my - 10, sbW - 20, 24); }
+          ctx.fillStyle = active ? '#667eea' : '#666'; ctx.font = '12px sans-serif';
+          ctx.fillText(m, 20, my + 4);
+        });
+        ctx.fillStyle = '#f0883e'; ctx.font = 'bold 12px sans-serif'; ctx.fillText('bravopm', 16, H - 45);
+        ctx.fillStyle = '#2ec4b6'; ctx.font = '10px sans-serif'; ctx.fillText('SBMS', 16, H - 28);
+
+        // Main panel
+        const mx = sbW + 16, my = 16;
+        const mw = W - sbW - 32 - 220, mh = H - 32;
+        roundRect(mx, my, mw, mh, 8, '#0f0f16', 'rgba(255,255,255,0.08)');
+
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 14px sans-serif'; ctx.fillText('學府案 · 消費者 4D 付款進度對照', mx + 16, my + 28);
+        ctx.fillStyle = '#888'; ctx.font = '10px sans-serif'; ctx.fillText('BIM 模型驗證進度 → 繳款里程碑自動掛勾', mx + 16, my + 44);
+
+        donut(mx + 70, my + 100, 34, Math.min(1, progress * 1.2), '#f0883e', '圖資審核進度', `${Math.floor(Math.min(100, progress*120))}%`);
+        donut(mx + 190, my + 100, 34, Math.min(1, progress * 0.9), '#feca57', '工程發包進度', `${Math.floor(Math.min(100, progress*90))}%`);
+
+        // Model viewer
+        const modelX = mx + 16, modelY = my + 160;
+        const modelW = mw - 32, modelH = 110;
+        roundRect(modelX, modelY, modelW, modelH, 6, '#0a0a10', 'rgba(255,255,255,0.06)');
+        ctx.fillStyle = '#1a1a22';
+        ctx.beginPath();
+        ctx.moveTo(modelX + 40, modelY + 85);
+        ctx.lineTo(modelX + modelW - 40, modelY + 85);
+        ctx.lineTo(modelX + modelW - 70, modelY + 45);
+        ctx.lineTo(modelX + 70, modelY + 45);
+        ctx.closePath(); ctx.fill(); ctx.strokeStyle = '#333'; ctx.stroke();
+
+        const floors = 6;
+        const flW = 18, flH = 12;
+        const flBaseX = modelX + modelW/2 - (floors * flW)/2;
+        const flBaseY = modelY + 40;
+        for (let i = 0; i < floors; i++) {
+          const built = progress > i / floors;
+          const h = built ? flH : 3;
+          ctx.fillStyle = built ? '#667eea' : '#333';
+          ctx.fillRect(flBaseX + i * flW, flBaseY - h + flH, flW - 2, h);
+        }
+
+        ctx.fillStyle = '#f0883e';
+        ctx.beginPath(); ctx.arc(modelX + 55, modelY + 70, 7, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#000'; ctx.font = 'bold 10px sans-serif'; ctx.fillText('!', modelX + 52, modelY + 74);
+        ctx.fillStyle = '#f0883e';
+        ctx.beginPath(); ctx.arc(modelX + modelW - 65, modelY + 45, 7, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#000'; ctx.fillText('!', modelX + modelW - 68, modelY + 49);
+
+        const propX = modelX + modelW - 130, propY = modelY + 12;
+        ctx.fillStyle = 'rgba(10,10,16,0.9)'; ctx.fillRect(propX, propY, 120, 85);
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.strokeRect(propX, propY, 120, 85);
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif'; ctx.fillText('屬性 Property View', propX + 8, propY + 18);
+        ctx.fillStyle = '#888'; ctx.font = '9px sans-serif'; ctx.fillText('選擇模型元件', propX + 8, propY + 36);
+        ctx.fillText('查看進度/成本', propX + 8, propY + 50);
+        ctx.fillStyle = '#2ec4b6'; ctx.fillRect(propX + 8, propY + 60, 48, 18);
+        ctx.fillStyle = '#000'; ctx.font = 'bold 9px sans-serif'; ctx.fillText('搜尋', propX + 24, propY + 72);
+
+        // Calendar/Gantt
+        const calX = mx + 16, calY = my + 290;
+        const calW = mw - 32, calH = 85;
+        roundRect(calX, calY, calW, calH, 6, '#0a0a10', 'rgba(255,255,255,0.06)');
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif'; ctx.fillText('圖資與進度時程管理', calX + 10, calY + 20);
+        ['month', 'week', 'day'].forEach((v, i) => {
+          ctx.fillStyle = i === 0 ? '#667eea' : '#222';
+          ctx.fillRect(calX + calW - 110 + i * 32, calY + 8, 30, 16);
+          ctx.fillStyle = '#fff'; ctx.font = '8px sans-serif'; ctx.fillText(v, calX + calW - 106 + i * 32, calY + 19);
+        });
+
+        const tlY = calY + 55;
+        ctx.strokeStyle = '#222'; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.moveTo(calX + 12, tlY); ctx.lineTo(calX + calW - 12, tlY); ctx.stroke();
+
+        milestones.forEach((m, i) => {
+          const mx_ = calX + 12 + m.gantt * (calW - 24);
+          const done = progress >= i / milestones.length;
+          const active = i === currentIdx;
+          const nextGantt = i === milestones.length - 1 ? 0.98 : milestones[i+1].gantt;
+          const bw = Math.max(40, (nextGantt - m.gantt) * (calW - 24));
+          const fillW = bw * Math.min(1, (progress * milestones.length) - i);
+
+          if (fillW > 0) {
+            ctx.fillStyle = m.color;
+            if (active) { ctx.shadowColor = m.color; ctx.shadowBlur = 10; }
+            ctx.fillRect(mx_, tlY - 10, fillW, 12);
+            ctx.shadowBlur = 0;
+          }
+
+          ctx.fillStyle = done ? m.color : '#333';
+          ctx.beginPath(); ctx.arc(mx_, tlY, 5, 0, Math.PI*2); ctx.fill();
+          ctx.fillStyle = done ? '#fff' : '#666'; ctx.font = '8px sans-serif'; ctx.fillText(m.date, mx_ - 10, tlY + 20);
+        });
+
+        const curX = calX + 12 + progress * (calW - 24);
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+        ctx.beginPath(); ctx.moveTo(curX, calY + 34); ctx.lineTo(curX, calY + calH - 10); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = '#fff'; ctx.font = '9px sans-serif'; ctx.fillText('今日', curX - 8, calY + calH - 2);
+
+        // Consumer app
+        const appX = mx + mw + 18, appY = my;
+        const appW = 202, appH = mh;
+        roundRect(appX, appY, appW, appH, 16, '#15151c', 'rgba(255,255,255,0.12)');
+        ctx.fillStyle = '#000';
+        ctx.beginPath(); ctx.roundRect(appX + appW/2 - 25, appY, 50, 14, [0, 0, 8, 8]); ctx.fill();
+        ctx.fillStyle = '#667eea'; ctx.fillRect(appX + 2, appY + 16, appW - 4, 34);
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif'; ctx.fillText('📱 玉霖學府', appX + 14, appY + 30);
+        ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '8px sans-serif'; ctx.fillText('我的房子 · 4D 合約', appX + 14, appY + 40);
+
+        const listY = appY + 65;
+        milestones.forEach((m, i) => {
+          const done = progress >= i / milestones.length;
+          const active = i === currentIdx;
+          const itemY = listY + i * 45;
+          if (active) {
+            ctx.fillStyle = 'rgba(102,126,234,0.12)'; ctx.fillRect(appX + 8, itemY - 2, appW - 16, 42);
+            ctx.strokeStyle = '#667eea'; ctx.strokeRect(appX + 8, itemY - 2, appW - 16, 42);
+          }
+          ctx.fillStyle = done ? '#2ec4b6' : '#333';
+          ctx.beginPath(); ctx.arc(appX + 22, itemY + 12, 8, 0, Math.PI*2); ctx.fill();
+          if (done) { ctx.fillStyle = '#000'; ctx.font = 'bold 10px sans-serif'; ctx.fillText('✓', appX + 19, itemY + 16); }
+          ctx.fillStyle = done ? '#fff' : '#777'; ctx.font = 'bold 11px sans-serif'; ctx.fillText(m.name, appX + 38, itemY + 10);
+          ctx.fillStyle = done ? '#2ec4b6' : '#555'; ctx.font = '9px sans-serif'; ctx.fillText(`${m.payment} · ${m.amount}`, appX + 38, itemY + 24);
+          if (done) { ctx.fillStyle = '#2ec4b6'; ctx.font = 'bold 8px sans-serif'; ctx.fillText('已驗證', appX + appW - 48, itemY + 15); }
+        });
+
+        const cur = milestones[currentIdx];
+        const alertY = appY + appH - 58;
+        ctx.fillStyle = 'rgba(102,126,234,0.15)'; ctx.fillRect(appX + 8, alertY, appW - 16, 50);
+        ctx.strokeStyle = '#667eea'; ctx.strokeRect(appX + 8, alertY, appW - 16, 50);
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif'; ctx.fillText(`第 ${currentIdx + 1} 期繳款`, appX + 14, alertY + 18);
+        ctx.fillStyle = '#aaa'; ctx.font = '9px sans-serif'; ctx.fillText(`${cur.payment}（${cur.amount}）`, appX + 14, alertY + 32);
+        ctx.fillStyle = '#2ec4b6'; ctx.font = 'bold 9px sans-serif'; ctx.fillText('BIM 已驗證', appX + appW - 66, alertY + 32);
+
+        // Arrows
+        const ay1 = my + 100, ay2 = my + 330;
+        ctx.strokeStyle = 'rgba(102,126,234,0.4)'; ctx.lineWidth = 2; ctx.setLineDash([5, 5]);
+        ctx.beginPath(); ctx.moveTo(mx + mw - 12, ay1); ctx.lineTo(appX + 4, ay1); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(mx + mw - 12, ay2); ctx.lineTo(appX + 4, ay2); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = '#667eea';
+        ctx.beginPath(); ctx.moveTo(appX + 4, ay1); ctx.lineTo(appX - 6, ay1 - 4); ctx.lineTo(appX - 6, ay1 + 4); ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(appX + 4, ay2); ctx.lineTo(appX - 6, ay2 - 4); ctx.lineTo(appX - 6, ay2 + 4); ctx.closePath(); ctx.fill();
+
+        t++;
+        reg('payment', requestAnimationFrame(draw));
+      }
+      draw();
+    }
+
+    // ===== AR/MR Animation =====
+    function initAR() {
+      const c = document.getElementById('c-ar');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      let t = 0;
+
+      const checks = [
+        { name: '牆面平整度', actual: '+1.2mm', pass: true, x: 0.22, y: 0.35 },
+        { name: '管線位置', actual: '符合', pass: true, x: 0.72, y: 0.45 },
+        { name: '門窗尺寸', actual: '-2.8mm', pass: false, x: 0.55, y: 0.22 },
+        { name: '地板水平', actual: '+0.8mm', pass: true, x: 0.35, y: 0.72 },
+      ];
+
+      function draw() {
+        ctx.fillStyle = '#08080a'; ctx.fillRect(0, 0, W, H);
+        const cycle = 300;
+        const progress = (t % cycle) / cycle;
+        const activeCheck = Math.floor(progress * checks.length);
+
+        const cx = W * 0.45;
+        const cy = H * 0.55;
+
+        // Room
+        ctx.fillStyle = '#121218';
+        ctx.beginPath();
+        ctx.moveTo(cx - 260, cy + 70); ctx.lineTo(cx + 300, cy + 70);
+        ctx.lineTo(cx + 220, cy + 160); ctx.lineTo(cx - 200, cy + 160); ctx.closePath(); ctx.fill();
+        ctx.strokeStyle = '#222'; ctx.stroke();
+
+        ctx.fillStyle = '#0e0e14';
+        ctx.beginPath();
+        ctx.moveTo(cx - 260, cy - 90); ctx.lineTo(cx + 300, cy - 90);
+        ctx.lineTo(cx + 300, cy + 70); ctx.lineTo(cx - 260, cy + 70); ctx.closePath(); ctx.fill(); ctx.stroke();
+
+        ctx.fillStyle = '#0a0a10';
+        ctx.beginPath();
+        ctx.moveTo(cx - 260, cy - 90); ctx.lineTo(cx - 200, cy - 135);
+        ctx.lineTo(cx - 200, cy + 160); ctx.lineTo(cx - 260, cy + 70); ctx.closePath(); ctx.fill(); ctx.stroke();
+
+        ctx.fillStyle = '#15151a';
+        ctx.beginPath();
+        ctx.moveTo(cx - 260, cy - 90); ctx.lineTo(cx + 300, cy - 90);
+        ctx.lineTo(cx + 360, cy - 135); ctx.lineTo(cx - 200, cy - 135); ctx.closePath(); ctx.fill(); ctx.stroke();
+
+        ctx.fillStyle = '#1a1a24'; ctx.fillRect(cx - 70, cy - 55, 140, 80); ctx.strokeStyle = '#333'; ctx.strokeRect(cx - 70, cy - 55, 140, 80);
+        ctx.fillStyle = '#1a1a24'; ctx.fillRect(cx + 230, cy - 45, 55, 115); ctx.strokeStyle = '#333'; ctx.strokeRect(cx + 230, cy - 45, 55, 115);
+
+        // BIM grid
+        ctx.strokeStyle = 'rgba(102,126,234,0.25)'; ctx.lineWidth = 1; ctx.setLineDash([4, 6]);
+        for (let i = -2; i <= 3; i++) {
+          ctx.beginPath(); ctx.moveTo(cx + i * 70, cy - 90); ctx.lineTo(cx + i * 70, cy + 70); ctx.stroke();
+        }
+        for (let i = -1; i <= 2; i++) {
+          ctx.beginPath(); ctx.moveTo(cx - 260, cy - 35 + i * 45); ctx.lineTo(cx + 300, cy - 35 + i * 45); ctx.stroke();
+        }
+        ctx.setLineDash([]);
+
+        // Pipes
+        ctx.strokeStyle = 'rgba(239,68,68,0.6)'; ctx.lineWidth = 5; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(cx - 210, cy - 70); ctx.lineTo(cx + 210, cy - 70); ctx.stroke();
+        ctx.strokeStyle = 'rgba(59,130,246,0.6)';
+        ctx.beginPath(); ctx.moveTo(cx + 120, cy - 70); ctx.lineTo(cx + 120, cy + 90); ctx.stroke(); ctx.lineCap = 'butt';
+
+        // AR frame
+        const corners = [[cx - 270, cy - 145], [cx + 310, cy - 145], [cx + 310, cy + 165], [cx - 270, cy + 165]];
+        ctx.strokeStyle = 'rgba(102,126,234,0.7)'; ctx.lineWidth = 3; const cl = 35;
+        corners.forEach((p, i) => {
+          const [x, y] = p;
+          ctx.beginPath();
+          if (i === 0) { ctx.moveTo(x, y + cl); ctx.lineTo(x, y); ctx.lineTo(x + cl, y); }
+          if (i === 1) { ctx.moveTo(x - cl, y); ctx.lineTo(x, y); ctx.lineTo(x, y + cl); }
+          if (i === 2) { ctx.moveTo(x, y - cl); ctx.lineTo(x, y); ctx.lineTo(x - cl, y); }
+          if (i === 3) { ctx.moveTo(x + cl, y); ctx.lineTo(x, y); ctx.lineTo(x, y - cl); }
+          ctx.stroke();
+        });
+
+        // Checks
+        checks.forEach((chk, i) => {
+          const appear = progress * checks.length > i;
+          if (!appear) return;
+          const px = cx + (chk.x - 0.5) * W * 0.55;
+          const py = cy + (chk.y - 0.5) * H * 0.7;
+          const isActive = i === activeCheck;
+
+          ctx.strokeStyle = chk.pass ? 'rgba(46,196,182,0.5)' : 'rgba(239,68,68,0.5)';
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px + 45, py - (isActive ? 10 : 0)); ctx.stroke();
+
+          const tagW = 130, tagH = 48;
+          const tx = px + 50, ty = py - 36;
+          ctx.fillStyle = 'rgba(10,10,16,0.9)';
+          ctx.strokeStyle = chk.pass ? '#2ec4b6' : '#ef4444';
+          ctx.lineWidth = isActive ? 2 : 1;
+          ctx.fillRect(tx, ty, tagW, tagH); ctx.strokeRect(tx, ty, tagW, tagH);
+          ctx.fillStyle = '#fff'; ctx.font = 'bold 11px sans-serif'; ctx.fillText(chk.name, tx + 10, ty + 18);
+          ctx.fillStyle = chk.pass ? '#2ec4b6' : '#ef4444'; ctx.font = 'bold 14px sans-serif'; ctx.fillText(`偏差 ${chk.actual}`, tx + 10, ty + 36);
+
+          if (isActive) {
+            const pulse = (Math.sin(t * 0.15) + 1) / 2;
+            ctx.strokeStyle = `rgba(${chk.pass ? '46,196,182' : '239,68,68'},${0.3 + pulse * 0.4})`;
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.arc(px, py, 16 + pulse * 10, 0, Math.PI*2); ctx.stroke();
+          }
+        });
+
+        // QR popup
+        const qrX = cx + 240, qrY = cy - 115;
+        ctx.fillStyle = 'rgba(10,10,16,0.95)'; ctx.fillRect(qrX, qrY, 140, 95);
+        ctx.strokeStyle = '#667eea'; ctx.lineWidth = 1; ctx.strokeRect(qrX, qrY, 140, 95);
+        ctx.fillStyle = '#fff';
+        for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) if ((i + j) % 2 === 0) ctx.fillRect(qrX + 12 + i*14, qrY + 12 + j*14, 12, 12);
+        ctx.fillStyle = '#667eea'; ctx.font = 'bold 11px sans-serif'; ctx.fillText('設備 QR', qrX + 82, qrY + 28);
+        ctx.fillStyle = '#aaa'; ctx.font = '10px sans-serif';
+        ctx.fillText('FCU-A06', qrX + 82, qrY + 46);
+        ctx.fillText('規格: 2RT', qrX + 82, qrY + 60);
+        ctx.fillText('保固: 3年', qrX + 82, qrY + 74);
+
+        // HUD
+        ctx.fillStyle = 'rgba(102,126,234,0.15)'; ctx.fillRect(24, 16, W - 48, 30);
+        ctx.strokeStyle = 'rgba(102,126,234,0.3)'; ctx.strokeRect(24, 16, W - 48, 30);
+        ctx.fillStyle = '#667eea'; ctx.font = 'bold 14px sans-serif'; ctx.fillText('🥽 AR/MR 交屋驗收模式 · BIM 模型疊加真實空間', 36, 36);
+
+        const passed = checks.filter(c => c.pass).length;
+        ctx.fillStyle = 'rgba(46,196,182,0.15)'; ctx.fillRect(24, H - 38, 210, 24);
+        ctx.strokeStyle = '#2ec4b6'; ctx.strokeRect(24, H - 38, 210, 24);
+        ctx.fillStyle = '#2ec4b6'; ctx.font = 'bold 11px sans-serif';
+        ctx.fillText(`已檢查 ${Math.min(checks.length, activeCheck + 1)}/${checks.length} 項 · ${passed} 項合格`, 34, H - 21);
+
+        t++;
+        reg('ar', requestAnimationFrame(draw));
+      }
+      draw();
+    }
+
     showSlide(0);
-    </script>
+  </script>
 </body>
 </html>
