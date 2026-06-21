@@ -375,7 +375,17 @@
       <a href="innovations.html" class="btn" style="display:inline-block; padding:10px 24px; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px;">▶ 觀看模擬動畫</a>
     </p>
   
-<canvas id="payment-canvas" width="800" height="360" style="width:100%; max-width:800px; margin:24px auto; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); display:block; background:#0a0a12;"></canvas>
+<!-- 4D Payment Dashboard -->
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; width:100%; max-width:900px; margin:20px auto;">
+  <div class="card" style="border-left:3px solid var(--cyan); padding:16px;">
+    <div style="font-size:12px; font-weight:700; color:var(--cyan); margin-bottom:12px;">🏗️ BIM 驗證進度</div>
+    <canvas id="prog-dash-canvas" width="420" height="280" style="width:100%;border-radius:8px;background:#0a0a12;"></canvas>
+  </div>
+  <div class="card" style="border-left:3px solid var(--gold); padding:16px;">
+    <div style="font-size:12px; font-weight:700; color:var(--gold); margin-bottom:12px;">💰 付款進度</div>
+    <canvas id="pay-dash-canvas" width="420" height="280" style="width:100%;border-radius:8px;background:#0a0a12;"></canvas>
+  </div>
+</div>
 </div>
 </div>
 
@@ -417,7 +427,17 @@
       <a href="innovations.html" class="btn" style="display:inline-block; padding:10px 24px; background:linear-gradient(135deg,var(--purple),var(--pink)); color:#fff; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px;">▶ 觀看模擬動畫</a>
     </p>
   
-<canvas id="ar-canvas" width="800" height="360" style="width:100%; max-width:800px; margin:24px auto; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1); display:block; background:#0a0a12;"></canvas>
+<!-- AR/MR Dashboard -->
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; width:100%; max-width:900px; margin:20px auto;">
+  <div class="card" style="border-left:3px solid var(--purple); padding:16px;">
+    <div style="font-size:12px; font-weight:700; color:var(--purple); margin-bottom:12px;">🏠 真實空間</div>
+    <canvas id="ar-room-canvas" width="420" height="280" style="width:100%;border-radius:8px;background:#0a0a12;"></canvas>
+  </div>
+  <div class="card" style="border-left:3px solid var(--cyan); padding:16px;">
+    <div style="font-size:12px; font-weight:700; color:var(--cyan); margin-bottom:12px;">📋 BIM 疊加驗收</div>
+    <canvas id="ar-check-canvas" width="420" height="280" style="width:100%;border-radius:8px;background:#0a0a12;"></canvas>
+  </div>
+</div>
 </div>
 </div>
 
@@ -650,7 +670,7 @@
       <!-- Right: Payment Schedule -->
       <div class="card" style="border-left:3px solid var(--gold);">
         <h3 class="g" style="margin-bottom:16px;">💰 付款進度</h3>
-        <canvas id="pay-dash-canvas" width="450" height="400" style="width:100%;border-radius:8px;background:#0a0a12;"></canvas>
+        <canvas id="pay-summary-canvas" width="450" height="400" style="width:100%;border-radius:8px;background:#0a0a12;"></canvas>
       </div>
     </div>
 
@@ -841,163 +861,191 @@ function initComparison() {
   window._compAnim = animId;
 }
 
-// ===== Slide 6: 4D Payment Progress =====
+// ===== Slide 6: 4D Payment Dashboard (Progress vs Payment) =====
 function initPayment() {
-  const c = document.getElementById('payment-canvas');
-  if (!c) return;
-  const ctx = c.getContext('2d');
-  const W = c.width, H = c.height;
+  const pc = document.getElementById('prog-dash-canvas');
+  const mc = document.getElementById('pay-dash-canvas');
+  if (!pc || !mc) return;
+  const ctxP = pc.getContext('2d');
+  const ctxM = mc.getContext('2d');
+  const W = pc.width, H = pc.height;
   let t = 0;
   let animId = null;
 
-  const floors = [
-    { name: '5F', progress: 0.2, color: '#2ec4b6' },
-    { name: '4F', progress: 0.4, color: '#22c55e' },
-    { name: '3F', progress: 0.6, color: '#667eea' },
-    { name: '2F', progress: 0.8, color: '#f0883e' },
-    { name: '1F', progress: 1.0, color: '#e2b04a' },
+  const milestones = [
+    { name: '基礎完成', progress: 100, payment: 100, amount: '12%' },
+    { name: '結構封頂', progress: 80, payment: 80, amount: '20%' },
+    { name: '外牆完工', progress: 55, payment: 40, amount: '25%' },
+    { name: '室內裝修', progress: 30, payment: 20, amount: '25%' },
+    { name: '交屋驗收', progress: 10, payment: 5, amount: '18%' },
   ];
 
-  function draw() {
-    ctx.fillStyle = '#0a0a12'; ctx.fillRect(0, 0, W, H);
+  function drawProgress() {
+    ctxP.fillStyle = '#0a0a12'; ctxP.fillRect(0, 0, W, H);
+    const barW = 55, gap = 15, startX = 30;
+    const baseY = H - 35;
+    const maxH = H - 70;
 
-    // Building (left side)
-    const baseY = H - 40;
-    const floorH = 50;
-    const buildX = 60;
-    const buildW = 200;
-
-    floors.forEach((f, i) => {
-      const y = baseY - (i+1)*floorH;
-      const p = Math.min(1, Math.max(0, (t/120 - i*0.15)*3));
-      // Actual built portion
-      ctx.fillStyle = f.color + '80';
-      ctx.fillRect(buildX, y, buildW * p, floorH - 4);
-      ctx.strokeStyle = f.color; ctx.lineWidth = 1;
-      ctx.strokeRect(buildX, y, buildW, floorH - 4);
-      // Floor label
-      ctx.fillStyle = '#fff'; ctx.font = 'bold 13px sans-serif';
-      ctx.fillText(f.name, buildX + 8, y + floorH/2 + 4);
-      // Progress bar
-      ctx.fillStyle = '#333'; ctx.fillRect(buildX + 60, y + 12, buildW - 70, 8);
-      ctx.fillStyle = f.color; ctx.fillRect(buildX + 60, y + 12, (buildW-70)*p, 8);
-    });
-
-    // Phone UI (right side)
-    const phoneX = W - 200, phoneY = 30, phoneW = 160, phoneH = 300;
-    ctx.fillStyle = '#1a1a2e'; ctx.fillRect(phoneX, phoneY, phoneW, phoneH);
-    ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.strokeRect(phoneX, phoneY, phoneW, phoneH);
-    // Phone header
-    ctx.fillStyle = '#667eea'; ctx.fillRect(phoneX, phoneY, phoneW, 28);
-    ctx.fillStyle = '#fff'; ctx.font = 'bold 12px sans-serif';
-    ctx.fillText('📱 付款進度', phoneX + 10, phoneY + 19);
-    // Milestones
-    const milestones = ['基礎完成', '結構封頂', '外牆完工', '室內裝修', '交屋驗收'];
-    const milestoneAmts = ['20%', '40%', '60%', '80%', '100%'];
-    const overallP = Math.min(1, t / 120);
     milestones.forEach((m, i) => {
-      const my = phoneY + 40 + i * 44;
-      const done = overallP > (i+1)*0.2;
-      ctx.fillStyle = done ? '#2ec4b620' : '#ffffff08';
-      ctx.fillRect(phoneX + 8, my, phoneW - 16, 36);
-      ctx.fillStyle = done ? '#2ec4b6' : '#555';
-      ctx.font = '11px sans-serif';
-      ctx.fillText(done ? '✓' : '○', phoneX + 14, my + 15);
-      ctx.fillText(m, phoneX + 30, my + 15);
-      ctx.fillText(milestoneAmts[i], phoneX + 100, my + 15);
-      // Progress dot
-      ctx.fillStyle = done ? '#2ec4b6' : '#333';
-      ctx.beginPath(); ctx.arc(phoneX + phoneW - 20, my + 12, 5, 0, Math.PI*2); ctx.fill();
+      const x = startX + i * (barW + gap);
+      const h = (m.progress / 100) * maxH;
+      const animP = Math.min(1, t / 60) * m.progress;
+      const animH = (animP / 100) * maxH;
+
+      ctxP.fillStyle = '#2ec4b640'; ctxP.fillRect(x, baseY - h, barW, h);
+      ctxP.fillStyle = '#2ec4b6'; ctxP.fillRect(x, baseY - animH, barW, animH);
+      ctxP.strokeStyle = '#2ec4b6'; ctxP.lineWidth = 1; ctxP.strokeRect(x, baseY - h, barW, h);
+
+      ctxP.fillStyle = '#fff'; ctxP.font = 'bold 12px sans-serif';
+      ctxP.fillText(`${m.progress}%`, x + 6, baseY - h - 8);
+      ctxP.save(); ctxP.translate(x + barW / 2, baseY + 12);
+      ctxP.fillStyle = '#888'; ctxP.font = '9px sans-serif'; ctxP.textAlign = 'center';
+      ctxP.fillText(m.name, 0, 0); ctxP.restore();
     });
-
-    // Bottom status
-    ctx.fillStyle = '#aaa'; ctx.font = '12px sans-serif';
-    ctx.fillText(`整體進度: ${Math.floor(overallP*100)}%`, phoneX + 10, phoneY + phoneH - 15);
-
-    t++;
-    animId = requestAnimationFrame(draw);
+    ctxP.fillStyle = '#2ec4b6'; ctxP.font = 'bold 11px sans-serif';
+    ctxP.fillText('BIM 驗證進度', 8, 16);
   }
-  draw();
+
+  function drawPayment() {
+    ctxM.fillStyle = '#0a0a12'; ctxM.fillRect(0, 0, W, H);
+    const barW = 55, gap = 15, startX = 30;
+    const baseY = H - 35;
+    const maxH = H - 70;
+
+    milestones.forEach((m, i) => {
+      const x = startX + i * (barW + gap);
+      const h = (m.payment / 100) * maxH;
+      const animP = Math.min(1, t / 60) * m.payment;
+      const animH = (animP / 100) * maxH;
+
+      ctxM.fillStyle = '#e2b04a40'; ctxM.fillRect(x, baseY - h, barW, h);
+      ctxM.fillStyle = '#e2b04a'; ctxM.fillRect(x, baseY - animH, barW, animH);
+      ctxM.strokeStyle = '#e2b04a'; ctxM.lineWidth = 1; ctxM.strokeRect(x, baseY - h, barW, h);
+
+      ctxM.fillStyle = '#fff'; ctxM.font = 'bold 11px sans-serif';
+      ctxM.fillText(m.amount, x + 8, baseY - h - 8);
+
+      const diff = m.progress - m.payment;
+      if (diff > 5) {
+        ctxM.fillStyle = '#ef4444'; ctxM.font = 'bold 10px sans-serif';
+        ctxM.fillText('⚠ 落後', x + 4, baseY + 26);
+      } else {
+        ctxM.fillStyle = '#2ec4b6'; ctxM.font = '10px sans-serif';
+        ctxM.fillText('✓', x + 18, baseY + 26);
+      }
+      ctxM.save(); ctxM.translate(x + barW / 2, baseY + 12);
+      ctxM.fillStyle = '#888'; ctxM.font = '9px sans-serif'; ctxM.textAlign = 'center';
+      ctxM.fillText(m.name, 0, 0); ctxM.restore();
+    });
+    ctxM.fillStyle = '#e2b04a'; ctxM.font = 'bold 11px sans-serif';
+    ctxM.fillText('付款進度', 8, 16);
+  }
+
+  function animate() { drawProgress(); drawPayment(); t++; animId = requestAnimationFrame(animate); }
+  animate();
   window._payAnim = animId;
 }
 
-// ===== Slide 7: AR/MR Handover Inspection =====
+// ===== Slide 7: AR/MR Handover Dashboard (Room vs Verification) =====
 function initAR() {
-  const c = document.getElementById('ar-canvas');
-  if (!c) return;
-  const ctx = c.getContext('2d');
-  const W = c.width, H = c.height;
+  const rc = document.getElementById('ar-room-canvas');
+  const cc = document.getElementById('ar-check-canvas');
+  if (!rc || !cc) return;
+  const ctxR = rc.getContext('2d');
+  const ctxC = cc.getContext('2d');
+  const W = rc.width, H = rc.height;
   let t = 0;
   let animId = null;
 
-  // Room layout
-  const room = { x: 100, y: 60, w: 600, h: 240 };
+  const checks = [
+    { name: '牆面平整度', tolerance: '±2mm', actual: '+1.2mm', pass: true },
+    { name: '管線位置', tolerance: '±5mm', actual: '+3.8mm', pass: true },
+    { name: '門窗尺寸', tolerance: '±3mm', actual: '+4.1mm', pass: false },
+    { name: '地板水平', tolerance: '±3mm', actual: '+0.8mm', pass: true },
+    { name: '插座高度', tolerance: '±5mm', actual: '+2.1mm', pass: true },
+    { name: '消防管路', tolerance: '±10mm', actual: '+8.5mm', pass: true },
+  ];
 
-  function draw() {
-    ctx.fillStyle = '#0a0a12'; ctx.fillRect(0, 0, W, H);
-
-    // Room walls (real space)
-    ctx.strokeStyle = '#555'; ctx.lineWidth = 3;
-    ctx.strokeRect(room.x, room.y, room.w, room.h);
-    // Floor lines
-    ctx.strokeStyle = '#333'; ctx.lineWidth = 1;
-    for (let i = 0; i < 8; i++) {
-      ctx.beginPath();
-      ctx.moveTo(room.x + i * (room.w/7), room.y + room.h);
-      ctx.lineTo(room.x + room.w/2 + (i-3.5)*20, room.y + room.h - 80);
-      ctx.stroke();
+  function drawRoom() {
+    ctxR.fillStyle = '#0a0a12'; ctxR.fillRect(0, 0, W, H);
+    // Room perspective
+    ctxR.strokeStyle = '#444'; ctxR.lineWidth = 2;
+    ctxR.strokeRect(40, 30, W - 80, H - 60);
+    // Floor grid
+    ctxR.strokeStyle = '#222'; ctxR.lineWidth = 0.5;
+    for (let i = 0; i < 10; i++) {
+      const x = 40 + i * ((W-80)/9);
+      ctxR.beginPath(); ctxR.moveTo(x, H - 30); ctxR.lineTo(W/2 + (i-4.5)*15, H - 80); ctxR.stroke();
     }
-
-    // BIM overlay (holographic grid)
-    ctx.strokeStyle = 'rgba(102,126,234,0.4)'; ctx.lineWidth = 1; ctx.setLineDash([4,4]);
-    ctx.strokeRect(room.x + 5, room.y + 5, room.w - 10, room.h - 10);
-    ctx.setLineDash([]);
-
-    // BIM elements overlay
+    for (let i = 0; i < 4; i++) {
+      const y = H - 30 - i * 12;
+      ctxR.beginPath(); ctxR.moveTo(40, y); ctxR.lineTo(W - 40, y); ctxR.stroke();
+    }
+    // BIM overlay (holographic)
+    ctxR.strokeStyle = 'rgba(102,126,234,0.3)'; ctxR.lineWidth = 1; ctxR.setLineDash([4,4]);
+    ctxR.strokeRect(45, 35, W - 90, H - 70);
+    ctxR.setLineDash([]);
     // Windows
-    ctx.fillStyle = 'rgba(46,196,182,0.15)'; ctx.strokeStyle = '#2ec4b6'; ctx.lineWidth = 2;
-    ctx.fillRect(room.x + 20, room.y + 10, 100, 40); ctx.strokeRect(room.x + 20, room.y + 10, 100, 40);
-    ctx.fillRect(room.x + room.w - 120, room.y + 10, 100, 40); ctx.strokeRect(room.x + room.w - 120, room.y + 10, 100, 40);
+    ctxR.fillStyle = 'rgba(46,196,182,0.1)'; ctxR.strokeStyle = '#2ec4b6'; ctxR.lineWidth = 1.5;
+    ctxR.fillRect(55, 45, 80, 35); ctxR.strokeRect(55, 45, 80, 35);
+    ctxR.fillRect(W - 135, 45, 80, 35); ctxR.strokeRect(W - 135, 45, 80, 35);
     // Door
-    ctx.fillStyle = 'rgba(168,85,247,0.15)'; ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 2;
-    ctx.fillRect(room.x + room.w/2 - 30, room.y + room.h - 40, 60, 35); ctx.strokeRect(room.x + room.w/2 - 30, room.y + room.h - 40, 60, 35);
-
-    // Checkpoints (animated)
-    const checks = [
-      { x: room.x + 30, y: room.y + 70, label: '牆面平整度', status: t > 20 ? '✓' : '◌', color: t > 20 ? '#2ec4b6' : '#555' },
-      { x: room.x + room.w - 160, y: room.y + 70, label: '管線位置', status: t > 50 ? '✓' : '◌', color: t > 50 ? '#2ec4b6' : '#555' },
-      { x: room.x + 30, y: room.y + room.h - 80, label: '門窗尺寸', status: t > 80 ? '✓' : '◌', color: t > 80 ? '#2ec4b6' : '#555' },
-      { x: room.x + room.w - 160, y: room.y + room.h - 80, label: '地板水平', status: t > 110 ? '✓' : '◌', color: t > 110 ? '#2ec4b6' : '#555' },
-    ];
-
-    checks.forEach(cp => {
-      ctx.fillStyle = cp.color + '20';
-      ctx.fillRect(cp.x - 5, cp.y - 15, 130, 28);
-      ctx.fillStyle = cp.color;
-      ctx.font = 'bold 13px sans-serif';
-      ctx.fillText(`${cp.status} ${cp.label}`, cp.x + 2, cp.y + 4);
-    });
-
-    // AR scanner beam
-    const beamX = room.x + (t * 2.5) % room.w;
-    ctx.strokeStyle = 'rgba(240,136,62,0.6)'; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(beamX, room.y); ctx.lineTo(beamX, room.y + room.h); ctx.stroke();
-
-    // Title
-    ctx.fillStyle = '#888'; ctx.font = '11px sans-serif';
-    ctx.fillText('AR 疊加模式 — BIM 模型 vs 真實空間', 10, H - 10);
-
-    if (t < 140) t++;
-    animId = requestAnimationFrame(draw);
+    ctxR.fillStyle = 'rgba(168,85,247,0.1)'; ctxR.strokeStyle = '#a855f7'; ctxR.lineWidth = 1.5;
+    ctxR.fillRect(W/2 - 25, H - 65, 50, 30); ctxR.strokeRect(W/2 - 25, H - 65, 50, 30);
+    // Scanner beam
+    const beamX = 40 + (t * 1.5) % (W - 80);
+    ctxR.strokeStyle = 'rgba(240,136,62,0.5)'; ctxR.lineWidth = 2;
+    ctxR.beginPath(); ctxR.moveTo(beamX, 30); ctxR.lineTo(beamX, H - 30); ctxR.stroke();
+    ctxR.fillStyle = '#888'; ctxR.font = '10px sans-serif';
+    ctxR.fillText('真實空間 · AR 掃瞄中', 8, H - 8);
   }
-  draw();
+
+  function drawChecks() {
+    ctxC.fillStyle = '#0a0a12'; ctxC.fillRect(0, 0, W, H);
+    const passCount = checks.filter(c => c.pass).length;
+    // Header
+    ctxC.fillStyle = passCount === checks.length ? '#2ec4b6' : '#ef4444';
+    ctxC.font = 'bold 12px sans-serif';
+    ctxC.fillText(`驗收結果: ${passCount}/${checks.length} 通過`, 10, 20);
+    // Check items
+    checks.forEach((c, i) => {
+      const y = 35 + i * 40;
+      // Background
+      ctxC.fillStyle = c.pass ? '#2ec4b610' : '#ef444410';
+      ctxC.fillRect(8, y, W - 16, 34);
+      // Status icon
+      ctxC.fillStyle = c.pass ? '#2ec4b6' : '#ef4444';
+      ctxC.font = 'bold 14px sans-serif';
+      ctxC.fillText(c.pass ? '✓' : '✗', 16, y + 22);
+      // Name
+      ctxC.fillStyle = '#ddd'; ctxC.font = 'bold 11px sans-serif';
+      ctxC.fillText(c.name, 36, y + 14);
+      // Tolerance
+      ctxC.fillStyle = '#888'; ctxC.font = '9px sans-serif';
+      ctxC.fillText(`容許: ${c.tolerance}`, 36, y + 27);
+      // Actual value
+      ctxC.fillStyle = c.pass ? '#2ec4b6' : '#ef4444';
+      ctxC.font = 'bold 11px sans-serif';
+      ctxC.fillText(c.actual, W - 70, y + 22);
+      // Animate appearance
+      if (t < i * 15 + 10) {
+        ctxC.fillStyle = '#0a0a12';
+        ctxC.fillRect(8, y, W - 16, 34);
+      }
+    });
+    ctxC.fillStyle = '#888'; ctxC.font = '10px sans-serif';
+    ctxC.fillText('BIM 疊加驗收', 10, H - 8);
+  }
+
+  function animate() { drawRoom(); drawChecks(); t++; animId = requestAnimationFrame(animate); }
+  animate();
   window._arAnim = animId;
 }
 
 // ===== Slide 14: 4D Progress vs Payment Dashboard =====
 function initProgressPayment() {
   const pc = document.getElementById('progress-canvas');
-  const mc = document.getElementById('pay-dash-canvas');
+  const mc = document.getElementById('pay-summary-canvas');
   if (!pc || !mc) return;
   const ctxP = pc.getContext('2d');
   const ctxM = mc.getContext('2d');
