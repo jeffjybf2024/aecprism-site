@@ -3,1003 +3,324 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AEC PRISM — Refracting Building Data Into Decisions</title>
-  <meta name="description" content="AEC PRISM transforms your building information model into a spectrum of applications — planning, construction, operations, and beyond.">
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="AEC PRISM">
-  <meta property="og:description" content="BIM Model → Prism → Decisions. Turning one building model into a spectrum of applications.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://aecprism.com">
-  <meta property="og:image" content="https://aecprism.com/og-image.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:type" content="image/png">
-
-  <meta name="theme-color" content="#050508">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpolygon points='16,2 22,28 10,28' fill='none' stroke='%23667eea' stroke-width='1.5'/%3E%3Cline x1='0' y1='16' x2='11' y2='16' stroke='white' stroke-width='1' opacity='0.5'/%3E%3C/svg%3E">
-
-  <!-- JSON-LD Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "AEC PRISM",
-    "description": "Refracting Building Data Into Decisions. Turning building information models into a spectrum of applications.",
-    "url": "https://aecprism.com",
-    "foundingDate": "2026",
-    "areaServed": "Worldwide"
-  }
-  </script>
-
+  <title>AEC Prism — Where Building Data Refracts Into Decisions</title>
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --orange: #f0883e; --cyan: #2ec4b6; --gold: #e2b04a; --purple: #a78bfa;
+      --white: #e8e8ec; --gray: #888; --bg: #050508;
+    }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #050508;
-      color: #e0e0e0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      overflow: hidden;
-      --mx: 0;
-      --my: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      overflow-x: hidden;
     }
 
-    /* === PAGE FADE IN === */
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    .container {
-      animation: fadeIn 1.8s ease-out 0.3s both;
-    }
-
-    /* === PRISM BACKGROUND === */
+    /* === PRISM BACKGROUND (fixed) === */
     .bg {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
+      position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
     }
+    .bg-base { position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 50%, #0a0a14 0%, #050508 70%); }
 
-    /* Dark base */
-    .bg-base {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 30% 50%, #0a0a14 0%, #050508 70%);
-    }
-
-    /* === BIM MATRIX GHOST GRID === */
-    .matrix-ghost {
-      position: absolute;
-      inset: 0;
-      opacity: 0.04;
-      z-index: 0;
-    }
-    .matrix-grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(102,126,234,0.3) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(102,126,234,0.3) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse at 50% 60%, black 20%, transparent 70%);
-      -webkit-mask-image: radial-gradient(ellipse at 50% 60%, black 20%, transparent 70%);
-    }
-    .matrix-grid::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(135deg, rgba(72,219,251,0.15) 1px, transparent 1px),
-        linear-gradient(225deg, rgba(165,94,234,0.15) 1px, transparent 1px),
-        linear-gradient(315deg, rgba(240,147,251,0.15) 1px, transparent 1px);
-      background-size: 180px 180px, 180px 180px, 180px 180px;
-      mask-image: radial-gradient(ellipse at 50% 60%, black 10%, transparent 60%);
-      -webkit-mask-image: radial-gradient(ellipse at 50% 60%, black 10%, transparent 60%);
-    }
-    @keyframes matrixPulse {
-      0%, 100% { opacity: 0.6; }
-      50% { opacity: 1; }
-    }
-    .matrix-ghost {
-      animation: matrixPulse 8s ease-in-out infinite;
-    }
-
-    /* White beam entering from left */
     .beam-white {
-      position: absolute;
-      top: 45%;
-      left: -5%;
-      width: 40%;
-      height: 3px;
+      position: absolute; top: 45%; left: -5%; width: 40%; height: 3px;
       background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.1) 80%, transparent 100%);
       box-shadow: 0 0 30px 8px rgba(255,255,255,0.08), 0 0 60px 16px rgba(255,255,255,0.04);
-      transform: rotate(calc(2deg + var(--mx) * 3deg));
-      z-index: 1;
-      transition: transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+      transform: rotate(2deg);
     }
     .beam-white::after {
-      content: '';
-      position: absolute;
-      top: -1px; left: 10%; right: 10%;
-      height: 1px;
+      content: ''; position: absolute; top: -1px; left: 10%; right: 10%; height: 1px;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
     }
-    @keyframes beamShimmer {
-      0%, 100% { opacity: 0.8; }
-      50% { opacity: 1; }
-    }
-    .beam-white {
-      animation: beamShimmer 6s ease-in-out infinite;
-    }
 
-    /* === BIM MODEL REVEAL on white beam === */
-    .bim-reveal {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.6s ease;
-    }
-    .bim-reveal.active {
-      opacity: 1;
-    }
-    .bim-reveal-spotlight {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at var(--spot-x, 30%) var(--spot-y, 45%), rgba(180,200,240,0.06) 0%, transparent 50%);
-    }
-    .bim-wireframe {
-      position: absolute;
-      inset: 0;
-      opacity: 0.12;
-    }
-    .bim-wireframe svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    /* Glass prism - triangle */
     .prism-glass {
-      position: absolute;
-      top: 15%;
-      left: 39%;
-      width: 0;
-      height: 0;
-      border-left: 80px solid transparent;
-      border-right: 80px solid transparent;
-      border-bottom: 140px solid rgba(255,255,255,0.02);
+      position: absolute; top: 15%; left: 35%; width: 0; height: 0;
+      border-left: 80px solid transparent; border-right: 80px solid transparent; border-bottom: 140px solid rgba(255,255,255,0.02);
       filter: drop-shadow(0 0 20px rgba(255,255,255,0.03));
-      z-index: 2;
-      transform: translateX(calc(var(--mx) * 10px));
-      transition: transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
     .prism-glass::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -80px;
-      width: 160px;
-      height: 140px;
+      content: ''; position: absolute; top: 0; left: -80px; width: 160px; height: 140px;
       background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 50%, rgba(255,255,255,0.03) 100%);
       clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
     }
-    .prism-glass::after {
-      content: '';
-      position: absolute;
-      top: 5px;
-      left: -75px;
-      width: 150px;
-      height: 130px;
-      background: linear-gradient(45deg, rgba(180,200,255,0.06) 0%, transparent 60%);
-      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    }
-    @keyframes prismBreathe {
-      0%, 100% { filter: drop-shadow(0 0 20px rgba(255,255,255,0.03)); }
-      50% { filter: drop-shadow(0 0 30px rgba(102,126,234,0.08)); }
-    }
-    .prism-glass {
-      animation: prismBreathe 5s ease-in-out infinite;
-    }
 
-    /* === CONTINUOUS SPECTRUM FAN === */
-    .spectrum {
-      position: absolute;
-      top: 30%;
-      left: 42%;
-      width: 70vw;
-      height: 70vh;
-      z-index: 2;
-      transform: translateX(calc(var(--mx) * 20px));
-      transition: transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-      pointer-events: auto;
-      cursor: crosshair;
-    }
-    .spectrum-fan {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.35;
-      background: conic-gradient(
-        from -55deg at 0% 15%,
-        #ff4d4d 0deg,
-        #ff6b6b 2deg,
-        #ff9f43 4deg,
-        #feca57 6deg,
-        #ffdd59 8deg,
-        #a8e063 10deg,
-        #48dbfb 12deg,
-        #0abde3 14deg,
-        #667eea 16deg,
-        #764ba2 18deg,
-        #a55eea 20deg,
-        #c56cf0 22deg,
-        #f093fb 24deg,
-        #f5576c 26deg,
-        #ff4d4d 28deg,
-        transparent 35deg
-      );
-      filter: blur(8px);
-      animation: spectrumShift 12s ease-in-out infinite;
-    }
-    /* Sharper inner fan */
-    .spectrum-fan-sharp {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.25;
-      background: conic-gradient(
-        from -50deg at 0% 15.5%,
-        transparent 0deg,
-        #ff4d4d 1deg, transparent 2.5deg,
-        #ff9f43 3deg, transparent 4.5deg,
-        #feca57 5deg, transparent 6.5deg,
-        #a8e063 7deg, transparent 8.5deg,
-        #48dbfb 9deg, transparent 10.5deg,
-        #667eea 11deg, transparent 12.5deg,
-        #a55eea 13deg, transparent 14.5deg,
-        #f093fb 15deg, transparent 16.5deg,
-        #f5576c 17deg, transparent 18.5deg,
-        #ff4d4d 19deg, transparent 25deg
-      );
-      animation: spectrumShift 12s ease-in-out infinite reverse;
-    }
-    /* Spectrum grain texture */
-    .spectrum-grain {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.06;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      background-size: 200px 200px;
-      animation: grainShift 0.5s steps(3) infinite;
-    }
-    @keyframes spectrumShift {
-      0%, 100% { filter: blur(8px) hue-rotate(0deg); }
-      25% { filter: blur(10px) hue-rotate(15deg); }
-      50% { filter: blur(9px) hue-rotate(-10deg); }
-      75% { filter: blur(11px) hue-rotate(5deg); }
-    }
-    /* Fine spectrum rays (hundreds of thin lines) */
-    .spectrum-lines {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      pointer-events: none;
-    }
-    .spectrum-line {
-      position: absolute;
-      left: 0;
-      top: 53%;
-      height: 1px;
-      transform-origin: left center;
-      opacity: 0;
-      transition: opacity 1.5s ease;
-    }
-    .spectrum-line.visible {
-      opacity: var(--sl-opacity, 0.4);
-    }
+    .spectrum { position: absolute; top: 48%; left: 43%; transform-origin: left center; }
+    .ray { position: absolute; left: 0; height: 2px; border-radius: 1px; filter: blur(1px); }
+    .ray-1 { width: 55vw; background: linear-gradient(90deg, #ff4d4d, rgba(255,77,77,0.1)); transform: rotate(-35deg); opacity: 0.5; box-shadow: 0 0 20px 4px rgba(255,77,77,0.1); }
+    .ray-2 { width: 55vw; background: linear-gradient(90deg, #ff9f43, rgba(255,159,67,0.1)); transform: rotate(-24deg); opacity: 0.45; box-shadow: 0 0 20px 4px rgba(255,159,67,0.08); }
+    .ray-3 { width: 55vw; background: linear-gradient(90deg, #feca57, rgba(254,202,87,0.1)); transform: rotate(-13deg); opacity: 0.4; box-shadow: 0 0 20px 4px rgba(254,202,87,0.08); }
+    .ray-4 { width: 55vw; background: linear-gradient(90deg, #48dbfb, rgba(72,219,251,0.1)); transform: rotate(-2deg); opacity: 0.45; box-shadow: 0 0 20px 4px rgba(72,219,251,0.08); }
+    .ray-5 { width: 55vw; background: linear-gradient(90deg, #667eea, rgba(102,126,234,0.1)); transform: rotate(9deg); opacity: 0.5; box-shadow: 0 0 20px 4px rgba(102,126,234,0.1); }
+    .ray-6 { width: 55vw; background: linear-gradient(90deg, #a55eea, rgba(165,94,234,0.1)); transform: rotate(20deg); opacity: 0.45; box-shadow: 0 0 20px 4px rgba(165,94,234,0.08); }
+    .ray-7 { width: 55vw; background: linear-gradient(90deg, #f093fb, rgba(240,147,251,0.1)); transform: rotate(31deg); opacity: 0.4; box-shadow: 0 0 20px 4px rgba(240,147,251,0.08); }
 
-    @keyframes grainShift {
-      0% { transform: translate(0, 0); }
-      33% { transform: translate(-1px, 1px); }
-      66% { transform: translate(1px, -1px); }
-    }
-
-    /* === BIM MATRIX DYNAMIC LABELS === */
-    .bim-labels {
-      position: fixed;
-      inset: 0;
-      z-index: 5;
-      pointer-events: none;
-    }
-    .bim-label {
-      position: absolute;
-      font-size: 0.62rem;
-      letter-spacing: 0.06em;
-      font-weight: 300;
-      white-space: nowrap;
-      opacity: 0;
-      transform: translate(-50%, -50%) translateY(6px);
-      transition: opacity 0.6s ease, transform 0.6s ease, color 0.6s ease;
-      text-shadow: 0 0 14px currentColor;
-    }
-    .bim-label.visible {
-      opacity: 0.75;
-      transform: translate(-50%, -50%) translateY(0);
-      pointer-events: auto;
-    }
-
-    /* Glow halo around spectrum fan */
     .glow-spectrum {
-      position: absolute;
-      top: 10%;
-      right: 5%;
-      width: 70vw;
-      height: 80vh;
-      background: conic-gradient(
-        from 200deg at 0% 50%,
-        transparent 0deg,
-        rgba(255,77,77,0.04) 5deg,
-        rgba(255,159,67,0.04) 10deg,
-        rgba(254,202,87,0.03) 15deg,
-        rgba(72,219,251,0.04) 20deg,
-        rgba(102,126,234,0.05) 25deg,
-        rgba(165,94,234,0.04) 30deg,
-        rgba(240,147,251,0.03) 35deg,
-        transparent 40deg
-      );
-      filter: blur(50px);
-      animation: glowPulse 8s ease-in-out infinite;
+      position: absolute; top: 10%; right: 5%; width: 60vw; height: 80vh;
+      background: conic-gradient(from 200deg at 0% 50%, transparent 0deg, rgba(255,77,77,0.03) 5deg, rgba(255,159,67,0.03) 10deg, rgba(254,202,87,0.03) 15deg, rgba(72,219,251,0.03) 20deg, rgba(102,126,234,0.04) 25deg, rgba(165,94,234,0.03) 30deg, rgba(240,147,251,0.03) 35deg, transparent 40deg);
+      filter: blur(40px);
     }
-    @keyframes glowPulse {
-      0%, 100% { opacity: 0.8; }
-      50% { opacity: 1.2; }
-    }
+    .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(5,5,8,0.7) 0%, rgba(5,5,8,0.3) 35%, transparent 65%); }
 
-    /* Vignette */
-    .vignette {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, rgba(5,5,8,0.6) 0%, rgba(5,5,8,0.2) 40%, transparent 70%);
-      z-index: 3;
-      pointer-events: none;
-    }
+    /* === SECTIONS === */
+    section { position: relative; z-index: 1; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 80px 24px; }
 
-    /* === CONTENT === */
-    .container {
-      text-align: center;
-      padding: 2rem 2rem 5rem;
-      position: relative;
-      z-index: 4;
-    }
-
-    /* Prism logo icon */
-    .logo-icon {
-      width: 80px;
-      height: 80px;
-      margin: 0 auto 1.5rem;
-    }
-    .logo-icon svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 0 16px rgba(102,126,234,0.3));
-    }
-
-    .logo {
-      font-size: clamp(2rem, 7vw, 4rem);
-      font-weight: 700;
-      letter-spacing: 0.15em;
+    /* Hero */
+    #hero { min-height: 100vh; flex-direction: column; text-align: center; }
+    .logo-icon { width: 80px; height: 80px; margin: 0 auto 2rem; filter: drop-shadow(0 0 20px rgba(102,126,234,0.3)); }
+    .logo-icon svg { width: 100%; height: 100%; }
+    .hero-title {
+      font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 900; letter-spacing: 0.12em;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 35%, #f093fb 70%, #f5576c 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      filter: drop-shadow(0 2px 8px rgba(102,126,234,0.3));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      filter: drop-shadow(0 2px 12px rgba(102,126,234,0.3));
     }
-    .tagline {
-      margin-top: 0.8rem;
-      font-size: clamp(0.85rem, 2.2vw, 1.1rem);
-      color: #6a6a7a;
-      letter-spacing: 0.06em;
-      font-weight: 300;
+    .hero-tagline { font-size: clamp(1rem, 2.5vw, 1.4rem); color: var(--gray); font-weight: 300; letter-spacing: 0.06em; margin-top: 0.8rem; }
+    .hero-divider { width: 80px; height: 1px; background: linear-gradient(90deg, transparent, #667eea, transparent); margin: 2rem auto; }
+    .hero-sub { font-size: 0.85rem; color: #444; text-transform: uppercase; letter-spacing: 0.35em; margin-bottom: 3rem; }
+    .cta-btn {
+      display: inline-block; padding: 14px 36px; border: 1px solid rgba(102,126,234,0.4);
+      border-radius: 8px; color: var(--white); text-decoration: none; font-size: 0.9rem;
+      letter-spacing: 0.1em; transition: all 0.3s; background: rgba(102,126,234,0.08);
     }
-    .formula {
-      margin-top: 1.2rem;
-      font-size: clamp(0.7rem, 1.6vw, 0.85rem);
-      color: #5a5a6a;
-      letter-spacing: 0.08em;
-      font-weight: 300;
-    }
-    .formula span {
-      color: #7a7a8a;
-    }
-    .divider {
-      width: 80px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, #667eea, transparent);
-      margin: 1.8rem auto;
-    }
-    .coming-soon {
-      font-size: 0.75rem;
-      color: #6a6a7a;
-      text-transform: uppercase;
-      letter-spacing: 0.35em;
-    }
+    .cta-btn:hover { background: rgba(102,126,234,0.2); border-color: #667eea; transform: translateY(-2px); }
 
-    /* === EMAIL WAITLIST === */
-    .waitlist {
-      margin-top: 2rem;
-      display: inline-flex;
-      gap: 0.5rem;
-      align-items: center;
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.04);
-      border-radius: 100px;
-      padding: 0.35rem 0.35rem 0.35rem 1rem;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      transition: border-color 0.4s ease;
-    }
-    .waitlist:focus-within {
-      border-color: rgba(102,126,234,0.3);
-    }
-    .waitlist-label {
-      display: block;
-      font-size: 0.65rem;
-      color: #5a5a6a;
-      letter-spacing: 0.06em;
-      margin-bottom: 0.5rem;
-    }
-    .waitlist input {
-      background: transparent;
-      border: none;
-      color: #aaa;
-      font-size: 0.8rem;
-      font-family: inherit;
-      outline: none;
-      width: 200px;
-      letter-spacing: 0.04em;
-    }
-    .waitlist input::placeholder {
-      color: #555;
-    }
-    .waitlist button {
-      background: rgba(102,126,234,0.15);
-      border: none;
-      color: #9eaaff;
-      font-size: 0.75rem;
-      font-family: inherit;
-      padding: 0.5rem 1.2rem;
-      border-radius: 100px;
-      cursor: pointer;
-      letter-spacing: 0.08em;
-      transition: all 0.3s ease;
-      white-space: nowrap;
-    }
-    .waitlist button:hover {
-      background: rgba(102,126,234,0.25);
-      color: #b8c4ff;
-    }
-    .waitlist-msg {
-      margin-top: 0.6rem;
-      font-size: 0.7rem;
-      color: #5a8a5a;
-      min-height: 1rem;
-      transition: color 0.5s ease;
-    }
-    .waitlist-msg.success {
-      color: #6aaa6a;
-    }
-    .waitlist-privacy {
-      margin-top: 0.5rem;
-      font-size: 0.58rem;
-      color: #3a3a44;
-      letter-spacing: 0.04em;
-    }
-    .waitlist-privacy:hover {
-      color: #5a5a64;
-    }
+    /* Story sections */
+    .story { max-width: 900px; width: 100%; }
+    .story h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 1rem; line-height: 1.3; }
+    .story h2 .o { color: var(--orange); } .story h2 .c { color: var(--cyan); } .story h2 .g { color: var(--gold); }
+    .story p { font-size: 1.1rem; line-height: 1.8; color: #aaa; max-width: 700px; }
+    .story .accent { color: var(--white); font-weight: 600; }
+    .story .divider-small { width: 48px; height: 2px; background: linear-gradient(90deg, var(--orange), var(--cyan)); border-radius: 1px; margin: 1.5rem 0; }
 
-    /* === VIP PERSONALIZED CARD === */
-    .vip-card {
-      display: none;
-      margin-top: 2rem;
-      padding: 1.5rem 2rem;
-      background: rgba(255,255,255,0.015);
-      border: 1px solid rgba(102,126,234,0.15);
-      border-radius: 12px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      animation: fadeIn 1s ease-out 0.2s both;
-      text-align: left;
+    /* Cards grid */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; width: 100%; max-width: 1000px; margin-top: 2rem; }
+    .card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px; padding: 24px; transition: all 0.3s;
     }
-    .vip-card.visible {
-      display: block;
-    }
-    .vip-greeting {
-      font-size: 0.8rem;
-      color: #8899bb;
-      letter-spacing: 0.04em;
-      margin-bottom: 0.3rem;
-    }
-    .vip-name {
-      font-size: 1.1rem;
-      font-weight: 600;
-      background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 0.8rem;
-    }
-    .vip-message {
-      font-size: 0.72rem;
-      color: #6a6a7a;
-      line-height: 1.6;
-      letter-spacing: 0.03em;
-    }
-    .vip-action {
-      margin-top: 1rem;
-      display: inline-block;
-      font-size: 0.7rem;
-      color: #667eea;
-      letter-spacing: 0.06em;
-      cursor: pointer;
-      transition: color 0.3s ease;
-      border-bottom: 1px solid rgba(102,126,234,0.2);
-    }
-    .vip-action:hover {
-      color: #8899ff;
-      border-color: rgba(102,126,234,0.5);
-    }
+    .card:hover { border-color: rgba(102,126,234,0.3); background: rgba(255,255,255,0.05); transform: translateY(-2px); }
+    .card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+    .card p { font-size: 0.9rem; color: var(--gray); line-height: 1.6; }
+    .card .icon { font-size: 28px; margin-bottom: 12px; }
 
-    /* === BIM MATRIX TEASER === */
-    .matrix-teaser {
-      position: fixed;
-      bottom: 2rem;
-      left: 0;
-      right: 0;
-      text-align: center;
-      z-index: 4;
-      font-size: 0.65rem;
-      color: #2a2a3a;
-      letter-spacing: 0.12em;
-      font-weight: 300;
-      transition: color 1s ease;
-    }
-    .matrix-teaser:hover {
-      color: #4a4a5a;
-    }
+    /* Spectrum bar */
+    .spectrum-bar { display: flex; gap: 4px; width: 100%; max-width: 700px; height: 6px; border-radius: 3px; margin: 2rem 0; overflow: hidden; }
+    .spectrum-bar div { flex: 1; }
+    .sb-1 { background: #ff4d4d; } .sb-2 { background: #ff9f43; } .sb-3 { background: #feca57; }
+    .sb-4 { background: #48dbfb; } .sb-5 { background: #667eea; } .sb-6 { background: #a55eea; } .sb-7 { background: #f093fb; }
 
-    /* === LANGUAGE TOGGLE === */
-    .lang-toggle {
-      position: fixed;
-      top: 1.5rem;
-      right: 1.5rem;
-      z-index: 10;
-      display: flex;
-      gap: 0.6rem;
-    }
-    .lang-toggle span {
-      font-size: 0.7rem;
-      color: #555;
-      cursor: pointer;
-      letter-spacing: 0.06em;
-      transition: color 0.3s ease;
-      user-select: none;
-    }
-    .lang-toggle span.active {
-      color: #667eea;
-    }
-    .lang-toggle span:hover {
-      color: #8899ff;
-    }
-    /* === MOBILE: disable parallax, adjust layout === */
-    @media (hover: none) and (pointer: coarse) {
-      body { --mx: 0; --my: 0; }
-      .beam-white { transform: rotate(2deg); }
-      .prism-glass { transform: none; }
-      .spectrum { transform: none; }
-    }
-    @media (max-width: 480px) {
-      .container { padding: 1.5rem 1rem 4rem; }
-      .waitlist { flex-direction: column; gap: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 12px; }
-      .waitlist input { width: 100%; text-align: center; }
-      .waitlist button { width: 100%; }
-      .matrix-teaser { bottom: 1rem; font-size: 0.55rem; }
-      .lang-toggle { top: 0.75rem; right: 0.75rem; }
+    /* Nav dots */
+    .nav-dots { position: fixed; right: 24px; top: 50%; transform: translateY(-50%); z-index: 100; display: flex; flex-direction: column; gap: 12px; }
+    .nav-dots a { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s; display: block; }
+    .nav-dots a:hover, .nav-dots a.active { background: #667eea; box-shadow: 0 0 8px rgba(102,126,234,0.5); }
+
+    /* Footer */
+    footer { position: relative; z-index: 1; text-align: center; padding: 40px 24px; font-size: 0.8rem; color: #333; }
+    footer a { color: #667eea; text-decoration: none; }
+
+    @media (max-width: 768px) {
+      .story { padding: 0 8px; }
+      .cards { grid-template-columns: 1fr; }
+      .nav-dots { display: none; }
     }
   </style>
 </head>
 <body>
-  <div class="bg">
-    <div class="bg-base"></div>
-    <div class="matrix-ghost">
-      <div class="matrix-grid"></div>
+
+<!-- Fixed background -->
+<div class="bg">
+  <div class="bg-base"></div>
+  <div class="beam-white"></div>
+  <div class="prism-glass"></div>
+  <div class="spectrum">
+    <div class="ray ray-1"></div><div class="ray ray-2"></div><div class="ray ray-3"></div>
+    <div class="ray ray-4"></div><div class="ray ray-5"></div><div class="ray ray-6"></div><div class="ray ray-7"></div>
+  </div>
+  <div class="glow-spectrum"></div>
+  <div class="vignette"></div>
+</div>
+
+<!-- Nav dots -->
+<nav class="nav-dots">
+  <a href="#hero" title="Home"></a>
+  <a href="#vision" title="Vision"></a>
+  <a href="#spectrum" title="Spectrum"></a>
+  <a href="#case" title="Case Study"></a>
+  <a href="#future" title="Future"></a>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <div class="logo-icon">
+    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="0" y1="42" x2="30" y2="42" stroke="url(#bg)" stroke-width="2"/>
+      <polygon points="40,12 50,65 30,65" fill="rgba(255,255,255,0.03)" stroke="url(#ps)" stroke-width="1.5"/>
+      <line x1="42" y1="44" x2="78" y2="16" stroke="#ff4d4d" stroke-width="1.5" opacity="0.7"/>
+      <line x1="42" y1="47" x2="78" y2="28" stroke="#ff9f43" stroke-width="1.5" opacity="0.6"/>
+      <line x1="42" y1="50" x2="78" y2="40" stroke="#feca57" stroke-width="1.5" opacity="0.5"/>
+      <line x1="42" y1="53" x2="78" y2="52" stroke="#667eea" stroke-width="1.5" opacity="0.6"/>
+      <line x1="42" y1="56" x2="78" y2="64" stroke="#a55eea" stroke-width="1.5" opacity="0.5"/>
+      <line x1="42" y1="58" x2="78" y2="72" stroke="#f093fb" stroke-width="1.5" opacity="0.4"/>
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="white"/></linearGradient>
+        <linearGradient id="ps" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="rgba(255,255,255,0.2)"/><stop offset="100%" stop-color="rgba(255,255,255,0.05)"/></linearGradient>
+      </defs>
+    </svg>
+  </div>
+  <div class="hero-title">AEC PRISM</div>
+  <div class="hero-tagline">Where Building Data Refracts Into Decisions</div>
+  <div class="hero-divider"></div>
+  <div class="hero-sub">AI-Driven BIM Intelligence Platform</div>
+  <a href="#vision" class="cta-btn">DISCOVER ↓</a>
+</section>
+
+<!-- ═══ VISION ═══ -->
+<section id="vision">
+  <div class="story">
+    <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--gray); margin-bottom: 0.5rem;">THE VISION</p>
+    <h2>One Beam of Light.<br><span class="o">Seven Decisions.</span></h2>
+    <div class="divider-small"></div>
+    <p>
+      In architecture, engineering, and construction — <span class="accent">data is light</span>.
+      Raw, white, overwhelming. It enters the project as drawings, specs, schedules, budgets.
+      Without a prism, it scatters — lost in silos, buried in emails, evaporated at handover.
+    </p>
+    <br>
+    <p>
+      <span class="accent">AEC Prism is that prism.</span>
+      We take the chaos of building data and refract it into clear, actionable spectrum:
+      <span class="o">planning</span>, <span class="c">design</span>,
+      <span class="g">construction</span>, <span class="o">handover</span>,
+      <span class="c">operations</span>, <span class="g">intelligence</span>.
+    </p>
+    <div class="spectrum-bar" style="margin-top: 2rem;">
+      <div class="sb-1"></div><div class="sb-2"></div><div class="sb-3"></div>
+      <div class="sb-4"></div><div class="sb-5"></div><div class="sb-6"></div><div class="sb-7"></div>
     </div>
-    <div class="beam-white"></div>
-    <div class="bim-reveal" id="bimReveal">
-      <div class="bim-reveal-spotlight" id="bimSpotlight"></div>
-      <div class="bim-wireframe">
-        <svg viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-          <g stroke="rgba(180,200,240,0.5)" stroke-width="1.5" fill="none">
-            <!-- Main building -->
-            <rect x="80" y="200" width="280" height="500"/>
-            <line x1="80" y1="360" x2="360" y2="360"/>
-            <line x1="80" y1="520" x2="360" y2="520"/>
-            <line x1="220" y1="200" x2="220" y2="700"/>
-            <!-- Roof -->
-            <polygon points="60,200 220,60 380,200"/>
-            <line x1="220" y1="60" x2="220" y2="200"/>
-            <!-- Floors -->
-            <line x1="80" y1="280" x2="360" y2="280"/>
-            <line x1="80" y1="440" x2="360" y2="440"/>
-            <line x1="80" y1="600" x2="360" y2="600"/>
-            <!-- Grid dots at intersections -->
-            <circle cx="220" cy="280" r="2" fill="rgba(180,200,240,0.3)"/>
-            <circle cx="220" cy="360" r="2" fill="rgba(180,200,240,0.3)"/>
-            <circle cx="220" cy="440" r="2" fill="rgba(180,200,240,0.3)"/>
-            <circle cx="220" cy="520" r="2" fill="rgba(180,200,240,0.3)"/>
-            <circle cx="220" cy="600" r="2" fill="rgba(180,200,240,0.3)"/>
-          </g>
-        </svg>
+    <p style="font-size: 0.85rem; color: #555;">Six phases. Fifty-one applications. One platform.</p>
+  </div>
+</section>
+
+<!-- ═══ SPECTRUM ═══ -->
+<section id="spectrum">
+  <div class="story" style="max-width: 1000px;">
+    <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--gray); margin-bottom: 0.5rem;">THE SPECTRUM</p>
+    <h2>From White Light to<br><span class="c">Actionable Intelligence</span></h2>
+    <div class="divider-small"></div>
+    <div class="cards">
+      <div class="card">
+        <div class="icon">📐</div>
+        <h3>Planning & Design</h3>
+        <p>Scan-to-BIM, clash detection, code compliance, energy analysis, lighting simulation</p>
+      </div>
+      <div class="card">
+        <div class="icon">🏗️</div>
+        <h3>Construction</h3>
+        <p>4D scheduling, 5D cost estimation, digital fabrication, safety planning, site logistics</p>
+      </div>
+      <div class="card">
+        <div class="icon">📋</div>
+        <h3>Handover</h3>
+        <p>As-built modeling, asset inventory, digital handover, training simulation</p>
+      </div>
+      <div class="card">
+        <div class="icon">🏠</div>
+        <h3>Facility Management</h3>
+        <p>Maintenance scheduling, asset management, space optimization, energy management</p>
+      </div>
+      <div class="card">
+        <div class="icon">🤖</div>
+        <h3>AI & Intelligence</h3>
+        <p>Digital twin, AR/VR presentation, smart construction, predictive maintenance, risk management</p>
+      </div>
+      <div class="card" style="border-color: rgba(102,126,234,0.3); background: rgba(102,126,234,0.05);">
+        <div class="icon">🔮</div>
+        <h3>The Platform</h3>
+        <p>BIM Matrix — the data backbone that connects all phases, powered by AI agents</p>
       </div>
     </div>
-    <div class="prism-glass"></div>
-    <div class="spectrum">
-      <div class="spectrum-fan"></div>
-      <div class="spectrum-fan-sharp"></div>
-      <div class="spectrum-lines" id="spectrumLines"></div>
-      <div class="spectrum-grain"></div>
-    </div>
-    <div class="bim-labels" id="bimLabels"></div>
-    <div class="glow-spectrum"></div>
-    <div class="vignette"></div>
   </div>
+</section>
 
-  <!-- Language Toggle -->
-  <div class="lang-toggle">
-    <span class="active" data-lang="en">EN</span>
-    <span data-lang="zh">繁中</span>
+<!-- ═══ CASE STUDY ═══ -->
+<section id="case">
+  <div class="story">
+    <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--gray); margin-bottom: 0.5rem;">CASE STUDY</p>
+    <h2>The <span class="g">Xuefu Project</span><br>Taipei's Most Ambitious BIM Deployment</h2>
+    <div class="divider-small"></div>
+    <p>
+      A luxury residential development in Taipei's Da'an District —
+      <span class="accent">NT$1.65–1.75M per ping</span>.
+      For developer Yulinn Construction, "standard BIM" wasn't enough.
+    </p>
+    <br>
+    <p>
+      We proposed a <span class="accent">51-item AI-driven full lifecycle upgrade</span>:
+      from 4D consumer progress contracts (industry first) to AR/MR inspection,
+      from predictive maintenance to a digital twin that spans 50 years of operations.
+    </p>
+    <br>
+    <div class="cards" style="grid-template-columns: repeat(3, 1fr); max-width: 700px;">
+      <div class="card" style="text-align: center; padding: 20px;">
+        <div style="font-size: 2rem; font-weight: 900; color: var(--orange);">51</div>
+        <div style="font-size: 0.8rem; color: var(--gray);">BIM Applications</div>
+      </div>
+      <div class="card" style="text-align: center; padding: 20px;">
+        <div style="font-size: 2rem; font-weight: 900; color: var(--cyan);">6</div>
+        <div style="font-size: 0.8rem; color: var(--gray);">Lifecycle Phases</div>
+      </div>
+      <div class="card" style="text-align: center; padding: 20px;">
+        <div style="font-size: 2rem; font-weight: 900; color: var(--gold);">2</div>
+        <div style="font-size: 0.8rem; color: var(--gray);">Industry Firsts</div>
+      </div>
+    </div>
+    <br>
+    <a href="xuefu.html" class="cta-btn" style="margin-top: 1rem;">VIEW FULL PRESENTATION →</a>
   </div>
+</section>
 
-  <div class="container">
-    <!-- Logo icon: prism with light -->
-    <div class="logo-icon">
-      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="0" y1="42" x2="30" y2="42" stroke="url(#beam-grad)" stroke-width="2"/>
-        <polygon points="40,12 50,65 30,65" fill="rgba(255,255,255,0.03)" stroke="url(#prism-stroke)" stroke-width="1.5"/>
-        <line x1="42" y1="44" x2="78" y2="16" stroke="#ff4d4d" stroke-width="1.5" opacity="0.7"/>
-        <line x1="42" y1="47" x2="78" y2="28" stroke="#ff9f43" stroke-width="1.5" opacity="0.6"/>
-        <line x1="42" y1="50" x2="78" y2="40" stroke="#feca57" stroke-width="1.5" opacity="0.5"/>
-        <line x1="42" y1="53" x2="78" y2="52" stroke="#667eea" stroke-width="1.5" opacity="0.6"/>
-        <line x1="42" y1="56" x2="78" y2="64" stroke="#a55eea" stroke-width="1.5" opacity="0.5"/>
-        <line x1="42" y1="58" x2="78" y2="72" stroke="#f093fb" stroke-width="1.5" opacity="0.4"/>
-        <defs>
-          <linearGradient id="beam-grad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="transparent"/>
-            <stop offset="100%" stop-color="white"/>
-          </linearGradient>
-          <linearGradient id="prism-stroke" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="rgba(255,255,255,0.2)"/>
-            <stop offset="100%" stop-color="rgba(255,255,255,0.05)"/>
-          </linearGradient>
-        </defs>
-      </svg>
+<!-- ═══ FUTURE ═══ -->
+<section id="future">
+  <div class="story" style="text-align: center;">
+    <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--gray); margin-bottom: 0.5rem;">THE FUTURE</p>
+    <h2>The <span class="o">Palantir</span> of AEC</h2>
+    <div class="divider-small" style="margin: 1.5rem auto;"></div>
+    <p style="max-width: 600px; margin: 0 auto;">
+      We don't just deliver BIM models. We deliver <span class="accent">data infrastructure</span> —
+      the kind that turns a construction company into a technology company.
+      One project at a time. One beam at a time.
+    </p>
+    <div class="spectrum-bar" style="margin: 2rem auto; max-width: 400px;">
+      <div class="sb-1"></div><div class="sb-2"></div><div class="sb-3"></div>
+      <div class="sb-4"></div><div class="sb-5"></div><div class="sb-6"></div><div class="sb-7"></div>
     </div>
-
-    <div class="logo">AEC PRISM</div>
-    <div class="tagline" data-i18n="tagline">Refracting Building Data Into Decisions</div>
-    <div class="formula">BIM Model <span>→</span> Prism <span>→</span> Decisions</div>
-    <div class="divider"></div>
-    <div class="coming-soon">Coming Soon</div>
-
-    <!-- Email Waitlist -->
-    <div class="waitlist-label">Be the first to know when we launch.</div>
-    <div class="waitlist" id="waitlist">
-      <input type="email" placeholder="Your email" id="emailInput" aria-label="Email address">
-      <button id="subscribeBtn">Stay Tuned</button>
-    </div>
-    <div class="waitlist-msg" id="waitlistMsg"></div>
-    <div class="waitlist-privacy">We'll only use your email to announce our launch. No spam, ever.</div>
-
-    <!-- VIP Personalized Card -->
-    <div class="vip-card" id="vipCard">
-      <div class="vip-greeting" id="vipGreeting"></div>
-      <div class="vip-name" id="vipName"></div>
-      <div class="vip-message" id="vipMessage"></div>
-      <span class="vip-action" id="vipAction">View Your Briefing ↓</span>
-    </div>
+    <p style="font-size: 0.85rem; color: #555; margin-bottom: 2rem;">Concord Tech · AEC Prism · Coming Soon</p>
+    <a href="mailto:jeff@ctc.com.tw" class="cta-btn">CONTACT US</a>
   </div>
+</section>
 
-  <div class="matrix-teaser" data-i18n="matrixTeaser">Powered by insights from 100+ BIM use cases. Full spectrum revealed soon.</div>
+<footer>
+  <p>AEC Prism is a product of <a href="https://www.ctc.com.tw" target="_blank">Concord Tech Co., Ltd.</a></p>
+  <p style="margin-top: 4px;">Taipei, Taiwan · <a href="mailto:jeff@ctc.com.tw">jeff@ctc.com.tw</a></p>
+</footer>
 
-  <script>
-    /* ---- MOUSE PARALLAX ---- */
-    (function() {
-      var mx = 0, my = 0, tmx = 0, tmy = 0;
-      document.addEventListener('mousemove', function(e) {
-        tmx = (e.clientX / window.innerWidth - 0.5) * 2;  // -1 to 1
-        tmy = (e.clientY / window.innerHeight - 0.5) * 2; // -1 to 1
-      });
-      function lerp() {
-        mx += (tmx - mx) * 0.04;
-        my += (tmy - my) * 0.04;
-        document.body.style.setProperty('--mx', mx.toFixed(3));
-        document.body.style.setProperty('--my', my.toFixed(3));
-        requestAnimationFrame(lerp);
+<script>
+  // Active nav dot on scroll
+  const sections = document.querySelectorAll('section');
+  const dots = document.querySelectorAll('.nav-dots a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        dots.forEach(d => d.classList.remove('active'));
+        const active = document.querySelector(`.nav-dots a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
       }
-      lerp();
-    })();
-
-    /* ---- SPECTRUM THIN RAYS: hundreds of lines in 7 colors ---- */
-    (function() {
-      var container = document.getElementById('spectrumLines');
-      var colors = [
-        '#ff4d4d', '#ff9f43', '#feca57',
-        '#48dbfb', '#667eea', '#a55eea', '#f093fb'
-      ];
-      var linesPerColor = 16; // 112 total lines
-      var allLines = [];
-
-      colors.forEach(function(color, ci) {
-        var baseAngle = -35 + ci * 10.5; // Spread across spectrum angular range
-        for (var i = 0; i < linesPerColor; i++) {
-          var line = document.createElement('div');
-          line.className = 'spectrum-line';
-          var angle = baseAngle + (i - (linesPerColor - 1) / 2) * 0.6;
-          var length = 40 + Math.random() * 55; // vw, vary each line
-          var opacity = 0.15 + Math.random() * 0.45;
-          line.style.width = length + 'vw';
-          line.style.transform = 'rotate(' + angle.toFixed(1) + 'deg)';
-          line.style.background = 'linear-gradient(90deg, ' + color + ' 0%, rgba(255,255,255,0.01) 100%)';
-          line.style.setProperty('--sl-opacity', opacity.toFixed(2));
-          line.style.boxShadow = '0 0 ' + (2 + Math.random() * 6) + 'px ' + (1 + Math.random() * 2) + 'px ' + color.replace(')', ',0.08)').replace('rgb', 'rgba');
-          container.appendChild(line);
-          allLines.push(line);
-        }
-      });
-
-      // Animate lines: shimmer + slight angle wobble
-      var time = 0;
-      function animateLines() {
-        time += 0.02;
-        allLines.forEach(function(line, i) {
-          var wobble = Math.sin(time * 0.8 + i * 0.3) * 0.5;
-          var flicker = 0.5 + 0.5 * Math.sin(time * 1.3 + i * 0.7);
-          line.style.opacity = parseFloat(line.style.getPropertyValue('--sl-opacity')) * (0.6 + flicker * 0.4);
-          if (line.classList.contains('visible') || true) { // All lines visible by default
-            line.classList.add('visible');
-          }
-        });
-        requestAnimationFrame(animateLines);
-      }
-      animateLines();
-    })();
-
-    /* ---- EMAIL WAITLIST + VIP MATCHING ---- */
-    (function() {
-      var btn = document.getElementById('subscribeBtn');
-      var input = document.getElementById('emailInput');
-      var msg = document.getElementById('waitlistMsg');
-      var vipCard = document.getElementById('vipCard');
-      var vipGreeting = document.getElementById('vipGreeting');
-      var vipName = document.getElementById('vipName');
-      var vipMessage = document.getElementById('vipMessage');
-      var vipAction = document.getElementById('vipAction');
-      var waitlistForm = document.getElementById('waitlist');
-
-      // VIP contact map: email → personalized briefing
-      var contacts = {
-        'ceo@yulin.com.tw': {
-          name: '呂董事長',
-          greeting: '敬愛的',
-          title: '董事長',
-          company: '玉霖建設',
-          message: 'AEC PRISM 為營建決策者打造的 AI 分析平台。從 BIM 模型出發，即時折射出工程進度、成本風險、品質指標。學府專案完整升級方案已為您備妥。',
-          briefingUrl: '/briefing/xuefu.html'
-        },
-        'exec@yulin.com.tw': {
-          name: '巫執行長',
-          greeting: '敬愛的',
-          title: '執行長',
-          company: '玉霖建設',
-          message: 'AEC PRISM 將您的 BIM 模型轉化為可執行的營運洞察。學府案全生命週期方案涵蓋設計、施工、營運各階段。',
-          briefingUrl: '/briefing/xuefu.html'
-        },
-        'demo@aecprism.com': {
-          name: '來賓',
-          greeting: '歡迎',
-          title: '',
-          company: 'AEC PRISM',
-          message: '這是玉霖建設 · 學府專案的 VIP 預覽模式。協勤資訊為學府案量身打造的 BIM 全生命週期升級方案。',
-          briefingUrl: '/briefing/xuefu.html'
-        }
-      };
-
-      function showVIP(contact) {
-        waitlistForm.style.display = 'none';
-        msg.textContent = '';
-        msg.className = 'waitlist-msg';
-        vipGreeting.textContent = contact.greeting + ' ' + contact.title;
-        vipName.textContent = contact.name + (contact.company ? ' · ' + contact.company : '');
-        vipMessage.textContent = contact.message;
-        vipAction.textContent = 'View Full Briefing →';
-        vipAction.style.cursor = 'pointer';
-        vipAction.onclick = function() {
-          window.open(contact.briefingUrl, '_blank');
-        };
-        vipCard.classList.add('visible');
-      }
-
-      btn.addEventListener('click', function() {
-        var email = input.value.trim().toLowerCase();
-        if (!email || !email.includes('@') || !email.includes('.')) {
-          msg.textContent = 'Please enter a valid email.';
-          msg.className = 'waitlist-msg';
-          return;
-        }
-
-        // VIP check
-        if (contacts[email]) {
-          showVIP(contacts[email]);
-          input.value = '';
-          return;
-        }
-
-        // Normal waitlist
-        var list = JSON.parse(localStorage.getItem('aecprism_waitlist') || '[]');
-        if (list.indexOf(email) !== -1) {
-          msg.textContent = 'You\'re already on the list.';
-          msg.className = 'waitlist-msg success';
-          return;
-        }
-        list.push(email);
-        localStorage.setItem('aecprism_waitlist', JSON.stringify(list));
-        msg.textContent = '✓ You\'re on the list. We\'ll be in touch.';
-        msg.className = 'waitlist-msg success';
-        input.value = '';
-      });
-      input.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') btn.click();
-      });
-    })();
-
-    /* ---- LANGUAGE TOGGLE (structure ready) ---- */
-    (function() {
-      var i18n = {
-        en: {
-          tagline: 'Refracting Building Data Into Decisions',
-          matrixTeaser: 'Powered by insights from 100+ BIM use cases. Full spectrum revealed soon.'
-        },
-        zh: {
-          tagline: '將建築數據折射為決策',
-          matrixTeaser: 'Powered by BIM Matrix · 近百項 BIM 應用情境 · 完整光譜即將揭曉'
-        }
-      };
-      var current = 'en';
-      document.querySelectorAll('.lang-toggle span').forEach(function(span) {
-        span.addEventListener('click', function() {
-          current = this.dataset.lang;
-          document.querySelectorAll('.lang-toggle span').forEach(function(s) {
-            s.classList.toggle('active', s.dataset.lang === current);
-          });
-          document.querySelectorAll('[data-i18n]').forEach(function(el) {
-            var key = el.dataset.i18n;
-            if (i18n[current] && i18n[current][key]) {
-              el.textContent = i18n[current][key];
-            }
-          });
-        });
-      });
-    })();
-
-    /* ---- BIM INTERACTIVE: beam spotlight + dynamic matrix labels ---- */
-    (function() {
-      var bimReveal = document.getElementById('bimReveal');
-      var bimSpotlight = document.getElementById('bimSpotlight');
-      var labelsContainer = document.getElementById('bimLabels');
-      var activeLabels = [];
-
-      // BIM Matrix use case pool — rotates based on cursor position
-      var useCases = [
-        'Design Coordination', 'Clash Detection', 'Quantity Takeoff',
-        '4D Scheduling', 'Cost Estimation', 'Energy Analysis',
-        'Facility Management', 'Structural Analysis', 'MEP Coordination',
-        'Laser Scan to BIM', 'Digital Twin Sync', 'Progress Tracking',
-        'Risk Assessment', 'Sustainability Audit', 'Asset Lifecycle',
-        'Code Compliance', 'Prefab Planning', 'Site Logistics',
-        'Reality Capture', 'AR Inspection'
-      ];
-
-      var spectrumColors = [
-        '#ff4d4d','#ff6b6b','#ff9f43','#feca57','#ffdd59',
-        '#a8e063','#48dbfb','#0abde3','#667eea','#764ba2',
-        '#a55eea','#c56cf0','#f093fb','#f5576c'
-      ];
-
-      function getColorAt(x, y) {
-        // Map x,y in spectrum zone to a color index
-        var idx = Math.floor(((x - 40) / 60 + (y / 100)) * spectrumColors.length);
-        return spectrumColors[Math.abs(idx) % spectrumColors.length];
-      }
-
-      function createLabel() {
-        var el = document.createElement('div');
-        el.className = 'bim-label';
-        labelsContainer.appendChild(el);
-        return el;
-      }
-
-      // Pre-create label pool
-      for (var i = 0; i < 5; i++) {
-        activeLabels.push({ el: createLabel(), text: '', visible: false, timer: 0 });
-      }
-
-      document.addEventListener('mousemove', function(e) {
-        var xPct = (e.clientX / window.innerWidth) * 100;
-        var yPct = (e.clientY / window.innerHeight) * 100;
-
-        // --- Beam zone: show BIM wireframe spotlight ---
-        if (xPct < 38) {
-          bimReveal.classList.add('active');
-          bimSpotlight.style.setProperty('--spot-x', xPct + '%');
-          bimSpotlight.style.setProperty('--spot-y', yPct + '%');
-        } else {
-          bimReveal.classList.remove('active');
-        }
-
-        // --- Spectrum zone: dynamic labels appear near cursor ---
-        if (xPct > 40) {
-          var seed = Math.floor((e.clientX * 13 + e.clientY * 7) % 100);
-          activeLabels.forEach(function(label, i) {
-            var offset = seed + i * 17;
-            var ucIdx = offset % useCases.length;
-            var spreadX = (Math.cos(offset * 0.4) * 80) - 40;
-            var spreadY = (Math.sin(offset * 0.4) * 50) - 25;
-
-            label.el.style.left = (e.clientX + spreadX) + 'px';
-            label.el.style.top = (e.clientY + spreadY) + 'px';
-            label.el.style.color = getColorAt(xPct + spreadX * 0.02, yPct + spreadY * 0.02);
-            label.el.textContent = useCases[ucIdx];
-            label.el.classList.add('visible');
-            label.visible = true;
-            label.timer = Date.now();
-          });
-        }
-      });
-
-      // Slowly fade labels when cursor leaves spectrum
-      setInterval(function() {
-        var now = Date.now();
-        activeLabels.forEach(function(label) {
-          if (label.visible && now - label.timer > 800) {
-            label.el.classList.remove('visible');
-            label.visible = false;
-          }
-        });
-      }, 400);
-
-      document.addEventListener('mouseleave', function() {
-        bimReveal.classList.remove('active');
-        activeLabels.forEach(function(l) {
-          l.el.classList.remove('visible');
-          l.visible = false;
-        });
-      });
-    })();
-  </script>
+    });
+  }, { threshold: 0.5 });
+  sections.forEach(s => observer.observe(s));
+</script>
 </body>
 </html>
