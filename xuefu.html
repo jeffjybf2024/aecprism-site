@@ -90,6 +90,13 @@
     -webkit-user-drag: none !important;
   }
   img, svg { -webkit-user-drag: none; pointer-events: none; }
+  /* Three.js containers */
+  .three-container { width:100%; height:360px; border-radius:12px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); box-shadow:0 8px 32px rgba(0,0,0,0.5); background:#0a0a12; }
+  .three-container canvas { width:100% !important; height:100% !important; }
+  .split-3d { display:grid; grid-template-columns:1fr 1fr; gap:16px; width:100%; max-width:900px; margin:20px auto; }
+  .split-3d .three-container { height:320px; }
+  .split-label { position:absolute; top:8px; left:12px; font-size:11px; font-weight:700; color:#888; letter-spacing:1px; z-index:2; text-shadow:0 0 8px rgba(0,0,0,0.8); }
+  .three-wrapper { position:relative; }
 </style>
 </head>
 <body>
@@ -319,14 +326,14 @@
       <a href="innovations.html" class="btn" style="display:inline-block; padding:10px 24px; background:linear-gradient(135deg,var(--orange),var(--gold)); color:#000; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px;">▶ 觀看模擬動畫</a>
     </p>
   
-<div class="split-comparison" style="display:grid; grid-template-columns:1fr 1fr; gap:16px; width:100%; max-width:900px; margin:20px auto;">
-  <div style="position:relative;">
-    <div class="split-label" style="position:absolute; top:8px; left:12px; font-size:11px; font-weight:700; color:#888; letter-spacing:1px; z-index:2; text-shadow:0 0 8px rgba(0,0,0,0.8);">現場掃瞄 · 點雲</div>
-    <canvas id="pointcloud-canvas" width="440" height="280" style="width:100%; border-radius:8px; background:#111;"></canvas>
+<div class="split-3d">
+  <div class="three-wrapper">
+    <div class="split-label">現場掃瞄 · 3D 點雲</div>
+    <div id="pointcloud-3d" class="three-container"></div>
   </div>
-  <div style="position:relative;">
-    <div class="split-label" style="position:absolute; top:8px; left:12px; font-size:11px; font-weight:700; color:#888; letter-spacing:1px; z-index:2; text-shadow:0 0 8px rgba(0,0,0,0.8);">BIM 模型 · 比對</div>
-    <canvas id="bim-canvas" width="440" height="280" style="width:100%; border-radius:8px; background:#111;"></canvas>
+  <div class="three-wrapper">
+    <div class="split-label">BIM 模型 · 比對</div>
+    <div id="bim-3d" class="three-container"></div>
   </div>
 </div>
 <div style="text-align:center; margin-top:12px;">
@@ -375,17 +382,8 @@
       <a href="innovations.html" class="btn" style="display:inline-block; padding:10px 24px; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px;">▶ 觀看模擬動畫</a>
     </p>
   
-<!-- 4D Payment Dashboard -->
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; width:100%; max-width:900px; margin:20px auto;">
-  <div class="card" style="border-left:3px solid var(--cyan); padding:16px;">
-    <div style="font-size:12px; font-weight:700; color:var(--cyan); margin-bottom:12px;">🏗️ BIM 驗證進度</div>
-    <canvas id="prog-dash-canvas" width="420" height="280" style="width:100%;border-radius:8px;background:#0a0a12;"></canvas>
-  </div>
-  <div class="card" style="border-left:3px solid var(--gold); padding:16px;">
-    <div style="font-size:12px; font-weight:700; color:var(--gold); margin-bottom:12px;">💰 付款進度</div>
-    <canvas id="pay-dash-canvas" width="420" height="280" style="width:100%;border-radius:8px;background:#0a0a12;"></canvas>
-  </div>
-</div>
+<!-- 4D Payment Dashboard - Three.js 3D -->
+<div id="payment-3d" class="three-container" style="max-width:900px; margin:24px auto;"></div>
 </div>
 </div>
 
@@ -427,17 +425,8 @@
       <a href="innovations.html" class="btn" style="display:inline-block; padding:10px 24px; background:linear-gradient(135deg,var(--purple),var(--pink)); color:#fff; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px;">▶ 觀看模擬動畫</a>
     </p>
   
-<!-- AR/MR Dashboard -->
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; width:100%; max-width:900px; margin:20px auto;">
-  <div class="card" style="border-left:3px solid var(--purple); padding:16px;">
-    <div style="font-size:12px; font-weight:700; color:var(--purple); margin-bottom:12px;">🏠 真實空間</div>
-    <canvas id="ar-room-canvas" width="420" height="280" style="width:100%;border-radius:8px;background:#0a0a12;"></canvas>
-  </div>
-  <div class="card" style="border-left:3px solid var(--cyan); padding:16px;">
-    <div style="font-size:12px; font-weight:700; color:var(--cyan); margin-bottom:12px;">📋 BIM 疊加驗收</div>
-    <canvas id="ar-check-canvas" width="420" height="280" style="width:100%;border-radius:8px;background:#0a0a12;"></canvas>
-  </div>
-</div>
+<!-- AR/MR Dashboard - Three.js 3D -->
+<div id="ar-3d" class="three-container" style="max-width:900px; margin:24px auto;"></div>
 </div>
 </div>
 
@@ -660,19 +649,7 @@
     <h2 class="mb-8">4D 進度 ↔ 付款 綁定關係</h2>
     <p class="tagline mb-24">施工進度是「因」，付款進度是「果」——兩者必須同步</p>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;width:100%;max-width:1000px;margin:0 auto;">
-      <!-- Left: Construction Progress -->
-      <div class="card" style="border-left:3px solid var(--cyan);">
-        <h3 class="c" style="margin-bottom:16px;">🏗️ 施工進度</h3>
-        <canvas id="progress-canvas" width="450" height="400" style="width:100%;border-radius:8px;background:#0a0a12;"></canvas>
-      </div>
-
-      <!-- Right: Payment Schedule -->
-      <div class="card" style="border-left:3px solid var(--gold);">
-        <h3 class="g" style="margin-bottom:16px;">💰 付款進度</h3>
-        <canvas id="pay-summary-canvas" width="450" height="400" style="width:100%;border-radius:8px;background:#0a0a12;"></canvas>
-      </div>
-    </div>
+    <div id="dash-3d" class="three-container" style="max-width:1000px;margin:0 auto;height:420px;"></div>
 
     <div style="max-width:1000px;margin:20px auto 0;">
       <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
@@ -780,405 +757,456 @@ document.addEventListener('keydown',e=>{
 });
 </script>
 
-<script>
-// ===== Slide 5: Split-screen comparison (Point Cloud vs BIM) =====
-function initComparison() {
-  const pc = document.getElementById('pointcloud-canvas');
-  const bc = document.getElementById('bim-canvas');
-  if (!pc || !bc) return;
-  const ctxP = pc.getContext('2d');
-  const ctxB = bc.getContext('2d');
-  const W = pc.width, H = pc.height;
-  let t = 0;
-  let animId = null;
-
-  const elements = [
-    { type: 'duct', x: 0.1, y: 0.15, w: 0.8, h: 0.08, color: '#22c55e', label: 'HVAC' },
-    { type: 'duct', x: 0.3, y: 0.35, w: 0.5, h: 0.06, color: '#22c55e', label: '' },
-    { type: 'pipe', x: 0.05, y: 0.5, w: 0.7, h: 0.03, color: '#ef4444', label: '消防' },
-    { type: 'pipe', x: 0.6, y: 0.2, w: 0.03, h: 0.5, color: '#ef4444', label: '' },
-    { type: 'equip', x: 0.7, y: 0.1, w: 0.15, h: 0.15, color: '#a855f7', label: 'FCU' },
-    { type: 'equip', x: 0.2, y: 0.6, w: 0.1, h: 0.1, color: '#a855f7', label: 'VAV' },
-  ];
-
-  const cloudPoints = [];
-  for (let i = 0; i < 800; i++) {
-    cloudPoints.push({ x: Math.random()*W, y: Math.random()*H*0.7+H*0.05, size: Math.random()*2+0.5, brightness: Math.random()*0.6+0.2 });
+<!-- Three.js CDN -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
   }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-  function drawPointCloud() {
-    ctxP.fillStyle = '#0a0a0a'; ctxP.fillRect(0, 0, W, H);
-    ctxP.fillStyle = '#1a1a1a'; ctxP.fillRect(0, 0, W, H*0.08);
-    cloudPoints.forEach(p => {
-      const flicker = 0.7 + Math.sin(t*0.05 + p.x*0.1)*0.3;
-      ctxP.fillStyle = `rgba(200,200,200,${p.brightness*flicker})`;
-      ctxP.fillRect(p.x, p.y, p.size, p.size);
-    });
-    for (let i = 0; i < 200; i++) {
-      ctxP.fillStyle = `rgba(255,255,255,${Math.random()*0.15})`;
-      ctxP.fillRect(Math.random()*W, Math.random()*H, 1, 1);
-    }
-    const scanY = (t*2) % H;
-    ctxP.strokeStyle = 'rgba(255,255,255,0.3)'; ctxP.lineWidth = 1;
-    ctxP.beginPath(); ctxP.moveTo(0, scanY); ctxP.lineTo(W, scanY); ctxP.stroke();
-    ctxP.fillStyle = '#888'; ctxP.font = '11px sans-serif';
-    ctxP.fillText('Point Cloud · 現場掃瞄', 10, H-10);
-  }
+// ===== Scene managers =====
+const scenes = {};
+let activeScene = null;
 
-  function drawBIM() {
-    ctxB.fillStyle = '#0a0a0a'; ctxB.fillRect(0, 0, W, H);
-    ctxB.strokeStyle = '#222'; ctxB.lineWidth = 0.5;
-    for (let x = 0; x < W; x += 40) { ctxB.beginPath(); ctxB.moveTo(x, 0); ctxB.lineTo(x, H); ctxB.stroke(); }
-    for (let y = 0; y < H; y += 40) { ctxB.beginPath(); ctxB.moveTo(0, y); ctxB.lineTo(W, y); ctxB.stroke(); }
-    elements.forEach(el => {
-      const ex = el.x*W, ey = el.y*H, ew = el.w*W, eh = el.h*H;
-      ctxB.shadowColor = el.color; ctxB.shadowBlur = 8;
-      if (el.type === 'duct') {
-        ctxB.fillStyle = el.color+'40'; ctxB.fillRect(ex, ey, ew, eh);
-        ctxB.strokeStyle = el.color; ctxB.lineWidth = 2; ctxB.strokeRect(ex, ey, ew, eh);
-      } else if (el.type === 'pipe') {
-        ctxB.strokeStyle = el.color; ctxB.lineWidth = 3;
-        ctxB.beginPath(); ctxB.moveTo(ex, ey+eh/2); ctxB.lineTo(ex+ew, ey+eh/2); ctxB.stroke();
-      } else if (el.type === 'equip') {
-        ctxB.fillStyle = el.color+'30'; ctxB.fillRect(ex, ey, ew, eh);
-        ctxB.strokeStyle = el.color; ctxB.lineWidth = 2; ctxB.strokeRect(ex, ey, ew, eh);
-      }
-      ctxB.shadowBlur = 0;
-      if (el.label) { ctxB.fillStyle = el.color; ctxB.font = '10px sans-serif'; ctxB.fillText(el.label, ex+4, ey+eh/2+4); }
-    });
-    if (t % 60 < 30) {
-      ctxB.strokeStyle = '#f0883e'; ctxB.lineWidth = 2; ctxB.setLineDash([4,4]);
-      ctxB.strokeRect(W*0.4, H*0.1, W*0.15, H*0.15); ctxB.setLineDash([]);
-      ctxB.fillStyle = '#f0883e'; ctxB.font = 'bold 12px sans-serif';
-      ctxB.fillText('+2.3cm', W*0.42, H*0.08);
-    }
-    ctxB.fillStyle = '#888'; ctxB.font = '11px sans-serif';
-    ctxB.fillText('BIM Model · 設計模型', 10, H-10);
-  }
-
-  function animate() { drawPointCloud(); drawBIM(); t++; animId = requestAnimationFrame(animate); }
-  animate();
-  window._compAnim = animId;
+function createScene(containerId, setupFn) {
+  if (scenes[containerId]) { disposeScene(scenes[containerId]); }
+  const container = document.getElementById(containerId);
+  if (!container) return null;
+  const w = container.clientWidth, h = container.clientHeight;
+  if (w === 0 || h === 0) return null;
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a0a12);
+  const camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 100);
+  camera.position.set(0, 2, 6);
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+  renderer.setSize(w, h);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+  controls.target.set(0, 0, 0);
+  setupFn(scene, camera, renderer, controls);
+  scenes[containerId] = { scene, camera, renderer, controls, container, animate: true };
+  return scenes[containerId];
 }
 
-// ===== Slide 6: 4D Payment Dashboard (Progress vs Payment) =====
-function initPayment() {
-  const pc = document.getElementById('prog-dash-canvas');
-  const mc = document.getElementById('pay-dash-canvas');
-  if (!pc || !mc) return;
-  const ctxP = pc.getContext('2d');
-  const ctxM = mc.getContext('2d');
-  const W = pc.width, H = pc.height;
-  let t = 0;
-  let animId = null;
-
-  const milestones = [
-    { name: '基礎完成', progress: 100, payment: 100, amount: '12%' },
-    { name: '結構封頂', progress: 80, payment: 80, amount: '20%' },
-    { name: '外牆完工', progress: 55, payment: 40, amount: '25%' },
-    { name: '室內裝修', progress: 30, payment: 20, amount: '25%' },
-    { name: '交屋驗收', progress: 10, payment: 5, amount: '18%' },
-  ];
-
-  function drawProgress() {
-    ctxP.fillStyle = '#0a0a12'; ctxP.fillRect(0, 0, W, H);
-    const barW = 55, gap = 15, startX = 30;
-    const baseY = H - 35;
-    const maxH = H - 70;
-
-    milestones.forEach((m, i) => {
-      const x = startX + i * (barW + gap);
-      const h = (m.progress / 100) * maxH;
-      const animP = Math.min(1, t / 60) * m.progress;
-      const animH = (animP / 100) * maxH;
-
-      ctxP.fillStyle = '#2ec4b640'; ctxP.fillRect(x, baseY - h, barW, h);
-      ctxP.fillStyle = '#2ec4b6'; ctxP.fillRect(x, baseY - animH, barW, animH);
-      ctxP.strokeStyle = '#2ec4b6'; ctxP.lineWidth = 1; ctxP.strokeRect(x, baseY - h, barW, h);
-
-      ctxP.fillStyle = '#fff'; ctxP.font = 'bold 12px sans-serif';
-      ctxP.fillText(`${m.progress}%`, x + 6, baseY - h - 8);
-      ctxP.save(); ctxP.translate(x + barW / 2, baseY + 12);
-      ctxP.fillStyle = '#888'; ctxP.font = '9px sans-serif'; ctxP.textAlign = 'center';
-      ctxP.fillText(m.name, 0, 0); ctxP.restore();
-    });
-    ctxP.fillStyle = '#2ec4b6'; ctxP.font = 'bold 11px sans-serif';
-    ctxP.fillText('BIM 驗證進度', 8, 16);
-  }
-
-  function drawPayment() {
-    ctxM.fillStyle = '#0a0a12'; ctxM.fillRect(0, 0, W, H);
-    const barW = 55, gap = 15, startX = 30;
-    const baseY = H - 35;
-    const maxH = H - 70;
-
-    milestones.forEach((m, i) => {
-      const x = startX + i * (barW + gap);
-      const h = (m.payment / 100) * maxH;
-      const animP = Math.min(1, t / 60) * m.payment;
-      const animH = (animP / 100) * maxH;
-
-      ctxM.fillStyle = '#e2b04a40'; ctxM.fillRect(x, baseY - h, barW, h);
-      ctxM.fillStyle = '#e2b04a'; ctxM.fillRect(x, baseY - animH, barW, animH);
-      ctxM.strokeStyle = '#e2b04a'; ctxM.lineWidth = 1; ctxM.strokeRect(x, baseY - h, barW, h);
-
-      ctxM.fillStyle = '#fff'; ctxM.font = 'bold 11px sans-serif';
-      ctxM.fillText(m.amount, x + 8, baseY - h - 8);
-
-      const diff = m.progress - m.payment;
-      if (diff > 5) {
-        ctxM.fillStyle = '#ef4444'; ctxM.font = 'bold 10px sans-serif';
-        ctxM.fillText('⚠ 落後', x + 4, baseY + 26);
-      } else {
-        ctxM.fillStyle = '#2ec4b6'; ctxM.font = '10px sans-serif';
-        ctxM.fillText('✓', x + 18, baseY + 26);
-      }
-      ctxM.save(); ctxM.translate(x + barW / 2, baseY + 12);
-      ctxM.fillStyle = '#888'; ctxM.font = '9px sans-serif'; ctxM.textAlign = 'center';
-      ctxM.fillText(m.name, 0, 0); ctxM.restore();
-    });
-    ctxM.fillStyle = '#e2b04a'; ctxM.font = 'bold 11px sans-serif';
-    ctxM.fillText('付款進度', 8, 16);
-  }
-
-  function animate() { drawProgress(); drawPayment(); t++; animId = requestAnimationFrame(animate); }
-  animate();
-  window._payAnim = animId;
+function disposeScene(s) {
+  if (!s) return;
+  s.animate = false;
+  s.renderer.dispose();
+  s.container.querySelectorAll('canvas').forEach(c => c.remove());
+  delete scenes[s.container.id];
 }
 
-// ===== Slide 7: AR/MR Handover Dashboard (Room vs Verification) =====
-function initAR() {
-  const rc = document.getElementById('ar-room-canvas');
-  const cc = document.getElementById('ar-check-canvas');
-  if (!rc || !cc) return;
-  const ctxR = rc.getContext('2d');
-  const ctxC = cc.getContext('2d');
-  const W = rc.width, H = rc.height;
-  let t = 0;
-  let animId = null;
+function animateLoop() {
+  requestAnimationFrame(animateLoop);
+  for (const key in scenes) {
+    const s = scenes[key];
+    if (!s || !s.animate) continue;
+    s.controls.update();
+    if (s.renderer && s.scene && s.camera) s.renderer.render(s.scene, s.camera);
+  }
+}
+animateLoop();
 
-  const checks = [
-    { name: '牆面平整度', tolerance: '±2mm', actual: '+1.2mm', pass: true },
-    { name: '管線位置', tolerance: '±5mm', actual: '+3.8mm', pass: true },
-    { name: '門窗尺寸', tolerance: '±3mm', actual: '+4.1mm', pass: false },
-    { name: '地板水平', tolerance: '±3mm', actual: '+0.8mm', pass: true },
-    { name: '插座高度', tolerance: '±5mm', actual: '+2.1mm', pass: true },
-    { name: '消防管路', tolerance: '±10mm', actual: '+8.5mm', pass: true },
-  ];
+// ===== Slide 5: Point Cloud 3D =====
+function initPointCloud() {
+  createScene('pointcloud-3d', (scene, camera) => {
+    camera.position.set(0, 2, 5);
+    // Room wireframe
+    const roomGeo = new THREE.BoxGeometry(4, 3, 3);
+    const roomMat = new THREE.MeshBasicMaterial({ color: 0x222222, wireframe: true });
+    const room = new THREE.Mesh(roomGeo, roomMat);
+    room.position.set(0, 0.5, 0);
+    scene.add(room);
+    // Point cloud (thousands of dots)
+    const count = 8000;
+    const positions = new Float32Array(count * 3);
+    const colors = new Float32Array(count * 3);
+    const baseBrightness = new Float32Array(count);
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const radius = Math.random() * 1.8 + 0.2;
+      positions[i * 3] = Math.cos(angle) * radius;
+      positions[i * 3 + 1] = Math.random() * 2.5 - 0.3;
+      positions[i * 3 + 2] = Math.sin(angle) * radius;
+      const brightness = Math.random() * 0.5 + 0.3;
+      baseBrightness[i] = brightness;
+      colors[i * 3] = brightness;
+      colors[i * 3 + 1] = brightness;
+      colors[i * 3 + 2] = brightness;
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    const mat = new THREE.PointsMaterial({ size: 0.02, vertexColors: true, transparent: true, opacity: 0.8 });
+    const points = new THREE.Points(geo, mat);
+    scene.add(points);
+    // Scan laser beam
+    const beamGeo = new THREE.CylinderGeometry(0.005, 0.005, 5, 4);
+    const beamMat = new THREE.MeshBasicMaterial({ color: 0xff883e, transparent: true, opacity: 0.6 });
+    const beam = new THREE.Mesh(beamGeo, beamMat);
+    beam.rotation.z = Math.PI / 2;
+    scene.add(beam);
+    // Animate
+    let t = 0;
+    const origAnimate = scenes['pointcloud-3d'];
+    const checkAnim = () => {
+      if (!scenes['pointcloud-3d']) return;
+      t += 0.02;
+      beam.position.x = Math.sin(t) * 2;
+      beam.rotation.y = t * 0.5;
+      // Flicker points
+      const cols = geo.attributes.color.array;
+      for (let i = 0; i < count; i++) {
+        const flicker = 0.6 + Math.sin(t * 5 + i * 0.01) * 0.3;
+        cols[i * 3] = baseBrightness[i] * flicker;
+        cols[i * 3 + 1] = baseBrightness[i] * flicker;
+        cols[i * 3 + 2] = baseBrightness[i] * flicker;
+      }
+      geo.attributes.color.needsUpdate = true;
+    };
+    scenes['pointcloud-3d'].update = checkAnim;
+  });
+}
 
-  function drawRoom() {
-    ctxR.fillStyle = '#0a0a12'; ctxR.fillRect(0, 0, W, H);
-    // Room perspective
-    ctxR.strokeStyle = '#444'; ctxR.lineWidth = 2;
-    ctxR.strokeRect(40, 30, W - 80, H - 60);
-    // Floor grid
-    ctxR.strokeStyle = '#222'; ctxR.lineWidth = 0.5;
-    for (let i = 0; i < 10; i++) {
-      const x = 40 + i * ((W-80)/9);
-      ctxR.beginPath(); ctxR.moveTo(x, H - 30); ctxR.lineTo(W/2 + (i-4.5)*15, H - 80); ctxR.stroke();
-    }
-    for (let i = 0; i < 4; i++) {
-      const y = H - 30 - i * 12;
-      ctxR.beginPath(); ctxR.moveTo(40, y); ctxR.lineTo(W - 40, y); ctxR.stroke();
-    }
-    // BIM overlay (holographic)
-    ctxR.strokeStyle = 'rgba(102,126,234,0.3)'; ctxR.lineWidth = 1; ctxR.setLineDash([4,4]);
-    ctxR.strokeRect(45, 35, W - 90, H - 70);
-    ctxR.setLineDash([]);
-    // Windows
-    ctxR.fillStyle = 'rgba(46,196,182,0.1)'; ctxR.strokeStyle = '#2ec4b6'; ctxR.lineWidth = 1.5;
-    ctxR.fillRect(55, 45, 80, 35); ctxR.strokeRect(55, 45, 80, 35);
-    ctxR.fillRect(W - 135, 45, 80, 35); ctxR.strokeRect(W - 135, 45, 80, 35);
-    // Door
-    ctxR.fillStyle = 'rgba(168,85,247,0.1)'; ctxR.strokeStyle = '#a855f7'; ctxR.lineWidth = 1.5;
-    ctxR.fillRect(W/2 - 25, H - 65, 50, 30); ctxR.strokeRect(W/2 - 25, H - 65, 50, 30);
+// ===== Slide 5: BIM Model 3D =====
+function initBIMModel() {
+  createScene('bim-3d', (scene, camera) => {
+    camera.position.set(0, 3, 6);
+    // Grid
+    const gridHelper = new THREE.GridHelper(6, 12, 0x111111, 0x0a0a0a);
+    scene.add(gridHelper);
+    // Ambient light
+    scene.add(new THREE.AmbientLight(0x404040, 1));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(3, 5, 3);
+    scene.add(dirLight);
+    // MEP Ducts (green)
+    const ductMat = new THREE.MeshStandardMaterial({ color: 0x22c55e, transparent: true, opacity: 0.7 });
+    const duct1 = new THREE.Mesh(new THREE.BoxGeometry(3, 0.15, 0.2), ductMat);
+    duct1.position.set(0, 2.5, 0);
+    scene.add(duct1);
+    const duct2 = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.12, 0.18), ductMat);
+    duct2.position.set(0.5, 2.2, -0.5);
+    scene.add(duct2);
+    // Pipes (red)
+    const pipeMat = new THREE.MeshStandardMaterial({ color: 0xef4444 });
+    const pipe1 = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 3, 8), pipeMat);
+    pipe1.rotation.z = Math.PI / 2;
+    pipe1.position.set(0, 2, 0.5);
+    scene.add(pipe1);
+    // Equipment (purple)
+    const equipMat = new THREE.MeshStandardMaterial({ color: 0xa855f7, transparent: true, opacity: 0.6 });
+    const equip1 = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.4, 0.4), equipMat);
+    equip1.position.set(1.2, 2.3, 0.8);
+    scene.add(equip1);
+    const equip2 = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.3), equipMat);
+    equip2.position.set(-1, 2.1, -0.6);
+    scene.add(equip2);
+    // Deviation marker
+    const markerGeo = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+    const markerMat = new THREE.MeshBasicMaterial({ color: 0xf0883e, wireframe: true });
+    const marker = new THREE.Mesh(markerGeo, markerMat);
+    marker.position.set(0.5, 2.5, 0.3);
+    scene.add(marker);
+    // Text label (using sprite)
+    const canvas = document.createElement('canvas');
+    canvas.width = 256; canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#f0883e';
+    ctx.font = 'bold 28px sans-serif';
+    ctx.fillText('+2.3cm', 10, 40);
+    const texture = new THREE.CanvasTexture(canvas);
+    const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true });
+    const sprite = new THREE.Sprite(spriteMat);
+    sprite.position.set(0.5, 3.1, 0.3);
+    sprite.scale.set(1, 0.25, 1);
+    scene.add(sprite);
+    // Animate
+    let t = 0;
+    const checkAnim = () => {
+      if (!scenes['bim-3d']) return;
+      t += 0.01;
+      marker.scale.setScalar(1 + Math.sin(t * 3) * 0.1);
+      marker.rotation.y = t;
+    };
+    scenes['bim-3d'].update = checkAnim;
+  });
+}
+
+// ===== Slide 6: 4D Payment Progress 3D =====
+function init4DPayment() {
+  createScene('payment-3d', (scene, camera) => {
+    camera.position.set(0, 3, 8);
+    // Grid
+    scene.add(new THREE.GridHelper(10, 10, 0x111111, 0x0a0a0a));
+    scene.add(new THREE.AmbientLight(0x404040, 1));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(3, 5, 3);
+    // Building floors
+    const floors = [
+      { name: '5F', h: 0.6, y: 0, color: 0x2ec4b6 },
+      { name: '4F', h: 0.5, y: 0.7, color: 0x22c55e },
+      { name: '3F', h: 0.4, y: 1.4, color: 0x667eea },
+      { name: '2F', h: 0.3, y: 2.1, color: 0xf0883e },
+      { name: '1F', h: 0.2, y: 2.8, color: 0xe2b04a },
+    ];
+    const meshes = [];
+    floors.forEach(f => {
+      const geo = new THREE.BoxGeometry(2, f.h, 1.5);
+      const mat = new THREE.MeshStandardMaterial({ color: f.color, transparent: true, opacity: 0.7 });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(-2, f.y, 0);
+      scene.add(mesh);
+      // Edge
+      const edgeGeo = new THREE.EdgesGeometry(geo);
+      const edgeMat = new THREE.LineBasicMaterial({ color: f.color });
+      const edge = new THREE.LineSegments(edgeGeo, edgeMat);
+      edge.position.copy(mesh.position);
+      scene.add(edge);
+      meshes.push({ mesh, edge, targetH: f.h, currentH: 0, color: f.color });
+    });
+    // Payment bars (right side)
+    const payBars = [];
+    floors.forEach((f, i) => {
+      const geo = new THREE.BoxGeometry(0.3, f.h * 0.8, 0.3);
+      const mat = new THREE.MeshStandardMaterial({ color: f.color, transparent: true, opacity: 0.5 });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(2, f.y, 0);
+      scene.add(mesh);
+      payBars.push({ mesh, targetH: f.h * 0.8, currentH: 0 });
+    });
+    // Animate
+    let t = 0;
+    const checkAnim = () => {
+      if (!scenes['payment-3d']) return;
+      t += 0.01;
+      meshes.forEach((m, i) => {
+        const target = Math.min(1, t * 0.3 - i * 0.1) * m.targetH;
+        m.mesh.scale.y = target / m.targetH || 0.001;
+        m.mesh.position.y = m.mesh.geometry.parameters.height * m.mesh.scale.y / 2 + (i * 0.7);
+        m.edge.scale.y = m.mesh.scale.y;
+        m.edge.position.y = m.mesh.position.y;
+      });
+      payBars.forEach((b, i) => {
+        const target = Math.min(1, t * 0.3 - i * 0.1) * b.targetH;
+        b.mesh.scale.y = target / b.targetH || 0.001;
+        b.mesh.position.y = b.mesh.geometry.parameters.height * b.mesh.scale.y / 2 + (i * 0.7);
+      });
+    };
+    scenes['payment-3d'].update = checkAnim;
+  });
+}
+
+// ===== Slide 7: AR/MR Room 3D =====
+function initARRoom() {
+  createScene('ar-3d', (scene, camera) => {
+    camera.position.set(0, 2, 5);
+    scene.add(new THREE.AmbientLight(0x404040, 0.5));
+    scene.add(new THREE.DirectionalLight(0xffffff, 0.6).translateX(2).translateY(3).translateZ(2));
+    // Room walls
+    const wallMat = new THREE.MeshBasicMaterial({ color: 0x333333, side: THREE.DoubleSide });
+    // Floor
+    const floorGeo = new THREE.PlaneGeometry(6, 4);
+    const floorMat = new THREE.MeshBasicMaterial({ color: 0x1a1a1a });
+    const floor = new THREE.Mesh(floorGeo, floorMat);
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = -1;
+    scene.add(floor);
+    // Back wall
+    const wallGeo = new THREE.PlaneGeometry(6, 3);
+    const wall = new THREE.Mesh(wallGeo, wallMat);
+    wall.position.set(0, 0.5, -2);
+    scene.add(wall);
+    // Side walls
+    const sideWallGeo = new THREE.PlaneGeometry(4, 3);
+    const leftWall = new THREE.Mesh(sideWallGeo, wallMat);
+    leftWall.position.set(-3, 0.5, 0);
+    leftWall.rotation.y = Math.PI / 2;
+    scene.add(leftWall);
+    const rightWall = new THREE.Mesh(sideWallGeo, wallMat);
+    rightWall.position.set(3, 0.5, 0);
+    rightWall.rotation.y = -Math.PI / 2;
+    scene.add(rightWall);
+    // BIM overlay (holographic cyan)
+    const bimMat = new THREE.MeshBasicMaterial({ color: 0x2ec4b6, transparent: true, opacity: 0.3, wireframe: true });
+    const bimBox = new THREE.Mesh(new THREE.BoxGeometry(5.8, 2.8, 3.8), bimMat);
+    bimBox.position.set(0, 0.5, 0);
+    scene.add(bimBox);
+    // Windows (cyan)
+    const winMat = new THREE.MeshBasicMaterial({ color: 0x2ec4b6, transparent: true, opacity: 0.2 });
+    const win1 = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.8), winMat);
+    win1.position.set(-1.5, 0.8, -1.99);
+    scene.add(win1);
+    const win2 = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.8), winMat);
+    win2.position.set(1.5, 0.8, -1.99);
+    scene.add(win2);
+    // Door (purple)
+    const doorMat = new THREE.MeshBasicMaterial({ color: 0xa855f7, transparent: true, opacity: 0.2 });
+    const door = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 1.5), doorMat);
+    door.position.set(0, -0.25, -1.99);
+    scene.add(door);
     // Scanner beam
-    const beamX = 40 + (t * 1.5) % (W - 80);
-    ctxR.strokeStyle = 'rgba(240,136,62,0.5)'; ctxR.lineWidth = 2;
-    ctxR.beginPath(); ctxR.moveTo(beamX, 30); ctxR.lineTo(beamX, H - 30); ctxR.stroke();
-    ctxR.fillStyle = '#888'; ctxR.font = '10px sans-serif';
-    ctxR.fillText('真實空間 · AR 掃瞄中', 8, H - 8);
-  }
-
-  function drawChecks() {
-    ctxC.fillStyle = '#0a0a12'; ctxC.fillRect(0, 0, W, H);
-    const passCount = checks.filter(c => c.pass).length;
-    // Header
-    ctxC.fillStyle = passCount === checks.length ? '#2ec4b6' : '#ef4444';
-    ctxC.font = 'bold 12px sans-serif';
-    ctxC.fillText(`驗收結果: ${passCount}/${checks.length} 通過`, 10, 20);
-    // Check items
-    checks.forEach((c, i) => {
-      const y = 35 + i * 40;
-      // Background
-      ctxC.fillStyle = c.pass ? '#2ec4b610' : '#ef444410';
-      ctxC.fillRect(8, y, W - 16, 34);
-      // Status icon
-      ctxC.fillStyle = c.pass ? '#2ec4b6' : '#ef4444';
-      ctxC.font = 'bold 14px sans-serif';
-      ctxC.fillText(c.pass ? '✓' : '✗', 16, y + 22);
-      // Name
-      ctxC.fillStyle = '#ddd'; ctxC.font = 'bold 11px sans-serif';
-      ctxC.fillText(c.name, 36, y + 14);
-      // Tolerance
-      ctxC.fillStyle = '#888'; ctxC.font = '9px sans-serif';
-      ctxC.fillText(`容許: ${c.tolerance}`, 36, y + 27);
-      // Actual value
-      ctxC.fillStyle = c.pass ? '#2ec4b6' : '#ef4444';
-      ctxC.font = 'bold 11px sans-serif';
-      ctxC.fillText(c.actual, W - 70, y + 22);
-      // Animate appearance
-      if (t < i * 15 + 10) {
-        ctxC.fillStyle = '#0a0a12';
-        ctxC.fillRect(8, y, W - 16, 34);
-      }
+    const beamGeo = new THREE.CylinderGeometry(0.01, 0.01, 3, 4);
+    const beamMat = new THREE.MeshBasicMaterial({ color: 0xf0883e, transparent: true, opacity: 0.5 });
+    const beam = new THREE.Mesh(beamGeo, beamMat);
+    beam.rotation.z = Math.PI / 2;
+    beam.position.set(0, 0.5, 0);
+    scene.add(beam);
+    // Checkpoints
+    const checkpoints = [];
+    const cpPositions = [
+      [-2, 0.5, -1.5], [2, 0.5, -1.5], [-2, -0.5, -1.5], [2, -0.5, -1.5],
+      [0, 0.5, -1.5], [0, -0.5, -1.5]
+    ];
+    cpPositions.forEach((pos, i) => {
+      const geo = new THREE.SphereGeometry(0.1, 8, 8);
+      const mat = new THREE.MeshBasicMaterial({ color: 0x555555 });
+      const cp = new THREE.Mesh(geo, mat);
+      cp.position.set(...pos);
+      scene.add(cp);
+      checkpoints.push({ mesh: cp, idx: i });
     });
-    ctxC.fillStyle = '#888'; ctxC.font = '10px sans-serif';
-    ctxC.fillText('BIM 疊加驗收', 10, H - 8);
-  }
-
-  function animate() { drawRoom(); drawChecks(); t++; animId = requestAnimationFrame(animate); }
-  animate();
-  window._arAnim = animId;
+    // Animate
+    let t = 0;
+    const checkAnim = () => {
+      if (!scenes['ar-3d']) return;
+      t += 0.02;
+      beam.position.x = Math.sin(t) * 2.5;
+      bimBox.scale.setScalar(1 + Math.sin(t * 2) * 0.01);
+      checkpoints.forEach(cp => {
+        if (t > cp.idx * 0.5 + 0.3) {
+          cp.mesh.material.color.setHex(0x2ec4b6);
+          cp.mesh.scale.setScalar(1 + Math.sin(t * 3) * 0.2);
+        }
+      });
+    };
+    scenes['ar-3d'].update = checkAnim;
+  });
 }
 
-// ===== Slide 14: 4D Progress vs Payment Dashboard =====
-function initProgressPayment() {
-  const pc = document.getElementById('progress-canvas');
-  const mc = document.getElementById('pay-summary-canvas');
-  if (!pc || !mc) return;
-  const ctxP = pc.getContext('2d');
-  const ctxM = mc.getContext('2d');
-  const W = pc.width, H = pc.height;
-  let t = 0;
-  let animId = null;
-
-  // 5 milestones
-  const milestones = [
-    { name: '基礎工程', progress: 100, payment: 100, amount: '12%' },
-    { name: '結構一樓', progress: 85, payment: 85, amount: '18%' },
-    { name: '結構二樓', progress: 65, payment: 65, amount: '20%' },
-    { name: '外牆工程', progress: 40, payment: 30, amount: '25%' }, // Payment lagging!
-    { name: '室內裝修', progress: 15, payment: 10, amount: '25%' },
-  ];
-
-  function drawProgress() {
-    ctxP.fillStyle = '#0a0a12'; ctxP.fillRect(0, 0, W, H);
-
-    const barW = 60, gap = 20, startX = 40;
-    const baseY = H - 40;
-    const maxH = H - 100;
-
+// ===== Slide 14: Dashboard 3D =====
+function initDashboard() {
+  createScene('dash-3d', (scene, camera) => {
+    camera.position.set(0, 3, 7);
+    scene.add(new THREE.GridHelper(8, 8, 0x111111, 0x0a0a0a));
+    scene.add(new THREE.AmbientLight(0x404040, 1));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(3, 5, 3);
+    scene.add(dirLight);
+    // Progress bars (left, cyan)
+    const milestones = [
+      { progress: 100, payment: 100 },
+      { progress: 85, payment: 85 },
+      { progress: 65, payment: 65 },
+      { progress: 40, payment: 30 },
+      { progress: 15, payment: 10 },
+    ];
+    const maxH = 2.5;
+    const progBars = [];
     milestones.forEach((m, i) => {
-      const x = startX + i * (barW + gap);
-      const h = (m.progress / 100) * maxH;
-      const y = baseY - h;
-
-      // Bar
-      ctxP.fillStyle = '#2ec4b640'; ctxP.fillRect(x, y, barW, h);
-      ctxP.strokeStyle = '#2ec4b6'; ctxP.lineWidth = 2; ctxP.strokeRect(x, y, barW, h);
-
-      // Progress fill
-      const animP = Math.min(1, t / 80) * m.progress;
-      const animH = (animP / 100) * maxH;
-      ctxP.fillStyle = '#2ec4b6'; ctxP.fillRect(x, baseY - animH, barW, animH);
-
-      // Percentage text
-      ctxP.fillStyle = '#fff'; ctxP.font = 'bold 13px sans-serif';
-      ctxP.fillText(`${m.progress}%`, x + 8, y - 8);
-
-      // Milestone name
-      ctxP.save();
-      ctxP.translate(x + barW / 2, baseY + 14);
-      ctxP.fillStyle = '#888'; ctxP.font = '10px sans-serif';
-      ctxP.textAlign = 'center';
-      ctxP.fillText(m.name, 0, 0);
-      ctxP.restore();
+      const geo = new THREE.BoxGeometry(0.4, maxH, 0.4);
+      const mat = new THREE.MeshStandardMaterial({ color: 0x2ec4b6, transparent: true, opacity: 0.3 });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(-2 + i * 0.8, 0, 0);
+      scene.add(mesh);
+      const fillGeo = new THREE.BoxGeometry(0.38, 0.1, 0.38);
+      const fillMat = new THREE.MeshStandardMaterial({ color: 0x2ec4b6, emissive: 0x2ec4b6, emissiveIntensity: 0.3 });
+      const fill = new THREE.Mesh(fillGeo, fillMat);
+      fill.position.copy(mesh.position);
+      scene.add(fill);
+      progBars.push({ mesh, fill, targetH: m.progress / 100 * maxH, currentH: 0 });
     });
-
-    // Title
-    ctxP.fillStyle = '#2ec4b6'; ctxP.font = 'bold 12px sans-serif';
-    ctxP.fillText('BIM 模型驗證進度', 10, 20);
-  }
-
-  function drawPayment() {
-    ctxM.fillStyle = '#0a0a12'; ctxM.fillRect(0, 0, W, H);
-
-    const barW = 60, gap = 20, startX = 40;
-    const baseY = H - 40;
-    const maxH = H - 100;
-
+    // Payment bars (right, gold)
+    const payBars = [];
     milestones.forEach((m, i) => {
-      const x = startX + i * (barW + gap);
-      const h = (m.payment / 100) * maxH;
-      const y = baseY - h;
-
-      // Bar
-      ctxM.fillStyle = '#e2b04a40'; ctxM.fillRect(x, y, barW, h);
-      ctxM.strokeStyle = '#e2b04a'; ctxM.lineWidth = 2; ctxM.strokeRect(x, y, barW, h);
-
-      // Payment fill
-      const animP = Math.min(1, t / 80) * m.payment;
-      const animH = (animP / 100) * maxH;
-      ctxM.fillStyle = '#e2b04a'; ctxM.fillRect(x, baseY - animH, barW, animH);
-
-      // Amount text
-      ctxM.fillStyle = '#fff'; ctxM.font = 'bold 13px sans-serif';
-      ctxM.fillText(m.amount, x + 10, y - 8);
-
-      // Status indicator
-      const diff = m.progress - m.payment;
-      if (diff > 5) {
-        ctxM.fillStyle = '#ef4444'; ctxM.font = '10px sans-serif';
-        ctxM.fillText('⚠ 暫停', x + 8, baseY + 28);
-      } else {
-        ctxM.fillStyle = '#2ec4b6'; ctxM.font = '10px sans-serif';
-        ctxM.fillText('✓ 同步', x + 8, baseY + 28);
+      const geo = new THREE.BoxGeometry(0.4, maxH, 0.4);
+      const mat = new THREE.MeshStandardMaterial({ color: 0xe2b04a, transparent: true, opacity: 0.3 });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(2 + i * 0.8, 0, 0);
+      scene.add(mesh);
+      const fillGeo = new THREE.BoxGeometry(0.38, 0.1, 0.38);
+      const fillMat = new THREE.MeshStandardMaterial({ color: 0xe2b04a, emissive: 0xe2b04a, emissiveIntensity: 0.3 });
+      const fill = new THREE.Mesh(fillGeo, fillMat);
+      fill.position.copy(mesh.position);
+      scene.add(fill);
+      payBars.push({ mesh, fill, targetH: m.payment / 100 * maxH, currentH: 0 });
+    });
+    // Warning indicators for lagging
+    const warnGeo = new THREE.OctahedronGeometry(0.15, 0);
+    const warnMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+    const warns = [];
+    milestones.forEach((m, i) => {
+      if (m.progress - m.payment > 5) {
+        const warn = new THREE.Mesh(warnGeo, warnMat);
+        warn.position.set(2 + i * 0.8, m.payment / 100 * maxH + 0.3, 0);
+        scene.add(warn);
+        warns.push(warn);
       }
-
-      // Milestone name
-      ctxM.save();
-      ctxM.translate(x + barW / 2, baseY + 14);
-      ctxM.fillStyle = '#888'; ctxM.font = '10px sans-serif';
-      ctxM.textAlign = 'center';
-      ctxM.fillText(m.name, 0, 0);
-      ctxM.restore();
     });
-
-    // Title
-    ctxM.fillStyle = '#e2b04a'; ctxM.font = 'bold 12px sans-serif';
-    ctxM.fillText('消費者付款進度', 10, 20);
-  }
-
-  function animate() {
-    drawProgress();
-    drawPayment();
-    t++;
-    animId = requestAnimationFrame(animate);
-  }
-  animate();
-  window._dashAnim = animId;
+    // Animate
+    let t = 0;
+    const checkAnim = () => {
+      if (!scenes['dash-3d']) return;
+      t += 0.015;
+      progBars.forEach(b => {
+        const target = Math.min(1, t * 0.4) * b.targetH;
+        b.fill.scale.y = target / 0.1 || 0.001;
+        b.fill.position.y = target / 2;
+      });
+      payBars.forEach((b, i) => {
+        const target = Math.min(1, t * 0.4) * b.targetH;
+        b.fill.scale.y = target / 0.1 || 0.001;
+        b.fill.position.y = target / 2;
+      });
+      warns.forEach((w, i) => {
+        w.rotation.y = t * 2;
+        w.position.y = 1 + Math.sin(t * 3 + i) * 0.1;
+      });
+    };
+    scenes['dash-3d'].update = checkAnim;
+  });
 }
 
 // ===== Master show() wrapper =====
-const _origShow = show;
+const _origShow = window.show;
 window.show = function(n) {
-    _origShow(n);
-    setTimeout(() => {
-        // Cancel all existing animations
-        if (window._compAnim) cancelAnimationFrame(window._compAnim);
-        if (window._payAnim) cancelAnimationFrame(window._payAnim);
-        if (window._arAnim) cancelAnimationFrame(window._arAnim);
-        if (window._dashAnim) cancelAnimationFrame(window._dashAnim);
-
-        // Trigger appropriate animation
-        if (n === 5) initComparison();
-        if (n === 6) initPayment();
-        if (n === 7) initAR();
-        if (n === 14) initProgressPayment();
-    }, 100);
+  _origShow(n);
+  setTimeout(() => {
+    // Dispose all inactive scenes
+    for (const key in scenes) {
+      if (scenes[key]) {
+        disposeScene(scenes[key]);
+      }
+    }
+    // Initialize scenes for current slide
+    if (n === 5) { initPointCloud(); initBIMModel(); }
+    if (n === 6) init4DPayment();
+    if (n === 7) initARRoom();
+    if (n === 14) initDashboard();
+  }, 150);
 };
-setTimeout(() => show(0), 500);
+
+// Handle resize
+window.addEventListener('resize', () => {
+  for (const key in scenes) {
+    const s = scenes[key];
+    if (s && s.renderer) {
+      const w = s.container.clientWidth, h = s.container.clientHeight;
+      s.camera.aspect = w / h;
+      s.camera.updateProjectionMatrix();
+      s.renderer.setSize(w, h);
+    }
+  }
+});
 </script>
 
 </body>
