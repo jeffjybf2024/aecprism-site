@@ -126,6 +126,13 @@
       .cards { grid-template-columns: 1fr; }
       .nav-dots { display: none; }
     }
+
+    /* === INTERACTIVE BACKGROUND CANVAS === */
+    #interactive-bg {
+      position: fixed; inset: 0; z-index: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -141,6 +148,10 @@
   </div>
   <div class="glow-spectrum"></div>
   <div class="vignette"></div>
+
+<!-- Interactive mouse-reveal canvas -->
+<canvas id="interactive-bg"></canvas>
+
 </div>
 
 <!-- Nav dots -->
@@ -284,5 +295,241 @@
   }, { threshold: 0.5 });
   sections.forEach(s => observer.observe(s));
 </script>
+
+<script>
+/* === INTERACTIVE MOUSE-REVEAL BACKGROUND === */
+(function() {
+  const canvas = document.getElementById('interactive-bg');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  let mouse = { x: W / 2, y: H / 2 };
+  let cursor = { x: W / 2, y: H / 2 };
+
+  const bimUses = [
+    "1A Existing Conditions Scanning", "1B Spatial Analysis & Planning", "1C Optioneering", "1D Design Coordination & Clash Detection", "1E Design Review", "1F Existing Conditions Modeling",
+    "2A Design Authoring", "2B Engineering Analysis", "2C Energy Analysis", "2D Structural Analysis", "2E Sustainability Assessment", "2F Code Compliance", "2G Lighting Analysis",
+    "3A Site Utilization Planning", "3B Construction System Design", "3C Digital Fabrication", "3D 3D Control & Planning", "3E 3D Coordination", "3F 4D Scheduling", "3G Cost Estimation", "3H Construction Review", "3I Digital Handover", "3J Safety Planning",
+    "4A As-Built Modeling", "4B Record Modeling", "4C Asset Inventory", "4D Operations Handover", "4E Training Simulation",
+    "5A Maintenance Scheduling", "5B Asset Management", "5C Space Management", "5D Disaster Planning", "5E Energy Management", "5F Tenant Management", "5G Capital Planning", "5H Systems Analysis", "5I Smart Building Integration", "5J Facility Maintenance", "5K Space Utilization Analysis", "5L Relocation & Reset Planning",
+    "6A VR/AR Applications", "6B Digital Twin", "6C Generative Design", "6D ML Predictive Analysis", "6E Drone Survey & Inspection", "6F Automated Construction / Robotics", "6G Blockchain Asset Traceability", "6H Cloud Collaboration Platform", "6I Big Data Analytics", "6J AI-Assisted Design Optimization", "6K 3D Printing / Additive Manufacturing"
+  ];
+
+  const labels = bimUses.map((text, i) => ({
+    text,
+    x: 0.52 + Math.random() * 0.38,
+    y: 0.1 + Math.random() * 0.85,
+    phase: Math.random() * Math.PI * 2,
+    speed: 0.2 + Math.random() * 0.4
+  }));
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    mouse.x = cursor.x = W / 2;
+    mouse.y = cursor.y = H / 2;
+  }
+
+  function onMove(e) {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  }
+
+  function drawBuilding(c, cx, cy, scale) {
+    // A more recognizable tower + podium building
+    const podiumW = 280 * scale, podiumH = 90 * scale, podiumD = 120 * scale;
+    const towerW = 160 * scale, towerH = 420 * scale, towerD = 90 * scale;
+    const baseY = cy;
+    const podiumTop = baseY - podiumH;
+    const towerTop = podiumTop - towerH;
+
+    c.strokeStyle = 'rgba(140,160,255,0.75)';
+    c.lineWidth = 1.6;
+
+    // Helper to draw a box prism given centerX, bottomY, width, height, depth
+    function drawPrism(bx, by, w, h, d, floors, windowsX, windowsY) {
+      const left = bx - w / 2;
+      const right = bx + w / 2;
+      const top = by - h;
+      const dx = d * 0.5;
+      const dy = d * 0.35;
+
+      // Front face outline
+      c.beginPath();
+      c.moveTo(left, top);
+      c.lineTo(right, top);
+      c.lineTo(right, by);
+      c.lineTo(left, by);
+      c.closePath();
+      c.stroke();
+
+      // Right/depth face edges
+      c.beginPath();
+      c.moveTo(right, top); c.lineTo(right + dx, top - dy);
+      c.lineTo(right + dx, by - dy); c.lineTo(right, by);
+      c.moveTo(right + dx, top - dy); c.lineTo(left + dx, top - dy);
+      c.lineTo(left, top);
+      c.stroke();
+
+      // Horizontal floor lines on front face
+      c.strokeStyle = 'rgba(140,160,255,0.35)';
+      c.lineWidth = 0.7;
+      const floorH = h / floors;
+      for (let i = 1; i < floors; i++) {
+        const y = top + i * floorH;
+        c.beginPath();
+        c.moveTo(left, y); c.lineTo(right, y);
+        c.stroke();
+      }
+
+      // Vertical window mullions on front face
+      for (let j = 1; j < windowsX; j++) {
+        const x = left + (w / windowsX) * j;
+        c.beginPath();
+        c.moveTo(x, top); c.lineTo(x, by);
+        c.stroke();
+      }
+
+      // Window grid horizontal on front face (subdivisions)
+      c.strokeStyle = 'rgba(140,160,255,0.18)';
+      c.lineWidth = 0.5;
+      for (let i = 0; i < floors; i++) {
+        const y = top + i * floorH;
+        for (let j = 0; j < windowsX; j++) {
+          const x1 = left + (w / windowsX) * j;
+          const x2 = left + (w / windowsX) * (j + 1);
+          const my = y + floorH * 0.55;
+          c.beginPath();
+          c.moveTo(x1 + 2, my); c.lineTo(x2 - 2, my);
+          c.stroke();
+        }
+      }
+
+      // Roof edge detail
+      c.strokeStyle = 'rgba(140,160,255,0.55)';
+      c.lineWidth = 1;
+      c.beginPath();
+      c.moveTo(left, top - 4); c.lineTo(right, top - 4);
+      c.lineTo(right + dx, top - dy - 4); c.lineTo(left + dx, top - dy - 4);
+      c.closePath();
+      c.stroke();
+    }
+
+    // Draw podium (wider base)
+    drawPrism(cx, baseY, podiumW, podiumH, podiumD, 4, 8, 2);
+
+    // Draw tower above podium, slightly set back
+    drawPrism(cx, podiumTop, towerW, towerH, towerD, 14, 5, 3);
+
+    // Entrance canopy detail
+    c.strokeStyle = 'rgba(140,160,255,0.6)';
+    c.lineWidth = 1.2;
+    const canopyY = baseY - podiumH * 0.25;
+    const canopyW = 70 * scale;
+    c.beginPath();
+    c.moveTo(cx - canopyW / 2, canopyY);
+    c.lineTo(cx + canopyW / 2, canopyY);
+    c.lineTo(cx + canopyW / 2 + 10 * scale, canopyY - 8 * scale);
+    c.lineTo(cx - canopyW / 2 + 10 * scale, canopyY - 8 * scale);
+    c.closePath();
+    c.stroke();
+  }
+
+  const contentCanvas = document.createElement('canvas');
+  const contentCtx = contentCanvas.getContext('2d');
+  const maskCanvas = document.createElement('canvas');
+  const maskCtx = maskCanvas.getContext('2d');
+
+  function drawContent() {
+    contentCanvas.width = W;
+    contentCanvas.height = H;
+    const c = contentCtx;
+    c.clearRect(0, 0, W, H);
+
+    // Left side: BIM wireframe building (larger, lower, recognizable tower + podium)
+    drawBuilding(c, W * 0.20, H * 0.84, Math.min(W, H) / 520);
+
+    // Right side: BIM USE labels
+    c.font = '500 10px Inter, sans-serif';
+    c.textAlign = 'left';
+    c.textBaseline = 'middle';
+    labels.forEach(lbl => {
+      const x = lbl.x * W;
+      const y = lbl.y * H;
+      const hue = (lbl.x * 360 + 200) % 360;
+      c.shadowColor = `hsla(${hue}, 70%, 65%, 0.4)`;
+      c.shadowBlur = 6;
+      c.fillStyle = `hsla(${hue}, 70%, 75%, 0.75)`;
+      c.fillText(lbl.text, x, y);
+      c.shadowBlur = 0;
+    });
+
+    // Label title
+    c.font = '700 12px Inter, sans-serif';
+    c.fillStyle = 'rgba(140,160,255,0.65)';
+    c.shadowColor = 'rgba(102,126,234,0.4)';
+    c.shadowBlur = 8;
+    c.fillText('BIM Matrix Uses', W * 0.82, H * 0.06);
+    c.shadowBlur = 0;
+  }
+
+  function drawMask() {
+    maskCanvas.width = W;
+    maskCanvas.height = H;
+    const m = maskCtx;
+    m.clearRect(0, 0, W, H);
+
+    const r = Math.min(W, H) * 0.30;
+    const g = m.createRadialGradient(cursor.x, cursor.y, 0, cursor.x, cursor.y, r);
+    g.addColorStop(0, 'rgba(255,255,255,1)');
+    g.addColorStop(0.45, 'rgba(255,255,255,0.5)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    m.fillStyle = g;
+    m.fillRect(0, 0, W, H);
+  }
+
+  function animate() {
+    // Smooth cursor following
+    cursor.x += (mouse.x - cursor.x) * 0.12;
+    cursor.y += (mouse.y - cursor.y) * 0.12;
+
+    // Animate labels subtly
+    const t = Date.now() / 1000;
+    labels.forEach(lbl => {
+      lbl.y += Math.sin(t * lbl.speed + lbl.phase) * 0.0003;
+    });
+
+    // Redraw content if labels moved (subtle)
+    drawContent();
+    drawMask();
+
+    // Clear main canvas
+    ctx.clearRect(0, 0, W, H);
+
+    // Draw faint baseline everywhere
+    ctx.globalAlpha = 0.32;
+    ctx.drawImage(contentCanvas, 0, 0);
+
+    // Create bright reveal masked to cursor radius
+    const temp = document.createElement('canvas');
+    temp.width = W; temp.height = H;
+    const tctx = temp.getContext('2d');
+    tctx.drawImage(maskCanvas, 0, 0);
+    tctx.globalCompositeOperation = 'source-in';
+    tctx.drawImage(contentCanvas, 0, 0);
+
+    ctx.globalAlpha = 1;
+    ctx.drawImage(temp, 0, 0);
+
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener('resize', () => { resize(); drawContent(); });
+  window.addEventListener('mousemove', onMove, { passive: true });
+  resize();
+  animate();
+})();
+</script>
+
 </body>
 </html>
