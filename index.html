@@ -335,105 +335,9 @@
     mouse.y = e.clientY;
   }
 
-  function drawBuilding(c, cx, cy, scale) {
-    // A more recognizable tower + podium building
-    const podiumW = 280 * scale, podiumH = 90 * scale, podiumD = 120 * scale;
-    const towerW = 160 * scale, towerH = 420 * scale, towerD = 90 * scale;
-    const baseY = cy;
-    const podiumTop = baseY - podiumH;
-    const towerTop = podiumTop - towerH;
-
-    c.strokeStyle = 'rgba(140,160,255,0.75)';
-    c.lineWidth = 1.6;
-
-    // Helper to draw a box prism given centerX, bottomY, width, height, depth
-    function drawPrism(bx, by, w, h, d, floors, windowsX, windowsY) {
-      const left = bx - w / 2;
-      const right = bx + w / 2;
-      const top = by - h;
-      const dx = d * 0.5;
-      const dy = d * 0.35;
-
-      // Front face outline
-      c.beginPath();
-      c.moveTo(left, top);
-      c.lineTo(right, top);
-      c.lineTo(right, by);
-      c.lineTo(left, by);
-      c.closePath();
-      c.stroke();
-
-      // Right/depth face edges
-      c.beginPath();
-      c.moveTo(right, top); c.lineTo(right + dx, top - dy);
-      c.lineTo(right + dx, by - dy); c.lineTo(right, by);
-      c.moveTo(right + dx, top - dy); c.lineTo(left + dx, top - dy);
-      c.lineTo(left, top);
-      c.stroke();
-
-      // Horizontal floor lines on front face
-      c.strokeStyle = 'rgba(140,160,255,0.35)';
-      c.lineWidth = 0.7;
-      const floorH = h / floors;
-      for (let i = 1; i < floors; i++) {
-        const y = top + i * floorH;
-        c.beginPath();
-        c.moveTo(left, y); c.lineTo(right, y);
-        c.stroke();
-      }
-
-      // Vertical window mullions on front face
-      for (let j = 1; j < windowsX; j++) {
-        const x = left + (w / windowsX) * j;
-        c.beginPath();
-        c.moveTo(x, top); c.lineTo(x, by);
-        c.stroke();
-      }
-
-      // Window grid horizontal on front face (subdivisions)
-      c.strokeStyle = 'rgba(140,160,255,0.18)';
-      c.lineWidth = 0.5;
-      for (let i = 0; i < floors; i++) {
-        const y = top + i * floorH;
-        for (let j = 0; j < windowsX; j++) {
-          const x1 = left + (w / windowsX) * j;
-          const x2 = left + (w / windowsX) * (j + 1);
-          const my = y + floorH * 0.55;
-          c.beginPath();
-          c.moveTo(x1 + 2, my); c.lineTo(x2 - 2, my);
-          c.stroke();
-        }
-      }
-
-      // Roof edge detail
-      c.strokeStyle = 'rgba(140,160,255,0.55)';
-      c.lineWidth = 1;
-      c.beginPath();
-      c.moveTo(left, top - 4); c.lineTo(right, top - 4);
-      c.lineTo(right + dx, top - dy - 4); c.lineTo(left + dx, top - dy - 4);
-      c.closePath();
-      c.stroke();
-    }
-
-    // Draw podium (wider base)
-    drawPrism(cx, baseY, podiumW, podiumH, podiumD, 4, 8, 2);
-
-    // Draw tower above podium, slightly set back
-    drawPrism(cx, podiumTop, towerW, towerH, towerD, 14, 5, 3);
-
-    // Entrance canopy detail
-    c.strokeStyle = 'rgba(140,160,255,0.6)';
-    c.lineWidth = 1.2;
-    const canopyY = baseY - podiumH * 0.25;
-    const canopyW = 70 * scale;
-    c.beginPath();
-    c.moveTo(cx - canopyW / 2, canopyY);
-    c.lineTo(cx + canopyW / 2, canopyY);
-    c.lineTo(cx + canopyW / 2 + 10 * scale, canopyY - 8 * scale);
-    c.lineTo(cx - canopyW / 2 + 10 * scale, canopyY - 8 * scale);
-    c.closePath();
-    c.stroke();
-  }
+  // Preload BIM building image
+  const buildingImg = new Image();
+  buildingImg.src = 'assets/building.png';
 
   const contentCanvas = document.createElement('canvas');
   const contentCtx = contentCanvas.getContext('2d');
@@ -446,8 +350,19 @@
     const c = contentCtx;
     c.clearRect(0, 0, W, H);
 
-    // Left side: BIM wireframe building (larger, lower, recognizable tower + podium)
-    drawBuilding(c, W * 0.20, H * 0.84, Math.min(W, H) / 520);
+    // Left side: BIM building wireframe (from 3D model render)
+    if (buildingImg.complete && buildingImg.naturalWidth > 0) {
+      const imgW = buildingImg.naturalWidth;
+      const imgH = buildingImg.naturalHeight;
+      const maxH = H * 0.75;
+      const maxW = W * 0.42;
+      const scale = Math.min(maxW / imgW, maxH / imgH);
+      const dw = imgW * scale, dh = imgH * scale;
+      const dx = W * 0.02, dy = H * 0.88 - dh;
+      c.globalAlpha = 0.7;
+      c.drawImage(buildingImg, dx, dy, dw, dh);
+      c.globalAlpha = 1;
+    }
 
     // Right side: BIM USE labels
     c.font = '500 10px Inter, sans-serif';
