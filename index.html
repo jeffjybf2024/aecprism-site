@@ -457,18 +457,18 @@
       const x = lbl.x * W;
       const y = lbl.y * H;
       const hue = (lbl.x * 360 + 200) % 360;
-      c.shadowColor = `hsla(${hue}, 70%, 65%, 0.4)`;
-      c.shadowBlur = 6;
-      c.fillStyle = `hsla(${hue}, 70%, 75%, 0.75)`;
+      c.shadowColor = `hsla(${hue}, 50%, 40%, 0.15)`;
+      c.shadowBlur = 4;
+      c.fillStyle = `hsla(${hue}, 35%, 45%, 0.45)`;
       c.fillText(lbl.text, x, y);
       c.shadowBlur = 0;
     });
 
     // Label title
     c.font = '700 12px Inter, sans-serif';
-    c.fillStyle = 'rgba(140,160,255,0.65)';
-    c.shadowColor = 'rgba(102,126,234,0.4)';
-    c.shadowBlur = 8;
+    c.fillStyle = 'rgba(140,160,255,0.45)';
+    c.shadowColor = 'rgba(102,126,234,0.25)';
+    c.shadowBlur = 6;
     c.fillText('BIM Matrix Uses', W * 0.82, H * 0.06);
     c.shadowBlur = 0;
   }
