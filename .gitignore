@@ -1,0 +1,7 @@
+# Dependencies
+node_modules/
+.DS_Store
+*.log
+
+# Large media files are tracked for GitHub Pages deployment
+# media/*.mp4
