@@ -353,7 +353,7 @@
 
   // Preload BIM building image (cropped to remove transparent padding)
   const buildingImg = new Image();
-  buildingImg.src = 'assets/building_cropped.png';
+  buildingImg.src = 'assets/building.png';
 
   const contentCanvas = document.createElement('canvas');
   const contentCtx = contentCanvas.getContext('2d');
@@ -370,12 +370,12 @@
     if (buildingImg.complete && buildingImg.naturalWidth > 0) {
       const imgW = buildingImg.naturalWidth;
       const imgH = buildingImg.naturalHeight;
-      const maxH = H * 0.70;
-      const maxW = W * 0.42;
+      const maxH = H * 0.55;
+      const maxW = W * 0.55;
       const scale = Math.min(maxW / imgW, maxH / imgH);
       const dw = imgW * scale, dh = imgH * scale;
-      const dx = W * 0.02, dy = H * 0.16;
-      c.shadowColor = 'rgba(255,255,255,0.30)';
+      const dx = W * -0.06, dy = H * 0.12;
+      c.shadowColor = 'rgba(255,255,255,0.32)';
       c.shadowBlur = 3;
       c.globalAlpha = 0.38;
       c.drawImage(buildingImg, dx, dy, dw, dh);
