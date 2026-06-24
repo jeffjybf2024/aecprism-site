@@ -64,8 +64,29 @@
     }
     .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(5,5,8,0.7) 0%, rgba(5,5,8,0.3) 35%, transparent 65%); }
 
+    /* === TOP NAV === */
+    nav.top-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 32px;
+      background: rgba(5,5,8,0.6); backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav-logo { font-weight: 800; letter-spacing: 0.1em; font-size: 1.1rem; color: var(--white); }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .nav-links a {
+      color: var(--gray); text-decoration: none; font-size: 0.85rem; font-weight: 500;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links .nav-cta {
+      padding: 6px 16px; border: 1px solid rgba(102,126,234,0.4); border-radius: 6px;
+      color: var(--white); transition: all 0.3s;
+    }
+    .nav-links .nav-cta:hover { background: rgba(102,126,234,0.15); }
+
     /* === SECTIONS === */
-    section { position: relative; z-index: 1; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 80px 24px; }
+    section { position: relative; z-index: 1; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 100px 32px 80px; }
 
     /* Hero */
     #hero { min-height: 100vh; flex-direction: column; text-align: center; }
@@ -149,6 +170,17 @@
   </style>
 </head>
 <body>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+  <div class="nav-logo">AEC PRISM</div>
+  <div class="nav-links">
+    <a href="#vision">Vision</a>
+    <a href="#spectrum">Spectrum</a>
+    <a href="#case">Case Study</a>
+    <a href="#future" class="nav-cta">Contact</a>
+  </div>
+</nav>
 
 <!-- Fixed background -->
 <div class="bg">
@@ -282,7 +314,6 @@
       from LiDAR scan-to-BIM and 4D construction verification to consumer-facing digital contracts.
     </p>
     <a href="#" class="cta-btn" style="margin-top: 1.5rem;" onclick="const pw=prompt('請輸入展示密碼'); if(pw==='yulin2026') window.location='xuefu.html'; else if(pw!==null) alert('密碼錯誤'); return false;">查看玉霖簡報 →</a>
-    <p class="gr" style="font-size:12px; margin-top:12px;">密碼預設為 yulin2026，可更改</p>
   </div>
 </section>
 
@@ -307,8 +338,14 @@
 </section>
 
 <footer>
-  <p>AEC Prism is a product of <a href="https://www.ctc.com.tw" target="_blank">Concord Tech Co., Ltd.</a></p>
-  <p style="margin-top: 4px;">Taipei, Taiwan · <a href="mailto:jeff@ctc.com.tw">jeff@ctc.com.tw</a></p>
+  <div style="margin-bottom: 16px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+    <a href="mailto:jeff@ctc.com.tw">jeff@ctc.com.tw</a>
+    <span style="color:#444;">|</span>
+    <a href="https://www.ctc.com.tw" target="_blank">Concord Tech Co., Ltd.</a>
+    <span style="color:#444;">|</span>
+    <span>Taipei, Taiwan</span>
+  </div>
+  <p style="color: #2a2a30; font-size: 0.75rem;">© 2026 AEC Prism. All rights reserved.</p>
 </footer>
 
 <script>
