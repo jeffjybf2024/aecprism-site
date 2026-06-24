@@ -129,14 +129,14 @@
 
     /* === HERO BUILDING MODEL (CSS positioned) === */
     .hero-building {
-      position: fixed;
+      position: absolute;
       left: 3%;
       top: 8%;
       width: 28%;
       height: auto;
       opacity: 0.35;
       filter: drop-shadow(0 0 8px rgba(255,255,255,0.35));
-      z-index: 0;
+      z-index: 1;
       pointer-events: none;
     }
 
@@ -150,12 +150,11 @@
 </head>
 <body>
 
-  <!-- Background building model (CSS positioned for precise control) -->
-  <img src="assets/building_cropped.png" class="hero-building" alt="">
-
 <!-- Fixed background -->
 <div class="bg">
   <div class="bg-base"></div>
+  <!-- Building model (inside bg, above dark gradient) -->
+  <img src="assets/building_cropped.png" class="hero-building" alt="">
   <div class="beam-white"></div>
   <div class="prism-glass"></div>
   <div class="spectrum">
