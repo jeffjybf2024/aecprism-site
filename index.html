@@ -127,6 +127,18 @@
       .nav-dots { display: none; }
     }
 
+    /* === HERO BUILDING MODEL (CSS positioned) === */
+    .hero-building {
+      position: fixed;
+      left: 4%;
+      top: 8%;
+      width: 38%;
+      opacity: 0.35;
+      filter: drop-shadow(0 0 8px rgba(255,255,255,0.35));
+      z-index: 0;
+      pointer-events: none;
+    }
+
     /* === INTERACTIVE BACKGROUND CANVAS === */
     #interactive-bg {
       position: fixed; inset: 0; z-index: 0;
@@ -136,6 +148,9 @@
   </style>
 </head>
 <body>
+
+  <!-- Background building model (CSS positioned for precise control) -->
+  <img src="assets/building.png" class="hero-building" alt="">
 
 <!-- Fixed background -->
 <div class="bg">
@@ -352,9 +367,6 @@
   }
 
   // Preload BIM building image (cropped to remove transparent padding)
-  const buildingImg = new Image();
-  buildingImg.src = 'assets/building.png';
-
   const contentCanvas = document.createElement('canvas');
   const contentCtx = contentCanvas.getContext('2d');
   const maskCanvas = document.createElement('canvas');
@@ -366,23 +378,7 @@
     const c = contentCtx;
     c.clearRect(0, 0, W, H);
 
-    // Left side: BIM building wireframe (from 3D model render)
-    if (buildingImg.complete && buildingImg.naturalWidth > 0) {
-      const imgW = buildingImg.naturalWidth;
-      const imgH = buildingImg.naturalHeight;
-      const maxH = H * 0.55;
-      const maxW = W * 0.55;
-      const scale = Math.min(maxW / imgW, maxH / imgH);
-      const dw = imgW * scale, dh = imgH * scale;
-      const dx = W * -0.06, dy = H * 0.12;
-      c.shadowColor = 'rgba(255,255,255,0.32)';
-      c.shadowBlur = 3;
-      c.globalAlpha = 0.38;
-      c.drawImage(buildingImg, dx, dy, dw, dh);
-      c.shadowColor = 'transparent';
-      c.shadowBlur = 0;
-      c.globalAlpha = 1;
-    }
+    // Building model now rendered via CSS .hero-building — no canvas draw needed
 
     // Right side: BIM USE labels
     c.font = '500 10px Inter, sans-serif';
