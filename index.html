@@ -351,9 +351,9 @@
     mouse.y = e.clientY;
   }
 
-  // Preload BIM building image
+  // Preload BIM building image (cropped to remove transparent padding)
   const buildingImg = new Image();
-  buildingImg.src = 'assets/building.png';
+  buildingImg.src = 'assets/building_cropped.png';
 
   const contentCanvas = document.createElement('canvas');
   const contentCtx = contentCanvas.getContext('2d');
@@ -374,7 +374,7 @@
       const maxW = W * 0.28;
       const scale = Math.min(maxW / imgW, maxH / imgH);
       const dw = imgW * scale, dh = imgH * scale;
-      const dx = W * 0.01, dy = H * 0.10;
+      const dx = W * 0.01, dy = H * 0.08;
       c.shadowColor = 'rgba(255,255,255,0.35)';
       c.shadowBlur = 3;
       c.globalAlpha = 0.20;
