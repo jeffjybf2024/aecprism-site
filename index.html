@@ -370,14 +370,14 @@
     if (buildingImg.complete && buildingImg.naturalWidth > 0) {
       const imgW = buildingImg.naturalWidth;
       const imgH = buildingImg.naturalHeight;
-      const maxH = H * 0.85;
-      const maxW = W * 0.28;
+      const maxH = H * 0.70;
+      const maxW = W * 0.42;
       const scale = Math.min(maxW / imgW, maxH / imgH);
       const dw = imgW * scale, dh = imgH * scale;
-      const dx = W * 0.01, dy = H * 0.08;
-      c.shadowColor = 'rgba(255,255,255,0.35)';
+      const dx = W * 0.02, dy = H * 0.16;
+      c.shadowColor = 'rgba(255,255,255,0.30)';
       c.shadowBlur = 3;
-      c.globalAlpha = 0.20;
+      c.globalAlpha = 0.38;
       c.drawImage(buildingImg, dx, dy, dw, dh);
       c.shadowColor = 'transparent';
       c.shadowBlur = 0;
