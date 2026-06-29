@@ -13,7 +13,7 @@
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'Noto Sans TC','Inter',sans-serif; background:var(--bg); color:var(--white); }
-  .deck { position:relative; }
+  .deck { position:relative; min-height:100vh; overflow:hidden; }
   .slide { position:absolute; top:0; left:0; width:100%; height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:60px 80px; opacity:0; transform:translateY(24px); transition:all .55s cubic-bezier(.22,1,.36,1); pointer-events:none; overflow-y:auto; }
   .slide.active { opacity:1; transform:translateY(0); pointer-events:auto; }
   .accent-bar { position:absolute; top:0; left:0; width:100%; height:3px; background:linear-gradient(90deg,var(--orange),var(--cyan),var(--gold)); }
