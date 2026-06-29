@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIM Matrix 商業簡報 — 群祥開發 × 協勤資訊</title>
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif; background:#1a1a2e; color:#fff; overflow:hidden; height:100vh; }
+  .slide-container { width:100vw; height:100vh; position:relative; }
+  .slide { width:100%; height:100%; display:none; position:absolute; top:0; left:0; padding:3rem 4rem; overflow-y:auto; background:linear-gradient(135deg,#1a237e 0%,#283593 50%,#3949ab 100%); }
+  .slide.active { display:flex; flex-direction:column; justify-content:flex-start; }
+  .slide:nth-child(even) { background:linear-gradient(135deg,#0d47a1 0%,#1565c0 50%,#1976d2 100%); }
+  .slide:first-child { background:linear-gradient(135deg,#1a237e 0%,#283593 40%,#3949ab 70%,#5c6bc0 100%); justify-content:center; align-items:center; text-align:center; }
+  
+  /* Navigation */
+  .nav { position:fixed; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; gap:0.6rem; align-items:center; z-index:100; background:rgba(0,0,0,0.5); padding:0.6rem 1.2rem; border-radius:2rem; backdrop-filter:blur(10px); }
+  .nav button { background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); color:#fff; width:2.4rem; height:2.4rem; border-radius:50%; cursor:pointer; font-size:1rem; transition:all 0.3s; }
+  .nav button:hover { background:rgba(255,255,255,0.4); }
+  .nav button.active { background:#c62828; border-color:#c62828; }
+  .nav .page-num { color:rgba(255,255,255,0.8); font-size:0.85rem; min-width:3rem; text-align:center; }
+
+  h1 { font-size:2.4rem; margin-bottom:0.8rem; letter-spacing:2px; }
+  h2 { font-size:1.8rem; color:#ff7043; border-left:4px solid #ff7043; padding-left:1rem; margin-bottom:1.2rem; }
+  h3 { font-size:1.3rem; color:#ffab91; margin:1rem 0 0.6rem; }
+  p { font-size:1.05rem; line-height:1.7; margin:0.5rem 0; color:rgba(255,255,255,0.9); }
+  .cover h1 { font-size:3rem; font-weight:700; border:none; color:#fff; }
+  .cover p { font-size:1.3rem; color:rgba(255,255,255,0.85); }
+  .cover .sub { font-size:1.1rem; margin-top:1.5rem; color:#ffcc80; border-top:1px solid rgba(255,255,255,0.2); padding-top:1.5rem; }
+  blockquote { background:rgba(255,255,255,0.08); border-left:4px solid #ff7043; padding:0.8rem 1.2rem; margin:0.8rem 0; font-size:1.05rem; border-radius:0 8px 8px 0; color:rgba(255,255,255,0.95); }
+  table { width:100%; border-collapse:collapse; margin:0.8rem 0; background:rgba(255,255,255,0.06); border-radius:8px; overflow:hidden; }
+  th,td { padding:0.6rem 0.8rem; text-align:left; border-bottom:1px solid rgba(255,255,255,0.1); font-size:0.95rem; }
+  th { background:rgba(255,255,255,0.12); color:#ffcc80; font-weight:600; }
+  tr:last-child td { border-bottom:none; }
+  .tag { display:inline-block; background:#c62828; color:#fff; padding:0.2rem 0.6rem; border-radius:4px; font-size:0.8rem; font-weight:600; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:0.8rem 0; }
+  .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; margin:0.8rem 0; }
+  .card { background:rgba(255,255,255,0.08); border-radius:10px; padding:1rem; border:1px solid rgba(255,255,255,0.1); }
+  .card h4 { color:#ffab91; font-size:1.1rem; margin-bottom:0.4rem; }
+  .card p { font-size:0.9rem; margin:0.2rem 0; }
+  .highlight { color:#ffcc80; font-weight:700; }
+  .icon-big { font-size:2.5rem; margin-bottom:0.5rem; }
+  pre { background:rgba(0,0,0,0.3); padding:0.8rem; border-radius:6px; font-size:0.85rem; line-height:1.5; color:#aed581; overflow-x:auto; margin:0.5rem 0; }
+  ul, ol { color:rgba(255,255,255,0.9); margin:0.5rem 0 0.5rem 1.5rem; line-height:1.7; }
+  li { margin:0.3rem 0; }
+  .video-placeholder { background:rgba(0,0,0,0.4); border:2px dashed rgba(255,255,255,0.3); border-radius:12px; padding:2rem; text-align:center; margin:1rem 0; }
+  
+  @media (max-width:768px) {
+    .slide { padding:1.5rem; }
+    h1 { font-size:1.6rem; }
+    h2 { font-size:1.3rem; }
+    .cover h1 { font-size:2rem; }
+    .grid2, .grid3 { grid-template-columns:1fr; }
+    .nav button { width:2rem; height:2rem; font-size:0.85rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="slide-container">
+  <!-- ===== SLIDE 1: 封面 ===== -->
+  <div class="slide active cover">
+    <h1>BIM Matrix 智慧建築全周期方案</h1>
+    <p style="font-size:1.8rem; margin:1rem 0; color:#ffcc80;">群祥開發 × 協勤資訊</p>
+    <p style="font-size:1.3rem;">營建專案</p>
+    <div style="margin-top:2rem;">
+      <p style="font-size:1.1rem; color:#ff8a65;">🔥 兩項業界創舉</p>
+      <p style="font-size:1rem;">🔄 4D + 現況比對 消費者視覺電子合約</p>
+      <p style="font-size:1rem;">🥽 AR/MR 竣工驗收，消費者親自比對現場</p>
+    </div>
+    <div class="sub">
+      <p>協勤資訊 Concord Tech</p>
+      <p style="font-size:0.9rem; color:rgba(255,255,255,0.6);">36 年工程數位化經驗 | BIM 51 項應用矩陣</p>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 2: 身份確認 ===== -->
+  <div class="slide">
+    <h2>身份確認：我們已準備就緒</h2>
+    <div class="card" style="margin-top:1rem;">
+      <h4>現況</h4>
+      <p>協勤資訊 Concord Tech 具備豐富的 BIM 顧問經驗，已服務台積電、新北市政府、慈濟等指標客戶。36 年深耕營建數位化，熟悉台灣法規與市場全貌。</p>
+    </div>
+    <div class="card" style="margin-top:0.8rem;">
+      <h4>核心能力</h4>
+      <ul>
+        <li>BIM Matrix 51 項應用 × 6 大階段 + 接近百項完整後盾</li>
+        <li>兩項業界創舉：4D 消費者電子合約 + AR/MR 竣工驗收</li>
+        <li>AI 自動化賦能平均 73%，效率領先傳統顧問 5–10 倍</li>
+        <li>探識空間 BIM FM 專利系統，台積電/慈濟驗證</li>
+      </ul>
+    </div>
+    <div class="card" style="margin-top:0.8rem;">
+      <h4>本次提案目的</h4>
+      <blockquote>從 BIM 顧問進化為智慧建築全周期夥伴，讓群祥開發的營建專案成為集團標杆。</blockquote>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 3: 專案挑戰與機會 ===== -->
+  <div class="slide">
+    <h2>營建專案挑戰與機會</h2>
+    <div class="grid2" style="margin-top:1rem;">
+      <div class="card">
+        <div class="icon-big">⚠️</div>
+        <h4>挑戰</h4>
+        <ul>
+          <li>空間與法規限制嚴格，審查周期長</li>
+          <li>機電管線密集，施工階段衝突風險高</li>
+          <li>競品同質化，差異化是決勝關鍵</li>
+          <li>買方對智慧化、透明化的期待持續提升</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="icon-big">💡</div>
+        <h4>機會</h4>
+        <ul>
+          <li>BIM 全周期服務從 Day 1 就位，避免事後補救</li>
+          <li>兩項業界創舉打造獨家銷售話題</li>
+          <li>AI 賦能 73%，設計變更減少、工期縮短</li>
+          <li>智慧建築溢價效應，提升品牌競爭力</li>
+        </ul>
+      </div>
+    </div>
+    <blockquote style="margin-top:0.8rem;">
+      選擇 Concord：不只是 BIM 建模，而是從第一天就準備好 20 年的營運數據競爭力。
+    </blockquote>
+  </div>
+
+  <!-- ===== SLIDE 4: 競品對照 ===== -->
+  <div class="slide">
+    <h2>為什麼選 Concord？</h2>
+    <table style="margin-top:1rem;">
+      <thead><tr><th>維度</th><th>傳統 BIM 顧問</th><th>Concord Tech</th><th>差異</th></tr></thead>
+      <tbody>
+        <tr><td>服務範圍</td><td>只做設計/施工段</td><td>規劃→營運全周期</td><td>多 3 個階段</td></tr>
+        <tr><td>FM 銜接</td><td>竣工後重新建模</td><td>Day 1 預留營運格式</td><td>省 3–6 個月</td></tr>
+        <tr><td>創新應用</td><td>無</td><td>4D 合約 + AR 驗收（業界首發）</td><td>獨家</td></tr>
+        <tr><td>AI 賦能</td><td>人工為主</td><td>73% 流程 AI 自動化</td><td>效率差 5–10 倍</td></tr>
+        <tr><td>在地經驗</td><td>國際團隊/遠端</td><td>36 年台灣營建、熟悉法規</td><td>溝通零時差</td></tr>
+      </tbody>
+    </table>
+    <blockquote style="margin-top:0.8rem;">
+      結論：傳統顧問幫您「蓋完房子」，Concord 幫您「從第一天就準備好 20 年的營運」。
+    </blockquote>
+  </div>
+
+  <!-- ===== SLIDE 5: BIM Matrix 體系 ===== -->
+  <div class="slide">
+    <h2>BIM Matrix 體系簡介</h2>
+    <h3>核心架構</h3>
+    <table style="margin-top:0.5rem;">
+      <thead><tr><th>層級</th><th>內容</th><th>數量</th></tr></thead>
+      <tbody>
+        <tr><td><strong>必點菜單（主廚推薦）</strong></td><td>高執行力、高價值、難度可控</td><td><strong>12 項</strong></td></tr>
+        <tr><td>擴展選單</td><td>依專案需求彈性加選</td><td>39 項</td></tr>
+        <tr><td>完整後盾</td><td>接近百項應用隨時支援</td><td>~100 項</td></tr>
+      </tbody>
+    </table>
+    <h3>兩項業界創舉（本次首發）</h3>
+    <div class="grid2">
+      <div class="card">
+        <h4>🔄 4D 消費者視覺電子合約</h4>
+        <p>買方透過 App 即時查看 4D 施工進度與現況照片比對，繳款進度與工程進度掛鉤。提升買方信任度，加速預售回款。</p>
+      </div>
+      <div class="card">
+        <h4>🥽 AR/MR 竣工驗收</h4>
+        <p>消費者戴上 AR 眼鏡，將 BIM 模型疊合現場實景，親自確認施工品質。降低驗收爭議，強化品牌口碑。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 6: 必點菜單 12 項 ===== -->
+  <div class="slide">
+    <h2>主廚推薦：12 項必點應用</h2>
+    <p style="color:#ffcc80; margin-bottom:0.5rem;">選擇邏輯：實踐度高、執行難度可控、價值明確</p>
+    <h3>規劃階段（2 項）</h3>
+    <table>
+      <thead><tr><th>編號</th><th>應用名稱</th><th>AI%</th><th>效益</th></tr></thead>
+      <tbody>
+        <tr><td>1B</td><td>空間分析與規劃</td><td>60%</td><td>優化戶型配置，提升坪效</td></tr>
+        <tr><td>1D</td><td>設計協調與衝突檢測</td><td>85%</td><td>減少施工變更 20% 以上</td></tr>
+      </tbody>
+    </table>
+    <h3>設計階段（3 項）</h3>
+    <table>
+      <thead><tr><th>編號</th><th>應用名稱</th><th>AI%</th><th>效益</th></tr></thead>
+      <tbody>
+        <tr><td>2C</td><td>能源分析</td><td>70%</td><td>綠建築加分，長期能耗降低 20–30%</td></tr>
+        <tr><td>2E</td><td>永續性評估</td><td>60%</td><td>貢獻銷售溢價 3–5%</td></tr>
+        <tr><td>2F</td><td>法規驗證</td><td>75%</td><td>縮短審查周期 2–3 週</td></tr>
+      </tbody>
+    </table>
+    <h3>施工階段（3 項）</h3>
+    <table>
+      <thead><tr><th>編號</th><th>應用名稱</th><th>AI%</th><th>效益</th></tr></thead>
+      <tbody>
+        <tr><td>3A</td><td>場地利用規劃（4D）</td><td>70%</td><td>施工動線模擬，降低交通衝擊</td></tr>
+        <tr><td>3E</td><td>3D 協調</td><td>85%</td><td>管線綜合，現場變更減少 50%</td></tr>
+        <tr><td>3G</td><td>成本估算</td><td>75%</td><td>自動提量，預算精準度提升 40%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== SLIDE 7: 創舉一 4D 合約 ===== -->
+  <div class="slide">
+    <h2>業界創舉一：4D + 現況比對 消費者視覺電子合約</h2>
+    <div class="video-placeholder">
+      <p style="font-size:1.2rem; color:#ffcc80;">📹 4D 電子合約示意影片</p>
+      <p style="font-size:0.9rem; color:rgba(255,255,255,0.6);">待嵌入影片</p>
+    </div>
+    <div class="grid3" style="margin-top:0.8rem;">
+      <div class="card">
+        <h4>🏠 買方</h4>
+        <p>隨時查看施工進度（3D 模型 + 時間軸），透明化過程，降低預售焦慮</p>
+      </div>
+      <div class="card">
+        <h4>🏗️ 群祥開發</h4>
+        <p>減少客服詢問 60%，里程碑自動觸發繳款，加速資金回流</p>
+      </div>
+      <div class="card">
+        <h4>🏆 差異化</h4>
+        <p>業界首創，直接成為銷售話題，競品無法複製</p>
+      </div>
+    </div>
+    <pre>BIM 4D 模型 → 進度 API 串接 → 現場照片 AI 比對 → 消費者 App → 繳款自動觸發</pre>
+  </div>
+
+  <!-- ===== SLIDE 8: 創舉二 AR 驗收 ===== -->
+  <div class="slide">
+    <h2>業界創舉二：AR/MR 竣工驗收</h2>
+    <p>傳統竣工驗收只能看紙本報告。Concord 讓買方親自用 AR 比對現場。</p>
+    <div class="grid2" style="margin-top:0.8rem;">
+      <div class="card">
+        <h4>📐 牆面平整度比對</h4>
+        <p>模型與現場比對，偏差自動標註</p>
+      </div>
+      <div class="card">
+        <h4>🔧 隱藏管線顯示</h4>
+        <p>AR 中查看牆內管線，確認與設計一致</p>
+      </div>
+      <div class="card">
+        <h4>📋 設備 QR Code 掃描</h4>
+        <p>即時顯示 BIM 屬性資料</p>
+      </div>
+      <div class="card">
+        <h4>📏 虛擬尺標</h4>
+        <p>空間尺寸即時量測比對</p>
+      </div>
+    </div>
+    <blockquote style="margin-top:0.8rem;">
+      「群祥的房子，連驗收都讓你親眼確認」—— 業界首創品牌話題
+    </blockquote>
+    <pre>BIM 竣工模型(LOD 500) → 空間定位(ARKit/HoloLens) → 模型疊合現場(誤差&lt;2cm) → 偏差自動標註 → 驗收報告</pre>
+  </div>
+
+  <!-- ===== SLIDE 9: BIM 全周期應用 ===== -->
+  <div class="slide">
+    <h2>移交 + 營運階段應用</h2>
+    <div class="grid3" style="margin-top:1rem;">
+      <div class="card">
+        <div class="icon-big">📦</div>
+        <h4>4C 資產盤點</h4>
+        <p>自動生成設備清單、保固資料、維護手冊。3–6 個月人工盤點壓縮至 2 週。</p>
+      </div>
+      <div class="card">
+        <div class="icon-big">🔗</div>
+        <h4>4D 營運移交</h4>
+        <p>BIM 資料轉換為營運系統格式，即插即用，無縫銜接。</p>
+      </div>
+      <div class="card">
+        <div class="icon-big">🏢</div>
+        <h4>5I 智慧建築整合</h4>
+        <p>IoT/BMS 架構設計，預留感測點位，打造智慧社區差異化賣點。</p>
+      </div>
+    </div>
+    <h3 style="margin-top:1rem;">進階應用：VR/AR 賞屋</h3>
+    <div class="card">
+      <p>虛擬賞屋與空間導覽，提升銷售體驗，預售成交率提升 <strong class="highlight">15–20%</strong>。</p>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 10: 案例證據 ===== -->
+  <div class="slide">
+    <h2>案例證據：Concord 實績</h2>
+    <div class="grid3" style="margin-top:1rem;">
+      <div class="card">
+        <h4>🔬 台積電 BIM FM</h4>
+        <p>多廠區雲端管理｜獲土木水利 BIM 獎、內政部智慧綠建築獎｜3,301 個 BA 點位整合、FDD 故障診斷</p>
+      </div>
+      <div class="card">
+        <h4>🏗️ 承天雲台</h4>
+        <p>1 建築、500 空間、5,188 設備｜設備異常減少 60%、能耗降低 25%</p>
+      </div>
+      <div class="card">
+        <h4>🏛️ 新北市公宅智慧管理雲</h4>
+        <p>整合影像平台、地震平台、派工平台、停車平台｜支援 200 棟以上群樓管理</p>
+      </div>
+    </div>
+    <blockquote style="margin-top:1rem;">
+      這些不是紙上談兵，是已經落地的實績。
+    </blockquote>
+  </div>
+
+  <!-- ===== SLIDE 11: 協勤優勢 ===== -->
+  <div class="slide">
+    <h2>協勤資訊 Concord Tech 優勢</h2>
+    <div class="grid2" style="margin-top:1rem;">
+      <div class="card">
+        <h4>📅 36 年工程數位化經驗</h4>
+        <p>深耕營建產業，熟悉台灣法規與市場特性</p>
+      </div>
+      <div class="card">
+        <h4>🧩 BIM Matrix 51 項應用</h4>
+        <p>全台灣最完整的 BIM 應用矩陣，接近百項後盾隨時支援</p>
+      </div>
+      <div class="card">
+        <h4>🤖 AI 自動化賦能 73%</h4>
+        <p>平均 73% 流程可 AI 化，降低人工成本、加速交付</p>
+      </div>
+      <div class="card">
+        <h4>🏆 兩項業界創舉</h4>
+        <p>4D 消費者電子合約 + AR/MR 竣工驗收，業界首發</p>
+      </div>
+      <div class="card">
+        <h4>🔗 Autodesk 夥伴生態</h4>
+        <p>Revit、Navisworks、ReCap 原廠技術支援</p>
+      </div>
+      <div class="card">
+        <h4>📋 一條龍服務</h4>
+        <p>從規劃到營運，全周期無縫銜接</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLIDE 12: 戰略願景 ===== -->
+  <div class="slide">
+    <h2>戰略願景 + 零風險試做</h2>
+    <blockquote>
+      <strong>「協勤資訊 = AEC 領域的數據中台」</strong><br>
+      從單一建案進入群祥開發的 AI 管理建置規劃。
+    </blockquote>
+    <h3>四階段演進路徑</h3>
+    <pre>單一建案驗證(0–1年) → 集團標準化(1–2年) → AI 管理建置(2–3年) → 產業輸出(3–5年)</pre>
+    <h3>🎁 零風險試做方案</h3>
+    <div class="grid2" style="margin-top:0.5rem;">
+      <div class="card">
+        <h4>📱 4D 消費者合約原型</h4>
+        <p>單一樓層 4D 模擬 + App 介面原型</p>
+        <p><span class="tag">2 週交付</span> <span class="tag" style="background:#2e7d32;">免費</span></p>
+      </div>
+      <div class="card">
+        <h4>🥽 AR 驗收 Demo</h4>
+        <p>單一空間 AR 模型疊合示範</p>
+        <p><span class="tag">2 週交付</span> <span class="tag" style="background:#2e7d32;">免費</span></p>
+      </div>
+    </div>
+    <blockquote>
+      先做，有價值再談合作。這是我們的誠意。
+    </blockquote>
+  </div>
+
+  <!-- ===== SLIDE 13: 下一步 ===== -->
+  <div class="slide">
+    <h2>下一步行動</h2>
+    <div style="margin-top:1rem;">
+      <div class="card" style="margin-bottom:0.8rem;">
+        <p>1️⃣ <strong>專案訪談</strong>：安排與群祥開發團隊深度訪談，確認專案細節與整合需求</p>
+      </div>
+      <div class="card" style="margin-bottom:0.8rem;">
+        <p>2️⃣ <strong>免費試做</strong>：選擇 4D 合約原型或 AR 驗收 Demo（2 週交付）</p>
+      </div>
+      <div class="card" style="margin-bottom:0.8rem;">
+        <p>3️⃣ <strong>客製報價</strong>：根據專案規模、LOD 精度，提供精確報價</p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:1rem;">
+      <h4>聯絡方式</h4>
+      <p><strong>協勤資訊 Concord Tech</strong></p>
+      <p>地址：台北市松山區南京東路五段 188 號 4 樓</p>
+      <p>電話：02-2760-8517</p>
+      <p>Email：ctc@ctc.com.tw</p>
+      <p>Web：www.ctc.com.tw</p>
+    </div>
+    <blockquote style="margin-top:1rem;">
+      我們隨時準備好，就等您的下一步指示。
+    </blockquote>
+  </div>
+</div>
+
+<div class="nav">
+  <button onclick="prevSlide()">‹</button>
+  <span class="page-num" id="pageNum">1 / 13</span>
+  <button onclick="nextSlide()">›</button>
+</div>
+
+<script>
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+
+function showSlide(n) {
+  slides.forEach((s, i) => s.classList.toggle('active', i === n));
+  document.getElementById('pageNum').textContent = (n+1) + ' / ' + total;
+}
+
+function nextSlide() {
+  if (current < total - 1) { current++; showSlide(current); }
+}
+
+function prevSlide() {
+  if (current > 0) { current--; showSlide(current); }
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
+});
+</script>
+
+</body>
+</html>
