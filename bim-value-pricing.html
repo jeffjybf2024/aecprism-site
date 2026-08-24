@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BIM Matrix — 應用價值與費用估計</title>
+<title>BIM Matrix — Application Value & Pricing</title>
 <style>
   :root { --bg:#0f172a; --card:#1e293b; --border:#334155; --text:#f1f5f9; --muted:#94a3b8; --accent:#f97316; }
   * { box-sizing:border-box; margin:0; padding:0; }
   body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif;
          background:var(--bg); color:var(--text); line-height:1.6; padding:24px; }
   .container { max-width:1080px; margin:0 auto; }
-  header { text-align:center; margin-bottom:24px; }
+  header { text-align:center; margin-bottom:20px; }
   h1 { color:#38bdf8; font-size:1.9em; }
   .subtitle { color:var(--muted); margin-top:6px; }
   .stats { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:16px 0 8px; }
@@ -28,7 +28,7 @@
   tbody td { padding:10px 12px; border-bottom:1px solid var(--border); font-size:.93em; vertical-align:top; }
   tbody tr:last-child td { border-bottom:none; }
   td.code { color:#38bdf8; font-family:ui-monospace,monospace; font-weight:600; white-space:nowrap; }
-  td.name { font-weight:600; white-space:nowrap; }
+  td.name { font-weight:600; }
   td.desc { color:#cbd5e1; }
   td.ai { color:var(--accent); font-weight:600; white-space:nowrap; }
   td.price { white-space:nowrap; font-weight:600; color:#a5b4fc; }
@@ -43,527 +43,544 @@
   .formula { background:#0b1220; border:1px solid var(--border); border-radius:10px; padding:12px 16px; color:#cbd5e1; }
   .note { color:var(--muted); font-size:.85em; margin-top:8px; }
   footer { text-align:center; color:var(--muted); font-size:.85em; margin-top:30px; }
+  
+  .langbar { display:flex; justify-content:flex-end; gap:8px; max-width:1080px; margin:0 auto 14px; }
+  .langbar button { background:var(--card); border:1px solid var(--border); color:var(--muted);
+                    padding:7px 16px; border-radius:999px; cursor:pointer; font-size:.9em; }
+  .langbar button.active { background:var(--accent); color:#0f172a; border-color:var(--accent); font-weight:600; }
+  body:not(.en) .en { display:none; }
+  body.en .zh { display:none; }
+
 </style>
 </head>
 <body>
+<div class="langbar">
+  <button data-l="zh" class="active" onclick="setLang('zh')">中文</button>
+  <button data-l="en" onclick="setLang('en')">English</button>
+</div>
 <div class="container">
   <header>
-    <h1>💰 BIM Matrix — 應用價值與費用估計</h1>
-    <p class="subtitle">54 項（51 BIM Uses + 3 文書自動化）的應用價值、AI 賦能比例與單價估計</p>
+    <h1>💰 BIM Matrix — <span class="zh">應用價值與費用估計</span><span class="en">Application Value & Pricing</span></h1>
+    <p class="subtitle"><span class="zh">54 項（51 BIM Uses + 3 文書自動化）的應用價值、AI 賦能比例與單價估計</span><span class="en">54 items (51 BIM Uses + 3 document automation): value, AI ratio & unit-price estimates</span></p>
     <div class="stats">
-      <div class="stat">總項目 <b>54</b></div>
-      <div class="stat">基礎 <b>8</b> · 進階 <b>23</b> · 高階 <b>23</b></div>
-      <div class="stat">全周期套餐 <b>NT$1,454,600</b>（43 項，-30%）</div>
+      <div class="stat"><span class="zh">總項目</span><span class="en">Items</span> <b>54</b></div>
+      <div class="stat"><span class="zh">基礎</span><span class="en">Basic</span> <b>8</b> · <span class="zh">進階</span><span class="en">Advanced</span> <b>23</b> · <span class="zh">高階</span><span class="en">Premium</span> <b>23</b></div>
+      <div class="stat"><span class="zh">全周期套餐</span><span class="en">Full-cycle</span> <b>NT$1,454,600</b>（43 <span class="zh">項</span><span class="en">items</span>，-30%）</div>
     </div>
   </header>
-  <input class="search" id="q" type="search" placeholder="搜尋：編號 / 應用名稱 / 說明…" oninput="filter(this.value)">
+  <input class="search" id="q" type="search" placeholder="搜尋 / Search…" oninput="filter(this.value)">
   
-<div class="framework">
-  <h2>定價邏輯</h2>
-  <div class="cards">
-    <div class="card">
-      <h3>價格帶設定</h3>
-      <table>
-        <thead><tr><th>價格帶</th><th>AI 比例</th><th>單價範圍</th></tr></thead>
-        <tbody>
-          <tr><td><span class="dot" style="background:#22c55e"></span>基礎型</td><td>45–65%</td><td>NT$15,000–25,000</td></tr>
-          <tr><td><span class="dot" style="background:#38bdf8"></span>進階型</td><td>65–80%</td><td>NT$25,000–45,000</td></tr>
-          <tr><td><span class="dot" style="background:#f97316"></span>高階型</td><td>80–90%</td><td>NT$45,000–80,000</td></tr>
-        </tbody>
-      </table>
+    <div class="framework">
+      <h2><span class="zh">定價邏輯</span><span class="en">Pricing Logic</span></h2>
+      <div class="cards">
+        <div class="card">
+          <h3><span class="zh">價格帶設定</span><span class="en">Price Tiers</span></h3>
+          <table><thead><tr><th><span class="zh">價格帶</span><span class="en">Tier</span></th><th>AI</th><th><span class="zh">單價範圍</span><span class="en">Unit Price</span></th></tr></thead>
+          <tbody>
+            <tr><td><span class="dot" style="background:#22c55e"></span><span class="zh">基礎型</span><span class="en">Basic</span></td><td>45–65%</td><td>NT$15,000–25,000</td></tr>
+            <tr><td><span class="dot" style="background:#38bdf8"></span><span class="zh">進階型</span><span class="en">Advanced</span></td><td>65–80%</td><td>NT$25,000–45,000</td></tr>
+            <tr><td><span class="dot" style="background:#f97316"></span><span class="zh">高階型</span><span class="en">Premium</span></td><td>80–90%</td><td>NT$45,000–80,000</td></tr>
+          </tbody></table>
+        </div>
+        <div class="card">
+          <h3><span class="zh">專案規模係數</span><span class="en">Project Scale Factor</span></h3>
+          <table><thead><tr><th><span class="zh">建築面積</span><span class="en">Area</span></th><th><span class="zh">係數</span><span class="en">Factor</span></th></tr></thead>
+          <tbody>
+            <tr><td>&lt; 3,000 m²</td><td>0.8</td></tr>
+            <tr><td>3,000–10,000 m²</td><td>1.0</td></tr>
+            <tr><td>10,000–30,000 m²</td><td>1.2</td></tr>
+            <tr><td>&gt; 30,000 m²</td><td>1.5+</td></tr>
+          </tbody></table>
+        </div>
+        <div class="card">
+          <h3><span class="zh">套餐優惠</span><span class="en">Package Discounts</span></h3>
+          <table><thead><tr><th><span class="zh">套餐</span><span class="en">Package</span></th><th><span class="zh">優惠</span><span class="en">Discount</span></th></tr></thead>
+          <tbody>
+            <tr><td><span class="zh">單項購買</span><span class="en">Individual</span></td><td>—</td></tr>
+            <tr><td><span class="zh">階段套餐</span><span class="en">Phase package</span></td><td>15%</td></tr>
+            <tr><td><span class="zh">全周期套餐</span><span class="en">Full-cycle</span></td><td>30%</td></tr>
+            <tr><td><span class="zh">年度訂閱</span><span class="en">Annual subscription</span></td><td><span class="zh">談判</span><span class="en">Negotiable</span></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+      <div class="formula">
+        <span class="zh"><strong>報價公式：</strong> 專案報價 = (Σ 選擇 BIM USE 單價) × 專案規模係數 × (1 − 套餐優惠)</span>
+        <span class="en"><strong>Formula:</strong> Project price = (Σ selected BIM USE unit prices) × scale factor × (1 − package discount)</span>
+      </div>
     </div>
-    <div class="card">
-      <h3>專案規模係數</h3>
-      <table>
-        <thead><tr><th>建築面積</th><th>係數</th></tr></thead>
+  
+        <section class="phase">
+          <h2><span class="zh">規劃階段（6 項）</span><span class="en">1. Planning (6)</span> <span class="cnt">6</span></h2>
+          <div class="tblwrap"><table>
+            <thead><tr><th><span class="zh">編號</span><span class="en">Code</span></th><th><span class="zh">應用</span><span class="en">Application</span></th><th><span class="zh">應用價值／說明</span><span class="en">Value / Description</span></th><th>AI%</th><th><span class="zh">價格帶</span><span class="en">Tier</span></th><th><span class="zh">單價</span><span class="en">Unit Price</span></th></tr></thead>
+            <tbody><tr data-code="1A" data-zh="現況掃描建模" data-en="Existing Conditions Modeling">
+              <td class="code">1A</td>
+              <td class="name"><span class="zh">現況掃描建模</span><span class="en">Existing Conditions Modeling</span></td>
+              <td class="desc"><span class="zh">點雲處理+自動分類</span><span class="en">Point cloud processing + auto-classification</span></td>
+              <td class="ai">75%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 35,000</td>
+            </tr><tr data-code="1B" data-zh="空間分析與規劃" data-en="Space Planning &amp; Analysis">
+              <td class="code">1B</td>
+              <td class="name"><span class="zh">空間分析與規劃</span><span class="en">Space Planning &amp; Analysis</span></td>
+              <td class="desc"><span class="zh">多方案比較</span><span class="en">Multi-option comparison</span></td>
+              <td class="ai">60%</td>
+              <td class="band"><span style="color:#22c55e;border:1px solid #22c55e66;background:#22c55e1a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">基礎</span><span class="en">Basic</span></span></td>
+              <td class="price">NT$ 22,000</td>
+            </tr><tr data-code="1C" data-zh="方案比對" data-en="Design Alternatives Comparison">
+              <td class="code">1C</td>
+              <td class="name"><span class="zh">方案比對</span><span class="en">Design Alternatives Comparison</span></td>
+              <td class="desc"><span class="zh">評估維度設定</span><span class="en">Evaluation dimension setup</span></td>
+              <td class="ai">55%</td>
+              <td class="band"><span style="color:#22c55e;border:1px solid #22c55e66;background:#22c55e1a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">基礎</span><span class="en">Basic</span></span></td>
+              <td class="price">NT$ 20,000</td>
+            </tr><tr data-code="1D" data-zh="設計協調與衝突檢測" data-en="Design Coordination &amp; Clash Detection">
+              <td class="code">1D</td>
+              <td class="name"><span class="zh">設計協調與衝突檢測</span><span class="en">Design Coordination &amp; Clash Detection</span></td>
+              <td class="desc"><span class="zh">自動化檢測與報告</span><span class="en">Automated detection &amp; reporting</span></td>
+              <td class="ai">85%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 55,000</td>
+            </tr><tr data-code="1E" data-zh="設計審查" data-en="3D Design Review">
+              <td class="code">1E</td>
+              <td class="name"><span class="zh">設計審查</span><span class="en">3D Design Review</span></td>
+              <td class="desc"><span class="zh">法規檢核</span><span class="en">Code compliance check</span></td>
+              <td class="ai">50%</td>
+              <td class="band"><span style="color:#22c55e;border:1px solid #22c55e66;background:#22c55e1a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">基礎</span><span class="en">Basic</span></span></td>
+              <td class="price">NT$ 18,000</td>
+            </tr><tr data-code="1F" data-zh="現況建模" data-en="As-Is Modeling">
+              <td class="code">1F</td>
+              <td class="name"><span class="zh">現況建模</span><span class="en">As-Is Modeling</span></td>
+              <td class="desc"><span class="zh">照片建模輔助</span><span class="en">Photo-assisted modeling</span></td>
+              <td class="ai">70%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 30,000</td>
+            </tr></tbody>
+          </table></div>
+        </section>
+        <section class="phase">
+          <h2><span class="zh">設計階段（7 項）</span><span class="en">2. Design (7)</span> <span class="cnt">7</span></h2>
+          <div class="tblwrap"><table>
+            <thead><tr><th><span class="zh">編號</span><span class="en">Code</span></th><th><span class="zh">應用</span><span class="en">Application</span></th><th><span class="zh">應用價值／說明</span><span class="en">Value / Description</span></th><th>AI%</th><th><span class="zh">價格帶</span><span class="en">Tier</span></th><th><span class="zh">單價</span><span class="en">Unit Price</span></th></tr></thead>
+            <tbody><tr data-code="2A" data-zh="設計創作" data-en="Design Authoring">
+              <td class="code">2A</td>
+              <td class="name"><span class="zh">設計創作</span><span class="en">Design Authoring</span></td>
+              <td class="desc"><span class="zh">參數化族群建立</span><span class="en">Parametric family creation</span></td>
+              <td class="ai">45%</td>
+              <td class="band"><span style="color:#22c55e;border:1px solid #22c55e66;background:#22c55e1a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">基礎</span><span class="en">Basic</span></span></td>
+              <td class="price">NT$ 18,000</td>
+            </tr><tr data-code="2B" data-zh="工程分析" data-en="Engineering Analysis">
+              <td class="code">2B</td>
+              <td class="name"><span class="zh">工程分析</span><span class="en">Engineering Analysis</span></td>
+              <td class="desc"><span class="zh">多物理場分析</span><span class="en">Multi-physics analysis</span></td>
+              <td class="ai">65%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 28,000</td>
+            </tr><tr data-code="2C" data-zh="能源分析" data-en="Energy Analysis">
+              <td class="code">2C</td>
+              <td class="name"><span class="zh">能源分析</span><span class="en">Energy Analysis</span></td>
+              <td class="desc"><span class="zh">全年能耗模擬</span><span class="en">Annual energy simulation</span></td>
+              <td class="ai">70%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 32,000</td>
+            </tr><tr data-code="2D" data-zh="結構分析" data-en="Structural Analysis">
+              <td class="code">2D</td>
+              <td class="name"><span class="zh">結構分析</span><span class="en">Structural Analysis</span></td>
+              <td class="desc"><span class="zh">引力計算+配筋</span><span class="en">Structural analysis + rebar detailing</span></td>
+              <td class="ai">80%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 50,000</td>
+            </tr><tr data-code="2E" data-zh="永續性評估" data-en="Sustainability Assessment">
+              <td class="code">2E</td>
+              <td class="name"><span class="zh">永續性評估</span><span class="en">Sustainability Assessment</span></td>
+              <td class="desc"><span class="zh">綠建築認證</span><span class="en">Green-building certification</span></td>
+              <td class="ai">60%</td>
+              <td class="band"><span style="color:#22c55e;border:1px solid #22c55e66;background:#22c55e1a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">基礎</span><span class="en">Basic</span></span></td>
+              <td class="price">NT$ 22,000</td>
+            </tr><tr data-code="2F" data-zh="法規驗證" data-en="Code Compliance Checking">
+              <td class="code">2F</td>
+              <td class="name"><span class="zh">法規驗證</span><span class="en">Code Compliance Checking</span></td>
+              <td class="desc"><span class="zh">自動檢核報告</span><span class="en">Automated checking report</span></td>
+              <td class="ai">75%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 35,000</td>
+            </tr><tr data-code="2G" data-zh="照明分析" data-en="Lighting Analysis">
+              <td class="code">2G</td>
+              <td class="name"><span class="zh">照明分析</span><span class="en">Lighting Analysis</span></td>
+              <td class="desc"><span class="zh">擬色圖分析</span><span class="en">False-color analysis</span></td>
+              <td class="ai">65%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 28,000</td>
+            </tr></tbody>
+          </table></div>
+        </section>
+        <section class="phase">
+          <h2><span class="zh">施工階段（10 項）</span><span class="en">3. Construction (10)</span> <span class="cnt">10</span></h2>
+          <div class="tblwrap"><table>
+            <thead><tr><th><span class="zh">編號</span><span class="en">Code</span></th><th><span class="zh">應用</span><span class="en">Application</span></th><th><span class="zh">應用價值／說明</span><span class="en">Value / Description</span></th><th>AI%</th><th><span class="zh">價格帶</span><span class="en">Tier</span></th><th><span class="zh">單價</span><span class="en">Unit Price</span></th></tr></thead>
+            <tbody><tr data-code="3A" data-zh="場地利用規劃" data-en="Site Utilization Planning">
+              <td class="code">3A</td>
+              <td class="name"><span class="zh">場地利用規劃</span><span class="en">Site Utilization Planning</span></td>
+              <td class="desc"><span class="zh">4D 模擬</span><span class="en">4D simulation</span></td>
+              <td class="ai">70%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 30,000</td>
+            </tr><tr data-code="3B" data-zh="施工系統設計" data-en="Construction System Design">
+              <td class="code">3B</td>
+              <td class="name"><span class="zh">施工系統設計</span><span class="en">Construction System Design</span></td>
+              <td class="desc"><span class="zh">虛擬樣板</span><span class="en">Virtual mockup</span></td>
+              <td class="ai">55%</td>
+              <td class="band"><span style="color:#22c55e;border:1px solid #22c55e66;background:#22c55e1a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">基礎</span><span class="en">Basic</span></span></td>
+              <td class="price">NT$ 20,000</td>
+            </tr><tr data-code="3C" data-zh="數位製造" data-en="Digital Fabrication">
+              <td class="code">3C</td>
+              <td class="name"><span class="zh">數位製造</span><span class="en">Digital Fabrication</span></td>
+              <td class="desc"><span class="zh">CNC/G-code 轉換</span><span class="en">CNC/G-code conversion</span></td>
+              <td class="ai">80%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 50,000</td>
+            </tr><tr data-code="3D" data-zh="3D 控制與規劃" data-en="3D Control &amp; Planning">
+              <td class="code">3D</td>
+              <td class="name"><span class="zh">3D 控制與規劃</span><span class="en">3D Control &amp; Planning</span></td>
+              <td class="desc"><span class="zh">數位放樣</span><span class="en">Digital layout</span></td>
+              <td class="ai">75%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 35,000</td>
+            </tr><tr data-code="3E" data-zh="3D 協調" data-en="3D Coordination">
+              <td class="code">3E</td>
+              <td class="name"><span class="zh">3D 協調</span><span class="en">3D Coordination</span></td>
+              <td class="desc"><span class="zh">多專業管線綜合</span><span class="en">Multi-discipline combined services</span></td>
+              <td class="ai">85%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 55,000</td>
+            </tr><tr data-code="3F" data-zh="階段規劃 4D" data-en="4D Scheduling">
+              <td class="code">3F</td>
+              <td class="name"><span class="zh">階段規劃 4D</span><span class="en">4D Scheduling</span></td>
+              <td class="desc"><span class="zh">進度連結模擬</span><span class="en">Schedule-linked simulation</span></td>
+              <td class="ai">80%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 48,000</td>
+            </tr><tr data-code="3G" data-zh="成本估算" data-en="Cost Estimation">
+              <td class="code">3G</td>
+              <td class="name"><span class="zh">成本估算</span><span class="en">Cost Estimation</span></td>
+              <td class="desc"><span class="zh">自動提量+估算</span><span class="en">Auto quantity takeoff + estimating</span></td>
+              <td class="ai">75%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 35,000</td>
+            </tr><tr data-code="3H" data-zh="施工審查" data-en="Construction Review">
+              <td class="code">3H</td>
+              <td class="name"><span class="zh">施工審查</span><span class="en">Construction Review</span></td>
+              <td class="desc"><span class="zh">方案審查</span><span class="en">Method review</span></td>
+              <td class="ai">60%</td>
+              <td class="band"><span style="color:#22c55e;border:1px solid #22c55e66;background:#22c55e1a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">基礎</span><span class="en">Basic</span></span></td>
+              <td class="price">NT$ 22,000</td>
+            </tr><tr data-code="3I" data-zh="數位交屋" data-en="Digital Handover">
+              <td class="code">3I</td>
+              <td class="name"><span class="zh">數位交屋</span><span class="en">Digital Handover</span></td>
+              <td class="desc"><span class="zh">COBie 資產資料</span><span class="en">COBie asset data</span></td>
+              <td class="ai">70%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 30,000</td>
+            </tr><tr data-code="3J" data-zh="安全規劃" data-en="Safety Planning">
+              <td class="code">3J</td>
+              <td class="name"><span class="zh">安全規劃</span><span class="en">Safety Planning</span></td>
+              <td class="desc"><span class="zh">風險模擬</span><span class="en">Risk simulation</span></td>
+              <td class="ai">65%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 28,000</td>
+            </tr></tbody>
+          </table></div>
+        </section>
+        <section class="phase">
+          <h2><span class="zh">移交階段（5 項）</span><span class="en">4. Handover (5)</span> <span class="cnt">5</span></h2>
+          <div class="tblwrap"><table>
+            <thead><tr><th><span class="zh">編號</span><span class="en">Code</span></th><th><span class="zh">應用</span><span class="en">Application</span></th><th><span class="zh">應用價值／說明</span><span class="en">Value / Description</span></th><th>AI%</th><th><span class="zh">價格帶</span><span class="en">Tier</span></th><th><span class="zh">單價</span><span class="en">Unit Price</span></th></tr></thead>
+            <tbody><tr data-code="4A" data-zh="竣工建模" data-en="As-Built Modeling">
+              <td class="code">4A</td>
+              <td class="name"><span class="zh">竣工建模</span><span class="en">As-Built Modeling</span></td>
+              <td class="desc"><span class="zh">LOD 500 更新</span><span class="en">LOD 500 update</span></td>
+              <td class="ai">70%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 30,000</td>
+            </tr><tr data-code="4B" data-zh="記錄建模" data-en="Record Modeling">
+              <td class="code">4B</td>
+              <td class="name"><span class="zh">記錄建模</span><span class="en">Record Modeling</span></td>
+              <td class="desc"><span class="zh">歷史變更追蹤</span><span class="en">Historical change tracking</span></td>
+              <td class="ai">65%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 28,000</td>
+            </tr><tr data-code="4C" data-zh="資產盤點" data-en="Asset Inventory">
+              <td class="code">4C</td>
+              <td class="name"><span class="zh">資產盤點</span><span class="en">Asset Inventory</span></td>
+              <td class="desc"><span class="zh">自動清單+編碼</span><span class="en">Auto inventory + coding</span></td>
+              <td class="ai">80%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 48,000</td>
+            </tr><tr data-code="4D" data-zh="營運移交" data-en="FM Handover">
+              <td class="code">4D</td>
+              <td class="name"><span class="zh">營運移交</span><span class="en">FM Handover</span></td>
+              <td class="desc"><span class="zh">FM 系統格式轉換</span><span class="en">FM system format conversion</span></td>
+              <td class="ai">75%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 35,000</td>
+            </tr><tr data-code="4E" data-zh="培訓模擬" data-en="Training Simulation">
+              <td class="code">4E</td>
+              <td class="name"><span class="zh">培訓模擬</span><span class="en">Training Simulation</span></td>
+              <td class="desc"><span class="zh">VR/AR 培訓</span><span class="en">VR/AR training</span></td>
+              <td class="ai">60%</td>
+              <td class="band"><span style="color:#22c55e;border:1px solid #22c55e66;background:#22c55e1a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">基礎</span><span class="en">Basic</span></span></td>
+              <td class="price">NT$ 22,000</td>
+            </tr></tbody>
+          </table></div>
+        </section>
+        <section class="phase">
+          <h2><span class="zh">營運維護（12 項）</span><span class="en">5. O&amp;M (12)</span> <span class="cnt">12</span></h2>
+          <div class="tblwrap"><table>
+            <thead><tr><th><span class="zh">編號</span><span class="en">Code</span></th><th><span class="zh">應用</span><span class="en">Application</span></th><th><span class="zh">應用價值／說明</span><span class="en">Value / Description</span></th><th>AI%</th><th><span class="zh">價格帶</span><span class="en">Tier</span></th><th><span class="zh">單價</span><span class="en">Unit Price</span></th></tr></thead>
+            <tbody><tr data-code="5A" data-zh="維護排程" data-en="Maintenance Scheduling">
+              <td class="code">5A</td>
+              <td class="name"><span class="zh">維護排程</span><span class="en">Maintenance Scheduling</span></td>
+              <td class="desc"><span class="zh">IoT 預測+自動工單</span><span class="en">IoT prediction + auto work orders</span></td>
+              <td class="ai">85%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 55,000</td>
+            </tr><tr data-code="5B" data-zh="資產管理" data-en="Asset Management">
+              <td class="code">5B</td>
+              <td class="name"><span class="zh">資產管理</span><span class="en">Asset Management</span></td>
+              <td class="desc"><span class="zh">全生命週期追蹤</span><span class="en">Full-lifecycle tracking</span></td>
+              <td class="ai">80%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 48,000</td>
+            </tr><tr data-code="5C" data-zh="空間管理" data-en="Space Management">
+              <td class="code">5C</td>
+              <td class="name"><span class="zh">空間管理</span><span class="en">Space Management</span></td>
+              <td class="desc"><span class="zh">即時監控儀表板</span><span class="en">Real-time monitoring dashboard</span></td>
+              <td class="ai">75%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 35,000</td>
+            </tr><tr data-code="5D" data-zh="災難規劃" data-en="Disaster Planning">
+              <td class="code">5D</td>
+              <td class="name"><span class="zh">災難規劃</span><span class="en">Disaster Planning</span></td>
+              <td class="desc"><span class="zh">疏散模擬</span><span class="en">Evacuation simulation</span></td>
+              <td class="ai">70%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 30,000</td>
+            </tr><tr data-code="5E" data-zh="能源管理" data-en="Energy Management">
+              <td class="code">5E</td>
+              <td class="name"><span class="zh">能源管理</span><span class="en">Energy Management</span></td>
+              <td class="desc"><span class="zh">AI 程式化控制</span><span class="en">AI programmatic control</span></td>
+              <td class="ai">85%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 55,000</td>
+            </tr><tr data-code="5F" data-zh="租戶管理" data-en="Tenant Management">
+              <td class="code">5F</td>
+              <td class="name"><span class="zh">租戶管理</span><span class="en">Tenant Management</span></td>
+              <td class="desc"><span class="zh">自動計算+續約預測</span><span class="en">Auto billing + renewal prediction</span></td>
+              <td class="ai">75%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 32,000</td>
+            </tr><tr data-code="5G" data-zh="資本規劃" data-en="Capital Planning">
+              <td class="code">5G</td>
+              <td class="name"><span class="zh">資本規劃</span><span class="en">Capital Planning</span></td>
+              <td class="desc"><span class="zh">長期預測模型</span><span class="en">Long-term forecast model</span></td>
+              <td class="ai">70%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 30,000</td>
+            </tr><tr data-code="5H" data-zh="系統分析" data-en="Systems Analysis">
+              <td class="code">5H</td>
+              <td class="name"><span class="zh">系統分析</span><span class="en">Systems Analysis</span></td>
+              <td class="desc"><span class="zh">數位孫生系統</span><span class="en">Digital twin system</span></td>
+              <td class="ai">80%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 48,000</td>
+            </tr><tr data-code="5I" data-zh="智慧建築整合" data-en="Smart Building Integration">
+              <td class="code">5I</td>
+              <td class="name"><span class="zh">智慧建築整合</span><span class="en">Smart Building Integration</span></td>
+              <td class="desc"><span class="zh">IoT/BMS 架構設計</span><span class="en">IoT/BMS architecture design</span></td>
+              <td class="ai">90%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 75,000</td>
+            </tr><tr data-code="5J" data-zh="設施維護" data-en="Facility Maintenance">
+              <td class="code">5J</td>
+              <td class="name"><span class="zh">設施維護</span><span class="en">Facility Maintenance</span></td>
+              <td class="desc"><span class="zh">行動工單系統</span><span class="en">Mobile work-order system</span></td>
+              <td class="ai">80%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 48,000</td>
+            </tr><tr data-code="5K" data-zh="空間利用率分析" data-en="Space Utilization Analysis">
+              <td class="code">5K</td>
+              <td class="name"><span class="zh">空間利用率分析</span><span class="en">Space Utilization Analysis</span></td>
+              <td class="desc"><span class="zh">熱點圖+趨勢</span><span class="en">Heat maps + trends</span></td>
+              <td class="ai">85%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 55,000</td>
+            </tr><tr data-code="5L" data-zh="搬遷與重置規劃" data-en="Move Management">
+              <td class="code">5L</td>
+              <td class="name"><span class="zh">搬遷與重置規劃</span><span class="en">Move Management</span></td>
+              <td class="desc"><span class="zh">時程模擬</span><span class="en">Schedule simulation</span></td>
+              <td class="ai">70%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 30,000</td>
+            </tr></tbody>
+          </table></div>
+        </section>
+        <section class="phase">
+          <h2><span class="zh">進階應用（11 項）</span><span class="en">6. Advanced (11)</span> <span class="cnt">11</span></h2>
+          <div class="tblwrap"><table>
+            <thead><tr><th><span class="zh">編號</span><span class="en">Code</span></th><th><span class="zh">應用</span><span class="en">Application</span></th><th><span class="zh">應用價值／說明</span><span class="en">Value / Description</span></th><th>AI%</th><th><span class="zh">價格帶</span><span class="en">Tier</span></th><th><span class="zh">單價</span><span class="en">Unit Price</span></th></tr></thead>
+            <tbody><tr data-code="6A" data-zh="VR/AR 應用" data-en="VR/AR Applications">
+              <td class="code">6A</td>
+              <td class="name"><span class="zh">VR/AR 應用</span><span class="en">VR/AR Applications</span></td>
+              <td class="desc"><span class="zh">Unity/Unreal 轉換</span><span class="en">Unity/Unreal conversion</span></td>
+              <td class="ai">70%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 35,000</td>
+            </tr><tr data-code="6B" data-zh="數位孫生" data-en="Digital Twin">
+              <td class="code">6B</td>
+              <td class="name"><span class="zh">數位孫生</span><span class="en">Digital Twin</span></td>
+              <td class="desc"><span class="zh">即時資料串流</span><span class="en">Real-time data streaming</span></td>
+              <td class="ai">90%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 75,000</td>
+            </tr><tr data-code="6C" data-zh="生成式設計" data-en="Generative Design">
+              <td class="code">6C</td>
+              <td class="name"><span class="zh">生成式設計</span><span class="en">Generative Design</span></td>
+              <td class="desc"><span class="zh">Dynamo/Grasshopper 多方案</span><span class="en">Dynamo/Grasshopper multi-option</span></td>
+              <td class="ai">85%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 60,000</td>
+            </tr><tr data-code="6D" data-zh="機器學習預測分析" data-en="ML Predictive Analytics">
+              <td class="code">6D</td>
+              <td class="name"><span class="zh">機器學習預測分析</span><span class="en">ML Predictive Analytics</span></td>
+              <td class="desc"><span class="zh">異常偵測+故障預測</span><span class="en">Anomaly detection + failure prediction</span></td>
+              <td class="ai">90%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 75,000</td>
+            </tr><tr data-code="6E" data-zh="無人機航測" data-en="Drone Survey &amp; Inspection">
+              <td class="code">6E</td>
+              <td class="name"><span class="zh">無人機航測</span><span class="en">Drone Survey &amp; Inspection</span></td>
+              <td class="desc"><span class="zh">航測+自動檢測</span><span class="en">Survey + automated inspection</span></td>
+              <td class="ai">80%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 50,000</td>
+            </tr><tr data-code="6F" data-zh="自動化施工/機器人" data-en="Robotics &amp; Automation">
+              <td class="code">6F</td>
+              <td class="name"><span class="zh">自動化施工/機器人</span><span class="en">Robotics &amp; Automation</span></td>
+              <td class="desc"><span class="zh">機器人路徑設計</span><span class="en">Robot path design</span></td>
+              <td class="ai">85%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 60,000</td>
+            </tr><tr data-code="6G" data-zh="區塊鏈資產溯源" data-en="Blockchain Asset Traceability">
+              <td class="code">6G</td>
+              <td class="name"><span class="zh">區塊鏈資產溯源</span><span class="en">Blockchain Asset Traceability</span></td>
+              <td class="desc"><span class="zh">供應鏈+智能合約</span><span class="en">Supply chain + smart contracts</span></td>
+              <td class="ai">75%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price">NT$ 40,000</td>
+            </tr><tr data-code="6H" data-zh="雲端協作平台" data-en="Cloud Collaboration Platform">
+              <td class="code">6H</td>
+              <td class="name"><span class="zh">雲端協作平台</span><span class="en">Cloud Collaboration Platform</span></td>
+              <td class="desc"><span class="zh">CDE 平台評估+導入</span><span class="en">CDE platform evaluation + adoption</span></td>
+              <td class="ai">80%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 50,000</td>
+            </tr><tr data-code="6I" data-zh="大數據分析" data-en="Big Data Analytics">
+              <td class="code">6I</td>
+              <td class="name"><span class="zh">大數據分析</span><span class="en">Big Data Analytics</span></td>
+              <td class="desc"><span class="zh">多建範比較+預測</span><span class="en">Multi-building comparison + prediction</span></td>
+              <td class="ai">90%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 75,000</td>
+            </tr><tr data-code="6J" data-zh="AI 輔助設計優化" data-en="AI Design Optimization">
+              <td class="code">6J</td>
+              <td class="name"><span class="zh">AI 輔助設計優化</span><span class="en">AI Design Optimization</span></td>
+              <td class="desc"><span class="zh">多目標優化演算</span><span class="en">Multi-objective optimization</span></td>
+              <td class="ai">85%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 60,000</td>
+            </tr><tr data-code="6K" data-zh="3D 列印積層製造" data-en="3D Printing &amp; Additive Manufacturing">
+              <td class="code">6K</td>
+              <td class="name"><span class="zh">3D 列印積層製造</span><span class="en">3D Printing &amp; Additive Manufacturing</span></td>
+              <td class="desc"><span class="zh">支撐結構優化+品檢</span><span class="en">Support optimization + QC</span></td>
+              <td class="ai">80%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price">NT$ 50,000</td>
+            </tr></tbody>
+          </table></div>
+        </section>
+        <section class="phase">
+          <h2><span class="zh">文書自動化（3 項）</span><span class="en">7. Document Automation (3)</span> <span class="cnt">3</span></h2>
+          <div class="tblwrap"><table>
+            <thead><tr><th><span class="zh">編號</span><span class="en">Code</span></th><th><span class="zh">應用</span><span class="en">Application</span></th><th><span class="zh">應用價值／說明</span><span class="en">Value / Description</span></th><th>AI%</th><th><span class="zh">價格帶</span><span class="en">Tier</span></th><th><span class="zh">單價</span><span class="en">Unit Price</span></th></tr></thead>
+            <tbody><tr data-code="7A" data-zh="BEP 自動生成" data-en="">
+              <td class="code">7A</td>
+              <td class="name"><span class="zh">BEP 自動生成</span><span class="en"></span></td>
+              <td class="desc"><span class="zh">BIM 執行計畫書（BEP）自動產出</span><span class="en">BEP auto-generation</span></td>
+              <td class="ai">80%</td>
+              <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">高階</span><span class="en">Premium</span></span></td>
+              <td class="price"><span class="tbd">待訪價</span></td>
+            </tr><tr data-code="7B" data-zh="月報／週報自動生成" data-en="">
+              <td class="code">7B</td>
+              <td class="name"><span class="zh">月報／週報自動生成</span><span class="en"></span></td>
+              <td class="desc"><span class="zh">專案定期進度報告自動產出</span><span class="en">Periodic report auto-generation</span></td>
+              <td class="ai">70%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price"><span class="tbd">待訪價</span></td>
+            </tr><tr data-code="7C" data-zh="結案報告自動生成" data-en="">
+              <td class="code">7C</td>
+              <td class="name"><span class="zh">結案報告自動生成</span><span class="en"></span></td>
+              <td class="desc"><span class="zh">專案結案報告自動產出</span><span class="en">Close-out report auto-generation</span></td>
+              <td class="ai">75%</td>
+              <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em"><span class="zh">進階</span><span class="en">Advanced</span></span></td>
+              <td class="price"><span class="tbd">待訪價</span></td>
+            </tr></tbody>
+          </table></div>
+        </section>
+  
+    <section class="phase">
+      <h2><span class="zh">套餐報價速算</span><span class="en">Package Quote Quick Calc</span> <span class="cnt"><span class="zh">以 10,000 m² 中型專案為例（係數 1.0）</span><span class="en">Example: 10,000 m² mid-size project (factor 1.0)</span></span></h2>
+      <div class="tblwrap"><table>
+        <thead><tr><th><span class="zh">套餐</span><span class="en">Package</span></th><th><span class="zh">項數</span><span class="en">Items</span></th><th><span class="zh">原價</span><span class="en">List</span></th><th><span class="zh">優惠後</span><span class="en">Discounted</span></th><th><span class="zh">單項均價</span><span class="en">Avg/Item</span></th></tr></thead>
         <tbody>
-          <tr><td>&lt; 3,000 m²</td><td>0.8</td></tr>
-          <tr><td>3,000–10,000 m²</td><td>1.0</td></tr>
-          <tr><td>10,000–30,000 m²</td><td>1.2</td></tr>
-          <tr><td>&gt; 30,000 m²</td><td>1.5+</td></tr>
+          <tr><td><span class="zh">規劃階段</span><span class="en">Planning</span></td><td>6</td><td>NT$190,000</td><td class="hl">NT$161,500</td><td>26,917</td></tr>
+          <tr><td><span class="zh">設計階段</span><span class="en">Design</span></td><td>7</td><td>NT$213,000</td><td class="hl">NT$181,050</td><td>25,864</td></tr>
+          <tr><td><span class="zh">施工階段</span><span class="en">Construction</span></td><td>10</td><td>NT$351,000</td><td class="hl">NT$298,350</td><td>29,835</td></tr>
+          <tr><td><span class="zh">移交階段</span><span class="en">Handover</span></td><td>5</td><td>NT$163,000</td><td class="hl">NT$138,550</td><td>27,710</td></tr>
+          <tr><td><span class="zh">營運維護</span><span class="en">O&M</span></td><td>12</td><td>NT$571,000</td><td class="hl">NT$485,350</td><td>40,446</td></tr>
+          <tr><td><span class="zh">進階應用</span><span class="en">Advanced</span></td><td>11</td><td>NT$590,000</td><td class="hl">NT$501,500</td><td>45,591</td></tr>
+          <tr class="total"><td><span class="zh">全周期套餐</span><span class="en">Full-cycle package</span></td><td>43</td><td>NT$2,078,000</td><td class="hl">NT$1,454,600</td><td>33,828</td></tr>
         </tbody>
-      </table>
-    </div>
-    <div class="card">
-      <h3>套餐優惠</h3>
-      <table>
-        <thead><tr><th>套餐</th><th>優惠</th></tr></thead>
+      </table></div>
+      <p class="note"><span class="zh">※ 全周期套餐另含文書自動化 7A/7B/7C，定價待訪價，不把估價當報價。</span><span class="en">※ Full-cycle package also includes document automation 7A/7B/7C, price TBD — estimates are not quotes.</span></p>
+    </section>
+  
+    <section class="phase">
+      <h2><span class="zh">競爭定價對標</span><span class="en">Competitive Pricing Benchmark</span></h2>
+      <div class="tblwrap"><table>
+        <thead><tr><th><span class="zh">對標對象</span><span class="en">Benchmark</span></th><th><span class="zh">價格水平</span><span class="en">Price Level</span></th><th><span class="zh">BIM Matrix 定位</span><span class="en">Positioning</span></th></tr></thead>
         <tbody>
-          <tr><td>單項購買</td><td>無</td></tr>
-          <tr><td>階段套餐</td><td>15%</td></tr>
-          <tr><td>全周期套餐</td><td>30%</td></tr>
-          <tr><td>年度訂閱</td><td>談判</td></tr>
+          <tr><td><span class="zh">台灣傳統建築師／BIM 部門</span><span class="en">TW traditional architects / BIM dept</span></td><td>NT$8,000–25,000／人天</td><td><span class="zh">單價略高，但含 AI 自動化、即用即跑</span><span class="en">Slightly higher, but AI-automated and ready-to-run</span></td></tr>
+          <tr><td><span class="zh">台灣工程顧問</span><span class="en">TW engineering consultants</span></td><td><span class="zh">案件包給制</span><span class="en">Project-based</span></td><td><span class="zh">提供回顯明確的單項選購與資產可重複使用</span><span class="en">Clear per-item selection and reusable assets</span></td></tr>
+          <tr><td>Autodesk／Procore SaaS</td><td>$2,500–10,000／年／座</td><td><span class="zh">軟體授權＋專業服務，不同維度</span><span class="en">License + professional services, different dimension</span></td></tr>
+          <tr><td>Buildots／ALICE AI 工具</td><td>$10,000–100,000／年</td><td><span class="zh">台灣本地化＋穿透全周期覆蓋</span><span class="en">TW localization + full-lifecycle coverage</span></td></tr>
         </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="formula">
-    <strong>報價公式：</strong> 專案報價 = (Σ 選擇 BIM USE 單價) × 專案規模係數 × (1 − 套餐優惠)
-  </div>
+      </table></div>
+    </section>
+  <footer>BIM Matrix V2.2 · <span class="zh">定價來源 Day1_BIM_USE_Pricing_Framework.md · 7A/7B/7C 待訪價</span><span class="en">Source: Day1_BIM_USE_Pricing_Framework.md · 7A/7B/7C price TBD</span> · AECPrism</footer>
 </div>
 
-  
-    <section class="phase">
-      <h2>規劃階段（6 項） <span class="cnt">6 項</span></h2>
-      <div class="tblwrap"><table>
-        <thead><tr><th>編號</th><th>應用</th><th>應用價值／說明</th><th>AI%</th><th>價格帶</th><th>單價</th></tr></thead>
-        <tbody><tr>
-          <td class="code">1A</td>
-          <td class="name">現況掃描建模</td>
-          <td class="desc">點雲處理+自動分類</td>
-          <td class="ai">75%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 35,000</td>
-        </tr><tr>
-          <td class="code">1B</td>
-          <td class="name">空間分析與規劃</td>
-          <td class="desc">多方案比較</td>
-          <td class="ai">60%</td>
-          <td class="band"><span style="color:#22c55e;border:1px solid #22c55e66;background:#22c55e1a;border-radius:20px;padding:2px 10px;font-size:.8em">基礎</span></td>
-          <td class="price">NT$ 22,000</td>
-        </tr><tr>
-          <td class="code">1C</td>
-          <td class="name">方案比對</td>
-          <td class="desc">評估維度設定</td>
-          <td class="ai">55%</td>
-          <td class="band"><span style="color:#22c55e;border:1px solid #22c55e66;background:#22c55e1a;border-radius:20px;padding:2px 10px;font-size:.8em">基礎</span></td>
-          <td class="price">NT$ 20,000</td>
-        </tr><tr>
-          <td class="code">1D</td>
-          <td class="name">設計協調與衝突檢測</td>
-          <td class="desc">自動化檢測與報告</td>
-          <td class="ai">85%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 55,000</td>
-        </tr><tr>
-          <td class="code">1E</td>
-          <td class="name">設計審查</td>
-          <td class="desc">法規檢核</td>
-          <td class="ai">50%</td>
-          <td class="band"><span style="color:#22c55e;border:1px solid #22c55e66;background:#22c55e1a;border-radius:20px;padding:2px 10px;font-size:.8em">基礎</span></td>
-          <td class="price">NT$ 18,000</td>
-        </tr><tr>
-          <td class="code">1F</td>
-          <td class="name">現況建模</td>
-          <td class="desc">照片建模輔助</td>
-          <td class="ai">70%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 30,000</td>
-        </tr></tbody>
-      </table></div>
-    </section>
-    <section class="phase">
-      <h2>設計階段（7 項） <span class="cnt">7 項</span></h2>
-      <div class="tblwrap"><table>
-        <thead><tr><th>編號</th><th>應用</th><th>應用價值／說明</th><th>AI%</th><th>價格帶</th><th>單價</th></tr></thead>
-        <tbody><tr>
-          <td class="code">2A</td>
-          <td class="name">設計創作</td>
-          <td class="desc">參數化族群建立</td>
-          <td class="ai">45%</td>
-          <td class="band"><span style="color:#22c55e;border:1px solid #22c55e66;background:#22c55e1a;border-radius:20px;padding:2px 10px;font-size:.8em">基礎</span></td>
-          <td class="price">NT$ 18,000</td>
-        </tr><tr>
-          <td class="code">2B</td>
-          <td class="name">工程分析</td>
-          <td class="desc">多物理場分析</td>
-          <td class="ai">65%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 28,000</td>
-        </tr><tr>
-          <td class="code">2C</td>
-          <td class="name">能源分析</td>
-          <td class="desc">全年能耗模擬</td>
-          <td class="ai">70%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 32,000</td>
-        </tr><tr>
-          <td class="code">2D</td>
-          <td class="name">結構分析</td>
-          <td class="desc">引力計算+配筋</td>
-          <td class="ai">80%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 50,000</td>
-        </tr><tr>
-          <td class="code">2E</td>
-          <td class="name">永續性評估</td>
-          <td class="desc">綠建築認證</td>
-          <td class="ai">60%</td>
-          <td class="band"><span style="color:#22c55e;border:1px solid #22c55e66;background:#22c55e1a;border-radius:20px;padding:2px 10px;font-size:.8em">基礎</span></td>
-          <td class="price">NT$ 22,000</td>
-        </tr><tr>
-          <td class="code">2F</td>
-          <td class="name">法規驗證</td>
-          <td class="desc">自動檢核報告</td>
-          <td class="ai">75%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 35,000</td>
-        </tr><tr>
-          <td class="code">2G</td>
-          <td class="name">照明分析</td>
-          <td class="desc">擬色圖分析</td>
-          <td class="ai">65%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 28,000</td>
-        </tr></tbody>
-      </table></div>
-    </section>
-    <section class="phase">
-      <h2>施工階段（10 項） <span class="cnt">10 項</span></h2>
-      <div class="tblwrap"><table>
-        <thead><tr><th>編號</th><th>應用</th><th>應用價值／說明</th><th>AI%</th><th>價格帶</th><th>單價</th></tr></thead>
-        <tbody><tr>
-          <td class="code">3A</td>
-          <td class="name">場地利用規劃</td>
-          <td class="desc">4D 模擬</td>
-          <td class="ai">70%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 30,000</td>
-        </tr><tr>
-          <td class="code">3B</td>
-          <td class="name">施工系統設計</td>
-          <td class="desc">虛擬樣板</td>
-          <td class="ai">55%</td>
-          <td class="band"><span style="color:#22c55e;border:1px solid #22c55e66;background:#22c55e1a;border-radius:20px;padding:2px 10px;font-size:.8em">基礎</span></td>
-          <td class="price">NT$ 20,000</td>
-        </tr><tr>
-          <td class="code">3C</td>
-          <td class="name">數位製造</td>
-          <td class="desc">CNC/G-code 轉換</td>
-          <td class="ai">80%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 50,000</td>
-        </tr><tr>
-          <td class="code">3D</td>
-          <td class="name">3D 控制與規劃</td>
-          <td class="desc">數位放樣</td>
-          <td class="ai">75%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 35,000</td>
-        </tr><tr>
-          <td class="code">3E</td>
-          <td class="name">3D 協調</td>
-          <td class="desc">多專業管線綜合</td>
-          <td class="ai">85%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 55,000</td>
-        </tr><tr>
-          <td class="code">3F</td>
-          <td class="name">階段規劃 4D</td>
-          <td class="desc">進度連結模擬</td>
-          <td class="ai">80%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 48,000</td>
-        </tr><tr>
-          <td class="code">3G</td>
-          <td class="name">成本估算</td>
-          <td class="desc">自動提量+估算</td>
-          <td class="ai">75%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 35,000</td>
-        </tr><tr>
-          <td class="code">3H</td>
-          <td class="name">施工審查</td>
-          <td class="desc">方案審查</td>
-          <td class="ai">60%</td>
-          <td class="band"><span style="color:#22c55e;border:1px solid #22c55e66;background:#22c55e1a;border-radius:20px;padding:2px 10px;font-size:.8em">基礎</span></td>
-          <td class="price">NT$ 22,000</td>
-        </tr><tr>
-          <td class="code">3I</td>
-          <td class="name">數位交屋</td>
-          <td class="desc">COBie 資產資料</td>
-          <td class="ai">70%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 30,000</td>
-        </tr><tr>
-          <td class="code">3J</td>
-          <td class="name">安全規劃</td>
-          <td class="desc">風險模擬</td>
-          <td class="ai">65%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 28,000</td>
-        </tr></tbody>
-      </table></div>
-    </section>
-    <section class="phase">
-      <h2>移交階段（5 項） <span class="cnt">5 項</span></h2>
-      <div class="tblwrap"><table>
-        <thead><tr><th>編號</th><th>應用</th><th>應用價值／說明</th><th>AI%</th><th>價格帶</th><th>單價</th></tr></thead>
-        <tbody><tr>
-          <td class="code">4A</td>
-          <td class="name">竣工建模</td>
-          <td class="desc">LOD 500 更新</td>
-          <td class="ai">70%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 30,000</td>
-        </tr><tr>
-          <td class="code">4B</td>
-          <td class="name">記錄建模</td>
-          <td class="desc">歷史變更追蹤</td>
-          <td class="ai">65%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 28,000</td>
-        </tr><tr>
-          <td class="code">4C</td>
-          <td class="name">資產盤點</td>
-          <td class="desc">自動清單+編碼</td>
-          <td class="ai">80%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 48,000</td>
-        </tr><tr>
-          <td class="code">4D</td>
-          <td class="name">營運移交</td>
-          <td class="desc">FM 系統格式轉換</td>
-          <td class="ai">75%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 35,000</td>
-        </tr><tr>
-          <td class="code">4E</td>
-          <td class="name">培訓模擬</td>
-          <td class="desc">VR/AR 培訓</td>
-          <td class="ai">60%</td>
-          <td class="band"><span style="color:#22c55e;border:1px solid #22c55e66;background:#22c55e1a;border-radius:20px;padding:2px 10px;font-size:.8em">基礎</span></td>
-          <td class="price">NT$ 22,000</td>
-        </tr></tbody>
-      </table></div>
-    </section>
-    <section class="phase">
-      <h2>營運維護（12 項） <span class="cnt">12 項</span></h2>
-      <div class="tblwrap"><table>
-        <thead><tr><th>編號</th><th>應用</th><th>應用價值／說明</th><th>AI%</th><th>價格帶</th><th>單價</th></tr></thead>
-        <tbody><tr>
-          <td class="code">5A</td>
-          <td class="name">維護排程</td>
-          <td class="desc">IoT 預測+自動工單</td>
-          <td class="ai">85%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 55,000</td>
-        </tr><tr>
-          <td class="code">5B</td>
-          <td class="name">資產管理</td>
-          <td class="desc">全生命週期追蹤</td>
-          <td class="ai">80%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 48,000</td>
-        </tr><tr>
-          <td class="code">5C</td>
-          <td class="name">空間管理</td>
-          <td class="desc">即時監控儀表板</td>
-          <td class="ai">75%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 35,000</td>
-        </tr><tr>
-          <td class="code">5D</td>
-          <td class="name">災難規劃</td>
-          <td class="desc">疏散模擬</td>
-          <td class="ai">70%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 30,000</td>
-        </tr><tr>
-          <td class="code">5E</td>
-          <td class="name">能源管理</td>
-          <td class="desc">AI 程式化控制</td>
-          <td class="ai">85%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 55,000</td>
-        </tr><tr>
-          <td class="code">5F</td>
-          <td class="name">租戶管理</td>
-          <td class="desc">自動計算+續約預測</td>
-          <td class="ai">75%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 32,000</td>
-        </tr><tr>
-          <td class="code">5G</td>
-          <td class="name">資本規劃</td>
-          <td class="desc">長期預測模型</td>
-          <td class="ai">70%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 30,000</td>
-        </tr><tr>
-          <td class="code">5H</td>
-          <td class="name">系統分析</td>
-          <td class="desc">數位孫生系統</td>
-          <td class="ai">80%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 48,000</td>
-        </tr><tr>
-          <td class="code">5I</td>
-          <td class="name">智慧建築整合</td>
-          <td class="desc">IoT/BMS 架構設計</td>
-          <td class="ai">90%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 75,000</td>
-        </tr><tr>
-          <td class="code">5J</td>
-          <td class="name">設施維護</td>
-          <td class="desc">行動工單系統</td>
-          <td class="ai">80%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 48,000</td>
-        </tr><tr>
-          <td class="code">5K</td>
-          <td class="name">空間利用率分析</td>
-          <td class="desc">熱點圖+趨勢</td>
-          <td class="ai">85%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 55,000</td>
-        </tr><tr>
-          <td class="code">5L</td>
-          <td class="name">搬遷與重置規劃</td>
-          <td class="desc">時程模擬</td>
-          <td class="ai">70%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 30,000</td>
-        </tr></tbody>
-      </table></div>
-    </section>
-    <section class="phase">
-      <h2>進階應用（11 項） <span class="cnt">11 項</span></h2>
-      <div class="tblwrap"><table>
-        <thead><tr><th>編號</th><th>應用</th><th>應用價值／說明</th><th>AI%</th><th>價格帶</th><th>單價</th></tr></thead>
-        <tbody><tr>
-          <td class="code">6A</td>
-          <td class="name">VR/AR 應用</td>
-          <td class="desc">Unity/Unreal 轉換</td>
-          <td class="ai">70%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 35,000</td>
-        </tr><tr>
-          <td class="code">6B</td>
-          <td class="name">數位孫生</td>
-          <td class="desc">即時資料串流</td>
-          <td class="ai">90%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 75,000</td>
-        </tr><tr>
-          <td class="code">6C</td>
-          <td class="name">生成式設計</td>
-          <td class="desc">Dynamo/Grasshopper 多方案</td>
-          <td class="ai">85%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 60,000</td>
-        </tr><tr>
-          <td class="code">6D</td>
-          <td class="name">機器學習預測分析</td>
-          <td class="desc">異常偵測+故障預測</td>
-          <td class="ai">90%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 75,000</td>
-        </tr><tr>
-          <td class="code">6E</td>
-          <td class="name">無人機航測</td>
-          <td class="desc">航測+自動檢測</td>
-          <td class="ai">80%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 50,000</td>
-        </tr><tr>
-          <td class="code">6F</td>
-          <td class="name">自動化施工/機器人</td>
-          <td class="desc">機器人路徑設計</td>
-          <td class="ai">85%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 60,000</td>
-        </tr><tr>
-          <td class="code">6G</td>
-          <td class="name">區塊鏈資產溯源</td>
-          <td class="desc">供應鏈+智能合約</td>
-          <td class="ai">75%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price">NT$ 40,000</td>
-        </tr><tr>
-          <td class="code">6H</td>
-          <td class="name">雲端協作平台</td>
-          <td class="desc">CDE 平台評估+導入</td>
-          <td class="ai">80%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 50,000</td>
-        </tr><tr>
-          <td class="code">6I</td>
-          <td class="name">大數據分析</td>
-          <td class="desc">多建範比較+預測</td>
-          <td class="ai">90%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 75,000</td>
-        </tr><tr>
-          <td class="code">6J</td>
-          <td class="name">AI 輔助設計優化</td>
-          <td class="desc">多目標優化演算</td>
-          <td class="ai">85%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 60,000</td>
-        </tr><tr>
-          <td class="code">6K</td>
-          <td class="name">3D 列印積層製造</td>
-          <td class="desc">支撐結構優化+品檢</td>
-          <td class="ai">80%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price">NT$ 50,000</td>
-        </tr></tbody>
-      </table></div>
-    </section>
-    <section class="phase">
-      <h2>文書自動化（3 項） <span class="cnt">3 項</span></h2>
-      <div class="tblwrap"><table>
-        <thead><tr><th>編號</th><th>應用</th><th>應用價值／說明</th><th>AI%</th><th>價格帶</th><th>單價</th></tr></thead>
-        <tbody><tr>
-          <td class="code">7A</td>
-          <td class="name">BEP 自動生成</td>
-          <td class="desc">BIM 執行計畫書（BEP）自動產出</td>
-          <td class="ai">80%</td>
-          <td class="band"><span style="color:#f97316;border:1px solid #f9731666;background:#f973161a;border-radius:20px;padding:2px 10px;font-size:.8em">高階</span></td>
-          <td class="price"><span class="tbd">待訪價</span></td>
-        </tr><tr>
-          <td class="code">7B</td>
-          <td class="name">月報／週報自動生成</td>
-          <td class="desc">專案定期進度報告自動產出</td>
-          <td class="ai">70%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price"><span class="tbd">待訪價</span></td>
-        </tr><tr>
-          <td class="code">7C</td>
-          <td class="name">結案報告自動生成</td>
-          <td class="desc">專案結案報告自動產出</td>
-          <td class="ai">75%</td>
-          <td class="band"><span style="color:#38bdf8;border:1px solid #38bdf866;background:#38bdf81a;border-radius:20px;padding:2px 10px;font-size:.8em">進階</span></td>
-          <td class="price"><span class="tbd">待訪價</span></td>
-        </tr></tbody>
-      </table></div>
-    </section>
-  
-<section class="phase">
-  <h2>套餐報價速算 <span class="cnt">以 10,000 m² 中型專案為例（係數 1.0）</span></h2>
-  <div class="tblwrap"><table>
-    <thead><tr><th>套餐</th><th>項數</th><th>原價</th><th>優惠後</th><th>單項均價</th></tr></thead>
-    <tbody>
-      <tr><td>規劃階段</td><td>6</td><td>NT$190,000</td><td class="hl">NT$161,500</td><td>26,917</td></tr>
-      <tr><td>設計階段</td><td>7</td><td>NT$213,000</td><td class="hl">NT$181,050</td><td>25,864</td></tr>
-      <tr><td>施工階段</td><td>10</td><td>NT$351,000</td><td class="hl">NT$298,350</td><td>29,835</td></tr>
-      <tr><td>移交階段</td><td>5</td><td>NT$163,000</td><td class="hl">NT$138,550</td><td>27,710</td></tr>
-      <tr><td>營運維護</td><td>12</td><td>NT$571,000</td><td class="hl">NT$485,350</td><td>40,446</td></tr>
-      <tr><td>進階應用</td><td>11</td><td>NT$590,000</td><td class="hl">NT$501,500</td><td>45,591</td></tr>
-      <tr class="total"><td>全周期套餐</td><td>43</td><td>NT$2,078,000</td><td class="hl">NT$1,454,600</td><td>33,828</td></tr>
-    </tbody>
-  </table></div>
-  <p class="note">※ 全周期套餐另含文書自動化 7A/7B/7C，定價待訪價，不把估價當報價。</p>
-</section>
+<script>
+  function setLang(l){
+    document.body.classList.toggle('en', l==='en');
+    try{localStorage.setItem('bmLang',l);}catch(e){}
+    document.querySelectorAll('.langbar button').forEach(b=>b.classList.toggle('active', b.dataset.l===l));
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    var saved='zh'; try{saved=localStorage.getItem('bmLang')||'zh';}catch(e){}
+    setLang(saved);
+  });
+</script>
 
-  
-<section class="phase">
-  <h2>競爭定價對標 <span class="cnt">市場定位參考</span></h2>
-  <div class="tblwrap"><table>
-    <thead><tr><th>對標對象</th><th>價格水平</th><th>BIM Matrix 定位</th></tr></thead>
-    <tbody>
-      <tr><td>台灣傳統建築師／BIM 部門</td><td>NT$8,000–25,000／人天</td><td>單價略高，但含 AI 自動化、即用即跑</td></tr>
-      <tr><td>台灣工程顧問</td><td>案件包給制</td><td>提供回顯明確的單項選購與資產可重複使用</td></tr>
-      <tr><td>Autodesk／Procore SaaS</td><td>$2,500–10,000／年／座</td><td>軟體授權＋專業服務，不同維度</td></tr>
-      <tr><td>Buildots／ALICE AI 工具</td><td>$10,000–100,000／年</td><td>台灣本地化＋穿透全周期覆蓋</td></tr>
-    </tbody>
-  </table></div>
-</section>
-
-  <footer>BIM Matrix V2.2 · 定價來源 Day1_BIM_USE_Pricing_Framework.md · 7A/7B/7C 待訪價 · AECPrism</footer>
-</div>
 <script>
   function filter(v){
     v=v.trim().toLowerCase();
@@ -571,9 +588,8 @@
       var hit = !v || r.textContent.toLowerCase().includes(v);
       r.style.display = hit ? '' : 'none';
     });
-    // keep header rows visible
     document.querySelectorAll('thead tr').forEach(r=>r.style.display='');
   }
 </script>
 </body>
-</html><!-- rebuilt $(date +%s) -->
+</html>

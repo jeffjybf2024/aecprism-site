@@ -3,29 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BIM Matrix — AI 賦能包（51 項應用總表）</title>
+<title>BIM Matrix — AI Empowerment Pack</title>
 <style>
-  :root {
-    --bg:#0f172a; --card:#1e293b; --border:#334155; --text:#f1f5f9; --muted:#94a3b8;
-    --accent:#f97316;
-  }
+  :root { --bg:#0f172a; --card:#1e293b; --border:#334155; --text:#f1f5f9; --muted:#94a3b8; --accent:#f97316; }
   * { box-sizing:border-box; margin:0; padding:0; }
   body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif;
          background:var(--bg); color:var(--text); line-height:1.6; padding:24px; }
   .container { max-width:1000px; margin:0 auto; }
-  header { text-align:center; margin-bottom:24px; }
+  header { text-align:center; margin-bottom:20px; }
   h1 { color:#38bdf8; font-size:1.9em; }
   .subtitle { color:var(--muted); margin-top:6px; }
-  .stats { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:16px 0 28px; }
+  .stats { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:16px 0 8px; }
   .stat { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:8px 16px; }
   .stat b { color:var(--accent); }
-  .search { display:block; width:100%; max-width:520px; margin:0 auto 28px; padding:12px 16px;
-             background:var(--card); border:1px solid var(--border); border-radius:12px; color:var(--text);
-             font-size:1em; outline:none; }
+  .search { display:block; width:100%; max-width:520px; margin:0 auto 26px; padding:12px 16px;
+             background:var(--card); border:1px solid var(--border); border-radius:12px; color:var(--text); outline:none; }
   .search:focus { border-color:var(--accent); }
   .phase { margin-bottom:28px; }
-  .phase-head { border-left:5px solid; padding:4px 0 4px 14px; margin-bottom:12px; display:flex;
-                 align-items:baseline; gap:12px; flex-wrap:wrap; }
+  .phase-head { border-left:5px solid; padding:4px 0 4px 14px; margin-bottom:12px; display:flex; align-items:baseline; gap:12px; }
   .phase-head h2 { font-size:1.25em; }
   .cnt { color:var(--muted); font-size:.9em; }
   .items { display:flex; flex-direction:column; gap:10px; }
@@ -35,944 +30,1019 @@
   summary::-webkit-details-marker { display:none; }
   .code { font-weight:700; padding:2px 10px; border-radius:8px; font-family:ui-monospace,monospace; white-space:nowrap; }
   .name { font-weight:600; }
-  .en { color:var(--muted); font-size:.88em; }
-  .ai { margin-left:auto; color:var(--accent); font-weight:700; white-space:nowrap; }
+  .en2.muted { color:var(--muted); font-size:.85em; }
+  .ai { margin-left:auto; color:var(--accent); font-weight:700; }
   .body { padding:4px 16px 16px; border-top:1px dashed var(--border); }
   .row { margin-top:10px; }
   .lbl { display:inline-block; color:var(--muted); font-size:.82em; margin-right:8px; }
-  .prompt { background:#0b1220; border:1px solid var(--border); border-radius:8px; padding:12px 14px;
-             color:#cbd5e1; font-size:.93em; white-space:pre-wrap; }
+  .prompt { background:#0b1220; border:1px solid var(--border); border-radius:8px; padding:12px 14px; color:#cbd5e1; font-size:.93em; white-space:pre-wrap; }
   .row.meta { display:flex; align-items:center; gap:16px; }
   .val { font-weight:600; }
   a.yt { color:#38bdf8; text-decoration:none; font-size:.92em; }
   a.yt:hover { text-decoration:underline; }
   footer { text-align:center; color:var(--muted); font-size:.85em; margin-top:30px; }
+  
+  .langbar { display:flex; justify-content:flex-end; gap:8px; max-width:1080px; margin:0 auto 14px; }
+  .langbar button { background:var(--card); border:1px solid var(--border); color:var(--muted);
+                    padding:7px 16px; border-radius:999px; cursor:pointer; font-size:.9em; }
+  .langbar button.active { background:var(--accent); color:#0f172a; border-color:var(--accent); font-weight:600; }
+  body:not(.en) .en { display:none; }
+  body.en .zh { display:none; }
+
 </style>
 </head>
 <body>
+<div class="langbar">
+  <button data-l="zh" class="active" onclick="setLang('zh')">中文</button>
+  <button data-l="en" onclick="setLang('en')">English</button>
+</div>
 <div class="container">
   <header>
-    <h1>🔷 BIM Matrix — AI 賦能包</h1>
-    <p class="subtitle">完整應用總表：說明 + AI 比例 + Prompt + 教學影片</p>
+    <h1>🔷 BIM Matrix — <span class="zh">AI 賦能包</span><span class="en">AI Empowerment Pack</span></h1>
+    <p class="subtitle"><span class="zh">完整應用總表：說明 + AI 比例 + Prompt + 教學影片</span><span class="en">Complete application matrix: description + AI ratio + Prompt + video tutorial</span></p>
     <div class="stats">
-      <div class="stat">總項目 <b>51</b></div>
-      <div class="stat">涵蓋階段 <b>6</b></div>
-      <div class="stat">平均 AI 比例 <b>74%</b></div>
+      <div class="stat"><span class="zh">總項目</span><span class="en">Items</span> <b>51</b></div>
+      <div class="stat"><span class="zh">涵蓋階段</span><span class="en">Phases</span> <b>6</b></div>
+      <div class="stat"><span class="zh">平均 AI 比例</span><span class="en">Avg AI ratio</span> <b>73%</b></div>
     </div>
   </header>
-  <input class="search" id="q" type="search" placeholder="搜尋：編號 / 中文 / 英文名稱…" oninput="filter(this.value)">
+  <input class="search" id="q" type="search" placeholder="搜尋 / Search…" oninput="filter(this.value)">
   
-    <section class="phase" data-phase="1">
-      <div class="phase-head" style="border-left-color:#3b82f6">
-        <h2 style="color:#3b82f6">一、規劃階段（6 項）</h2>
-        <span class="cnt">6 項 · 平均 AI 66%</span>
-      </div>
-      <div class="items">
-        <details class="item" data-code="1A" data-zh="現況掃描建模" data-en="Existing Conditions Modeling">
-          <summary>
-            <span class="code" style="background:#3b82f633;color:#3b82f6">1A</span>
-            <span class="name">現況掃描建模</span>
-            <span class="en">Existing Conditions Modeling</span>
-            <span class="ai" title="AI 賦能比例">75%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位 BIM 點雲建模專家。請根據以下 3D 雷射掃描點雲資料，使用 Autodesk ReCap Pro 與 Revit 建立 LOD 300 的現況建築資訊模型。需求：1) 自動分類樓板、牆柱、樑架；2) 識別管線與設備位置；3) 輸出幾何精度報告與點雲對齊誤差分析；4) 標註需人工複核的模糊區域。請提供完整建模步驟與品質檢核清單。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">75%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=Ok8FAEZdUXg" target="_blank" rel="noopener">▶ Scan to BIM Workflow - Autodesk</a>
-            </div>
+        <section class="phase" data-phase="1">
+          <div class="phase-head" style="border-left-color:#3b82f6">
+            <h2 style="color:#3b82f6"><span class="zh">一、規劃階段</span><span class="en">1. Planning</span></h2>
+            <span class="cnt">6 <span class="zh">項</span><span class="en">items</span></span>
           </div>
-        </details>
-        <details class="item" data-code="1B" data-zh="空間分析與規劃" data-en="Space Planning &amp; Analysis">
-          <summary>
-            <span class="code" style="background:#3b82f633;color:#3b82f6">1B</span>
-            <span class="name">空間分析與規劃</span>
-            <span class="en">Space Planning &amp; Analysis</span>
-            <span class="ai" title="AI 賦能比例">60%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位建築空間規劃顧問。請針對以下建築平面圖與使用者需求，執行 AI 輔助空間分析：1) 計算各樓層空間利用率與淨/毛面積比；2) 模擬三種不同部門配置方案的人流動線；3) 評估無障礙法規符合性；4) 產生空間衝突熱點圖。輸出方案比較表與建議最佳配置。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">60%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=w48cOqx-q1w" target="_blank" rel="noopener">▶ Revit Space Planning Tutorial</a>
-            </div>
+          <div class="items">
+            <details class="item" data-code="1A" data-zh="現況掃描建模" data-en="Existing Conditions Modeling">
+              <summary>
+                <span class="code" style="background:#3b82f633;color:#3b82f6">1A</span>
+                <span class="name"><span class="zh">現況掃描建模</span><span class="en">Existing Conditions Modeling</span></span>
+                <span class="en2 muted"><span class="zh">Existing Conditions Modeling</span></span>
+                <span class="ai" title="AI ratio">75%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位 BIM 點雲建模專家。請根據以下 3D 雷射掃描點雲資料，使用 Autodesk ReCap Pro 與 Revit 建立 LOD 300 的現況建築資訊模型。需求：1) 自動分類樓板、牆柱、樑架；2) 識別管線與設備位置；3) 輸出幾何精度報告與點雲對齊誤差分析；4) 標註需人工複核的模糊區域。請提供完整建模步驟與品質檢核清單。</div>
+                  <div class="prompt en">You are a BIM point-cloud modeling expert. Using the following 3D laser-scan point-cloud data, build a LOD 300 as-built building information model with Autodesk ReCap Pro and Revit. Requirements: 1) automatically classify slabs, walls/columns, and beams; 2) identify piping and equipment locations; 3) output a geometry-accuracy report and point-cloud alignment error analysis; 4) flag ambiguous areas needing manual review. Provide the full modeling workflow and a quality-check checklist.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">75%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=Ok8FAEZdUXg" target="_blank" rel="noopener">▶ Scan to BIM Workflow - Autodesk</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="1B" data-zh="空間分析與規劃" data-en="Space Planning &amp; Analysis">
+              <summary>
+                <span class="code" style="background:#3b82f633;color:#3b82f6">1B</span>
+                <span class="name"><span class="zh">空間分析與規劃</span><span class="en">Space Planning &amp; Analysis</span></span>
+                <span class="en2 muted"><span class="zh">Space Planning &amp; Analysis</span></span>
+                <span class="ai" title="AI ratio">60%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位建築空間規劃顧問。請針對以下建築平面圖與使用者需求，執行 AI 輔助空間分析：1) 計算各樓層空間利用率與淨/毛面積比；2) 模擬三種不同部門配置方案的人流動線；3) 評估無障礙法規符合性；4) 產生空間衝突熱點圖。輸出方案比較表與建議最佳配置。</div>
+                  <div class="prompt en">You are an architectural space-planning consultant. Based on the following floor plans and user requirements, perform AI-assisted space analysis: 1) calculate per-floor space utilization and net/gross area ratios; 2) simulate pedestrian circulation for three department-layout options; 3) assess accessibility code compliance; 4) generate space-conflict heat maps. Output an option comparison table and a recommended optimal layout.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">60%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=w48cOqx-q1w" target="_blank" rel="noopener">▶ Revit Space Planning Tutorial</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="1C" data-zh="方案比對" data-en="Design Alternatives Comparison">
+              <summary>
+                <span class="code" style="background:#3b82f633;color:#3b82f6">1C</span>
+                <span class="name"><span class="zh">方案比對</span><span class="en">Design Alternatives Comparison</span></span>
+                <span class="en2 muted"><span class="zh">Design Alternatives Comparison</span></span>
+                <span class="ai" title="AI ratio">55%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位 BIM 設計經理。請針對以下三個設計方案，建立結構化的比對分析：1) 建立統一的評估維度（成本、工期、能耗、可施工性、美學）；2) 使用 AI 視覺化生成各方案的 3D 渲染比較圖；3) 計算每方案的碳足跡預估值；4) 產生利害關係人簡報用的決策矩陣。請輸出完整的比對報告。</div>
+                  <div class="prompt en">You are a BIM design manager. For the following three design options, build a structured comparison: 1) define unified evaluation dimensions (cost, schedule, energy, constructability, aesthetics); 2) use AI visualization to generate 3D render comparisons; 3) estimate each option&#x27;s carbon footprint; 4) produce a stakeholder decision matrix. Output a complete comparison report.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">55%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=omuxzPT050w" target="_blank" rel="noopener">▶ BIM Design Options Revit</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="1D" data-zh="設計協調與衝突檢測" data-en="Design Coordination &amp; Clash Detection">
+              <summary>
+                <span class="code" style="background:#3b82f633;color:#3b82f6">1D</span>
+                <span class="name"><span class="zh">設計協調與衝突檢測</span><span class="en">Design Coordination &amp; Clash Detection</span></span>
+                <span class="en2 muted"><span class="zh">Design Coordination &amp; Clash Detection</span></span>
+                <span class="ai" title="AI ratio">85%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位 BIM 協調專家。請針對以下多專業模型（建築、結構、機電），執行自動化衝突檢測：1) 使用 Navisworks 或 Solibri 執行硬碰撞與軟碰撞分析；2) 依嚴重程度分級衝突（致命/嚴重/提醒）；3) 自動產生衝突報告含視覺截圖與元素 ID；4) 建議每項衝突的最佳解決方案與負責專業。輸出完整衝突矩陣與協調會議議程。</div>
+                  <div class="prompt en">You are a BIM coordination expert. For the following multi-discipline models (architecture, structure, MEP), perform automated clash detection: 1) run hard- and soft-clash analysis in Navisworks or Solibri; 2) classify clashes by severity (critical / serious / advisory); 3) auto-generate clash reports with screenshots and element IDs; 4) recommend the best resolution and responsible discipline for each clash. Output a full clash matrix and a coordination-meeting agenda.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">85%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=Nb5hFvV4gc4" target="_blank" rel="noopener">▶ Clash Detection in Navisworks</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="1E" data-zh="設計審查" data-en="3D Design Review">
+              <summary>
+                <span class="code" style="background:#3b82f633;color:#3b82f6">1E</span>
+                <span class="name"><span class="zh">設計審查</span><span class="en">3D Design Review</span></span>
+                <span class="en2 muted"><span class="zh">3D Design Review</span></span>
+                <span class="ai" title="AI ratio">50%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位資深建築審查顧問。請針對以下 BIM 模型執行設計審查：1) 檢核建築法規符合性（防火避難、無障礙、綠建築指標）；2) 識別設計不合理處（淨高不足、動線交叉、維修空間不足）；3) 比對設計準則與業主要求的符合度；4) 產生審查意見書與問題追蹤表。請輸出專業審查報告。</div>
+                  <div class="prompt en">You are a senior architectural review consultant. For the following BIM model, perform a design review: 1) verify building-code compliance (fire egress, accessibility, green-building indicators); 2) identify unreasonable design elements (insufficient headroom, crossing circulation, inadequate maintenance space); 3) compare against design standards and owner requirements; 4) generate a review comments log and issue-tracking sheet. Output a professional review report.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">50%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=v3uDiV2eQt0" target="_blank" rel="noopener">▶ BIM 3D Design Review Process</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="1F" data-zh="現況建模" data-en="As-Is Modeling">
+              <summary>
+                <span class="code" style="background:#3b82f633;color:#3b82f6">1F</span>
+                <span class="name"><span class="zh">現況建模</span><span class="en">As-Is Modeling</span></span>
+                <span class="en2 muted"><span class="zh">As-Is Modeling</span></span>
+                <span class="ai" title="AI ratio">70%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位既有建築建模專家。請根據以下現場測量資料與照片，建立既有建築的 BIM 模型：1) 使用照片建模技術輔助幾何重建；2) 標註結構劣化與材料老化區域；3) 建立設備銘牌資料庫；4) 輸出現況模型與重建建議。請提供建模精度聲明與不確定區域清單。</div>
+                  <div class="prompt en">You are an existing-building modeling expert. Based on the following site survey data and photos, build an as-is BIM model: 1) use photo-modeling techniques to assist geometry reconstruction; 2) flag structural deterioration and material-aging zones; 3) build an equipment nameplate database; 4) output the as-is model and reconstruction recommendations. Provide a modeling-accuracy statement and a list of uncertain areas.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">70%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=Ok8FAEZdUXg" target="_blank" rel="noopener">▶ As-Built Modeling with Revit</a>
+                </div>
+              </div>
+            </details></div>
+        </section>
+        <section class="phase" data-phase="2">
+          <div class="phase-head" style="border-left-color:#8b5cf6">
+            <h2 style="color:#8b5cf6"><span class="zh">二、設計階段</span><span class="en">2. Design</span></h2>
+            <span class="cnt">7 <span class="zh">項</span><span class="en">items</span></span>
           </div>
-        </details>
-        <details class="item" data-code="1C" data-zh="方案比對" data-en="Design Alternatives Comparison">
-          <summary>
-            <span class="code" style="background:#3b82f633;color:#3b82f6">1C</span>
-            <span class="name">方案比對</span>
-            <span class="en">Design Alternatives Comparison</span>
-            <span class="ai" title="AI 賦能比例">55%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位 BIM 設計經理。請針對以下三個設計方案，建立結構化的比對分析：1) 建立統一的評估維度（成本、工期、能耗、可施工性、美學）；2) 使用 AI 視覺化生成各方案的 3D 渲染比較圖；3) 計算每方案的碳足跡預估值；4) 產生利害關係人簡報用的決策矩陣。請輸出完整的比對報告。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">55%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=omuxzPT050w" target="_blank" rel="noopener">▶ BIM Design Options Revit</a>
-            </div>
+          <div class="items">
+            <details class="item" data-code="2A" data-zh="設計創作" data-en="Design Authoring">
+              <summary>
+                <span class="code" style="background:#8b5cf633;color:#8b5cf6">2A</span>
+                <span class="name"><span class="zh">設計創作</span><span class="en">Design Authoring</span></span>
+                <span class="en2 muted"><span class="zh">Design Authoring</span></span>
+                <span class="ai" title="AI ratio">45%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位 BIM 設計師。請根據以下設計準則與概念草圖，使用 Revit 進行設計創作：1) 建立參數化族群與可重用元件；2) 確保模型符合 LOD 350 標準；3) 自動生成平面、立面、剖面圖紙；4) 建立設計變更追蹤機制。請輸出完整模型檔案、圖紙集與設計說明書。</div>
+                  <div class="prompt en">You are a BIM designer. Based on the following design criteria and concept sketches, author the design in Revit: 1) create parametric families and reusable components; 2) ensure LOD 350 compliance; 3) auto-generate plans, elevations, and sections; 4) set up design-change tracking. Output the complete model files, drawing set, and design narrative.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">45%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=7cv78Xj38CA" target="_blank" rel="noopener">▶ Revit Design Authoring Basics</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="2B" data-zh="工程分析" data-en="Engineering Analysis">
+              <summary>
+                <span class="code" style="background:#8b5cf633;color:#8b5cf6">2B</span>
+                <span class="name"><span class="zh">工程分析</span><span class="en">Engineering Analysis</span></span>
+                <span class="en2 muted"><span class="zh">Engineering Analysis</span></span>
+                <span class="ai" title="AI ratio">65%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位建築工程分析師。請針對以下 BIM 結構模型執行多物理場分析：1) 匯出至 ETABS/Robot 進行結構力學計算；2) 執行機電管線壓降與流量分析；3) 評估基礎沈陷與土壤互制；4) 產生分析結果視覺化與設計建議。輸出工程分析報告與優化建議。</div>
+                  <div class="prompt en">You are a building engineering analyst. For the following BIM structural model, run multi-physics analysis: 1) export to ETABS/Robot for structural computation; 2) perform MEP pressure-drop and flow analysis; 3) evaluate foundation settlement and soil-structure interaction; 4) generate result visualizations and design recommendations. Output an engineering analysis report with optimization suggestions.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">65%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=2v9CQHYqmMY" target="_blank" rel="noopener">▶ Structural Analysis with Revit + Robot</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="2C" data-zh="能源分析" data-en="Energy Analysis">
+              <summary>
+                <span class="code" style="background:#8b5cf633;color:#8b5cf6">2C</span>
+                <span class="name"><span class="zh">能源分析</span><span class="en">Energy Analysis</span></span>
+                <span class="en2 muted"><span class="zh">Energy Analysis</span></span>
+                <span class="ai" title="AI ratio">70%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位建築能源模擬專家。請針對以下 BIM 模型執行能源分析：1) 使用 Green Building Studio 或 Insight 進行全年能耗模擬；2) 分析外殼熱傳性能（U-value、日射量）；3) 模擬不同 HVAC 系統方案的能耗差異；4) 產生符合 ASHRAE 90.1 的比較基準報告。輸出 EUI 指標與節能策略建議。</div>
+                  <div class="prompt en">You are a building energy-simulation expert. For the following BIM model, run energy analysis: 1) use Green Building Studio or Insight for annual energy simulation; 2) analyze envelope thermal performance (U-value, solar gain); 3) simulate energy differences across HVAC options; 4) produce an ASHRAE 90.1 comparison baseline. Output EUI metrics and energy-saving strategy recommendations.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">70%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=FLobArjPCCU" target="_blank" rel="noopener">▶ Revit Insight Energy Analysis</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="2D" data-zh="結構分析" data-en="Structural Analysis">
+              <summary>
+                <span class="code" style="background:#8b5cf633;color:#8b5cf6">2D</span>
+                <span class="name"><span class="zh">結構分析</span><span class="en">Structural Analysis</span></span>
+                <span class="en2 muted"><span class="zh">Structural Analysis</span></span>
+                <span class="ai" title="AI ratio">80%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位結構工程師。請針對以下 BIM 結構模型執行完整分析：1) 匯出至 SAP2000/ETABS 建立分析模型；2) 執行靜力、動力與地震反應譜分析；3) 檢核構件強度與變位是否符合規範；4) 自動標註超限構件並建議斷面調整。輸出結構計算書與配筋建議圖。</div>
+                  <div class="prompt en">You are a structural engineer. For the following BIM structural model, run a complete analysis: 1) export to SAP2000/ETABS to build the analytical model; 2) run static, dynamic, and seismic response-spectrum analyses; 3) check member strength and deflection against code; 4) auto-flag overstressed members and suggest section adjustments. Output a structural calculation report and rebar recommendation drawings.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">80%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=Xhw2Ukij97Y" target="_blank" rel="noopener">▶ Revit to ETABS Structural Workflow</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="2E" data-zh="永續性評估" data-en="Sustainability Assessment">
+              <summary>
+                <span class="code" style="background:#8b5cf633;color:#8b5cf6">2E</span>
+                <span class="name"><span class="zh">永續性評估</span><span class="en">Sustainability Assessment</span></span>
+                <span class="en2 muted"><span class="zh">Sustainability Assessment</span></span>
+                <span class="ai" title="AI ratio">60%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位綠建築認證顧問。請針對以下 BIM 模型執行永續性評估：1) 計算 EEWH 或 LEED 積分預估；2) 分析材料蘊含碳與生命週期衝擊；3) 評估雨水回收與再生能源潛力；4) 產生綠建築得分卡與改善建議。輸出認證路徑規劃與成本效益分析。</div>
+                  <div class="prompt en">You are a green-building certification consultant. For the following BIM model, run a sustainability assessment: 1) estimate EEWH or LEED credits; 2) analyze embodied carbon and life-cycle impact; 3) assess rainwater recycling and renewable-energy potential; 4) generate a green-building scorecard and improvement recommendations. Output certification-path planning and a cost-benefit analysis.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">60%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=S8rpu9-OP4Y" target="_blank" rel="noopener">▶ BIM for LEED Certification</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="2F" data-zh="法規驗證" data-en="Code Compliance Checking">
+              <summary>
+                <span class="code" style="background:#8b5cf633;color:#8b5cf6">2F</span>
+                <span class="name"><span class="zh">法規驗證</span><span class="en">Code Compliance Checking</span></span>
+                <span class="en2 muted"><span class="zh">Code Compliance Checking</span></span>
+                <span class="ai" title="AI ratio">75%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位建築法規檢查專家。請針對以下 BIM 模型執行自動法規驗證：1) 使用 Solibri 或 BIMcollab 檢核建築技術規則；2) 驗證防火區劃、避難距離、無障礙設施；3) 檢查結構耐震與消防法規符合性；4) 產生法規檢核報告與不符合事項清單。輸出官方格式報告書。</div>
+                  <div class="prompt en">You are a building-code checking expert. For the following BIM model, perform automated code validation: 1) use Solibri or BIMcollab to check building technical regulations; 2) verify fire compartmentation, egress distance, and accessibility; 3) check seismic and fire-safety compliance; 4) generate a compliance report and non-conformance list. Output the official-format report.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">75%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=l489GxRcB3E" target="_blank" rel="noopener">▶ Automated Code Checking with BIM</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="2G" data-zh="照明分析" data-en="Lighting Analysis">
+              <summary>
+                <span class="code" style="background:#8b5cf633;color:#8b5cf6">2G</span>
+                <span class="name"><span class="zh">照明分析</span><span class="en">Lighting Analysis</span></span>
+                <span class="en2 muted"><span class="zh">Lighting Analysis</span></span>
+                <span class="ai" title="AI ratio">65%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位照明設計顧問。請針對以下 BIM 模型執行照明分析：1) 使用 ElumTools 或 Dialux 模擬自然採光與人工照明；2) 計算各空間的照度、均勻度與眩光指數；3) 模擬不同時段與季節的採光表現；4) 產生照明配置建議與節能策略。輸出偽色圖分析與設備規格表。</div>
+                  <div class="prompt en">You are a lighting design consultant. For the following BIM model, run lighting analysis: 1) use ElumTools or DIALux to simulate daylight and artificial lighting; 2) compute illuminance, uniformity, and glare index per space; 3) simulate daylighting across times and seasons; 4) generate lighting-configuration recommendations and energy-saving strategies. Output false-color analysis and an equipment specification sheet.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">65%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=DnH5es0wPso" target="_blank" rel="noopener">▶ ElumTools Lighting Analysis in Revit</a>
+                </div>
+              </div>
+            </details></div>
+        </section>
+        <section class="phase" data-phase="3">
+          <div class="phase-head" style="border-left-color:#10b981">
+            <h2 style="color:#10b981"><span class="zh">三、施工階段</span><span class="en">3. Construction</span></h2>
+            <span class="cnt">10 <span class="zh">項</span><span class="en">items</span></span>
           </div>
-        </details>
-        <details class="item" data-code="1D" data-zh="設計協調與衝突檢測" data-en="Design Coordination &amp; Clash Detection">
-          <summary>
-            <span class="code" style="background:#3b82f633;color:#3b82f6">1D</span>
-            <span class="name">設計協調與衝突檢測</span>
-            <span class="en">Design Coordination &amp; Clash Detection</span>
-            <span class="ai" title="AI 賦能比例">85%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位 BIM 協調專家。請針對以下多專業模型（建築、結構、機電），執行自動化衝突檢測：1) 使用 Navisworks 或 Solibri 執行硬碰撞與軟碰撞分析；2) 依嚴重程度分級衝突（致命/嚴重/提醒）；3) 自動產生衝突報告含視覺截圖與元素 ID；4) 建議每項衝突的最佳解決方案與負責專業。輸出完整衝突矩陣與協調會議議程。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">85%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=Nb5hFvV4gc4" target="_blank" rel="noopener">▶ Clash Detection in Navisworks</a>
-            </div>
+          <div class="items">
+            <details class="item" data-code="3A" data-zh="場地利用規劃" data-en="Site Utilization Planning">
+              <summary>
+                <span class="code" style="background:#10b98133;color:#10b981">3A</span>
+                <span class="name"><span class="zh">場地利用規劃</span><span class="en">Site Utilization Planning</span></span>
+                <span class="en2 muted"><span class="zh">Site Utilization Planning</span></span>
+                <span class="ai" title="AI ratio">70%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位施工規劃工程師。請針對以下專案執行場地利用規劃：1) 使用 4D BIM 模擬施工各階段的場地配置；2) 規劃材料堆置區、塔吊位置與臨時設施；3) 模擬運輸路線與人車動線；4) 產生各階段場地平面圖與安全距離檢核。輸出施工場地配置動畫與管理計畫。</div>
+                  <div class="prompt en">You are a construction planning engineer. For the following project, plan site utilization: 1) use 4D BIM to simulate site layouts at each construction stage; 2) plan material laydown areas, crane positions, and temporary facilities; 3) simulate haul routes and pedestrian/vehicle circulation; 4) generate stage-by-stage site plans and safety-distance checks. Output a site-layout animation and a management plan.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">70%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=PXfI5BtLc7I" target="_blank" rel="noopener">▶ 4D Site Logistics Planning</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="3B" data-zh="施工系統設計" data-en="Construction System Design">
+              <summary>
+                <span class="code" style="background:#10b98133;color:#10b981">3B</span>
+                <span class="name"><span class="zh">施工系統設計</span><span class="en">Construction System Design</span></span>
+                <span class="en2 muted"><span class="zh">Construction System Design</span></span>
+                <span class="ai" title="AI ratio">55%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位施工系統設計專家。請針對以下專案設計施工系統：1) 建立虛擬樣板模型驗證複雜節點；2) 設計模板支撐系統與臨時結構；3) 模擬預鑄元件吊裝程序；4) 產生施工圖與安全檢核表。輸出系統設計報告與 3D 施工模擬。</div>
+                  <div class="prompt en">You are a construction system design expert. For the following project, design the construction systems: 1) build virtual mockups to verify complex nodes; 2) design formwork/shoring and temporary structures; 3) simulate precast component erection; 4) generate shop drawings and safety checklists. Output a system design report and 3D construction simulation.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">55%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=w48cOqx-q1w" target="_blank" rel="noopener">▶ Virtual Construction Mockups</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="3C" data-zh="數位製造" data-en="Digital Fabrication">
+              <summary>
+                <span class="code" style="background:#10b98133;color:#10b981">3C</span>
+                <span class="name"><span class="zh">數位製造</span><span class="en">Digital Fabrication</span></span>
+                <span class="en2 muted"><span class="zh">Digital Fabrication</span></span>
+                <span class="ai" title="AI ratio">80%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位數位製造工程師。請針對以下 BIM 模型執行數位製造準備：1) 將複雜幾何轉換為 CNC/機器人可讀的 G-code；2) 優化切割路徑與材料利用率；3) 建立預鑄元件的生產排程；4) 產生製造圖與品管規範。輸出完整製造資料包與誤差容許分析。</div>
+                  <div class="prompt en">You are a digital fabrication engineer. For the following BIM model, prepare for digital fabrication: 1) convert complex geometry into CNC/robot-readable G-code; 2) optimize cutting paths and material utilization; 3) schedule precast production; 4) generate fabrication drawings and QC specifications. Output a complete fabrication data package and tolerance analysis.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">80%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=9ACBm0ZJq-E" target="_blank" rel="noopener">▶ BIM to Fabrication Workflow</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="3D" data-zh="3D 控制與規劃" data-en="3D Control &amp; Planning">
+              <summary>
+                <span class="code" style="background:#10b98133;color:#10b981">3D</span>
+                <span class="name"><span class="zh">3D 控制與規劃</span><span class="en">3D Control &amp; Planning</span></span>
+                <span class="en2 muted"><span class="zh">3D Control &amp; Planning</span></span>
+                <span class="ai" title="AI ratio">75%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位數位放樣工程師。請針對以下專案執行 3D 控制規劃：1) 使用全站儀與雷射掃描建立現場控制網；2) 將 BIM 座標轉換為施工放樣點位；3) 建立即時偏差比對機制；4) 產生放樣報告與精度驗證。輸出 3D 控制計畫與現場執行手冊。</div>
+                  <div class="prompt en">You are a digital layout engineer. For the following project, plan 3D control: 1) establish the site control network with total stations and laser scanning; 2) convert BIM coordinates to layout points; 3) set up real-time deviation comparison; 4) generate layout reports and accuracy verification. Output a 3D control plan and a field execution manual.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">75%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=w48cOqx-q1w" target="_blank" rel="noopener">▶ BIM 3D Layout with Trimble</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="3E" data-zh="3D 協調" data-en="3D Coordination">
+              <summary>
+                <span class="code" style="background:#10b98133;color:#10b981">3E</span>
+                <span class="name"><span class="zh">3D 協調</span><span class="en">3D Coordination</span></span>
+                <span class="en2 muted"><span class="zh">3D Coordination</span></span>
+                <span class="ai" title="AI ratio">85%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位 BIM 協調經理。請針對以下多專業模型執行 3D 協調：1) 統整建築、結構、機電、消防模型；2) 執行管線綜合與淨高分析；3) 自動產生衝突報告與協調會議議程；4) 追蹤衝突解決進度至零衝突。輸出協調報告與簽核紀錄。</div>
+                  <div class="prompt en">You are a BIM coordination manager. For the following multi-discipline models, run 3D coordination: 1) integrate architecture, structure, MEP, and fire-protection models; 2) perform combined-services and headroom analysis; 3) auto-generate clash reports and meeting agendas; 4) track clash resolution to zero clashes. Output a coordination report and sign-off records.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">85%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=Nb5hFvV4gc4" target="_blank" rel="noopener">▶ MEP Coordination with BIM</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="3F" data-zh="階段規劃 4D" data-en="4D Scheduling">
+              <summary>
+                <span class="code" style="background:#10b98133;color:#10b981">3F</span>
+                <span class="name"><span class="zh">階段規劃 4D</span><span class="en">4D Scheduling</span></span>
+                <span class="en2 muted"><span class="zh">4D Scheduling</span></span>
+                <span class="ai" title="AI ratio">80%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位 4D BIM 規劃師。請針對以下專案建立 4D 施工模擬：1) 將 BIM 模型與 MS Project/Primavera 進度連結；2) 模擬各工項的時空衝突與資源需求；3) 優化施工順序與關鍵路徑；4) 產生 4D 動畫與進度報告。輸出 4D 模型與施工策略分析。</div>
+                  <div class="prompt en">You are a 4D BIM planner. For the following project, build a 4D construction simulation: 1) link the BIM model to the MS Project/Primavera schedule; 2) simulate spatio-temporal conflicts and resource demands per activity; 3) optimize the construction sequence and critical path; 4) generate 4D animation and progress reports. Output the 4D model and construction-strategy analysis.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">80%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=_WLscRCMd6A" target="_blank" rel="noopener">▶ 4D BIM Construction Simulation</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="3G" data-zh="成本估算" data-en="Cost Estimation">
+              <summary>
+                <span class="code" style="background:#10b98133;color:#10b981">3G</span>
+                <span class="name"><span class="zh">成本估算</span><span class="en">Cost Estimation</span></span>
+                <span class="en2 muted"><span class="zh">Cost Estimation</span></span>
+                <span class="ai" title="AI ratio">75%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位 BIM 估算師。請針對以下 BIM 模型執行自動成本估算：1) 從模型自動提取工程量（混凝土、鋼筋、管線）；2) 連結單價資料庫計算直接與間接成本；3) 模擬設計變更對成本的影響；4) 產生詳細估算書與比較分析。輸出符合標準格式的成本報告。</div>
+                  <div class="prompt en">You are a BIM estimator. For the following BIM model, perform automated cost estimation: 1) auto-extract quantities (concrete, rebar, piping) from the model; 2) link a unit-price database to compute direct and indirect costs; 3) simulate the cost impact of design changes; 4) generate a detailed estimate and comparison analysis. Output a standard-format cost report.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">75%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=xqlslf_k9CQ" target="_blank" rel="noopener">▶ BIM 5D Cost Estimation Tutorial</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="3H" data-zh="施工審查" data-en="Construction Review">
+              <summary>
+                <span class="code" style="background:#10b98133;color:#10b981">3H</span>
+                <span class="name"><span class="zh">施工審查</span><span class="en">Construction Review</span></span>
+                <span class="en2 muted"><span class="zh">Construction Review</span></span>
+                <span class="ai" title="AI ratio">60%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位施工審查顧問。請針對以下施工方案執行 BIM 輔助審查：1) 檢核施工圖與 BIM 模型的一致性；2) 驗證臨時結構的安全性；3) 評估施工方法的可行性與風險；4) 產生審查意見與改善建議。輸出施工審查報告與追蹤表。</div>
+                  <div class="prompt en">You are a construction review consultant. For the following construction method, perform BIM-assisted review: 1) verify consistency between shop drawings and the BIM model; 2) validate temporary-structure safety; 3) assess method feasibility and risk; 4) generate review comments and improvement suggestions. Output a review report and tracking sheet.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">60%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=v3uDiV2eQt0" target="_blank" rel="noopener">▶ Construction Drawing Review with BIM</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="3I" data-zh="數位交屋" data-en="Digital Handover">
+              <summary>
+                <span class="code" style="background:#10b98133;color:#10b981">3I</span>
+                <span class="name"><span class="zh">數位交屋</span><span class="en">Digital Handover</span></span>
+                <span class="en2 muted"><span class="zh">Digital Handover</span></span>
+                <span class="ai" title="AI ratio">70%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位竣工交付經理。請針對以下專案執行數位交屋準備：1) 將施工過程變更整合為 As-built 模型；2) 建立 COBie 格式的設備資產資料；3) 產生符合業主要求的交付文件集；4) 建立設施管理系統的資料匯入程序。輸出數位交屋包與驗收清單。</div>
+                  <div class="prompt en">You are a handover manager. For the following project, prepare digital handover: 1) integrate construction changes into the as-built model; 2) build COBie asset data; 3) generate the owner-required deliverable set; 4) set up FM system data import. Output a digital handover package and acceptance checklist.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">70%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=sYxKLKjyR_g" target="_blank" rel="noopener">▶ BIM Digital Handover COBie</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="3J" data-zh="安全規劃" data-en="Safety Planning">
+              <summary>
+                <span class="code" style="background:#10b98133;color:#10b981">3J</span>
+                <span class="name"><span class="zh">安全規劃</span><span class="en">Safety Planning</span></span>
+                <span class="en2 muted"><span class="zh">Safety Planning</span></span>
+                <span class="ai" title="AI ratio">65%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位施工安全工程師。請針對以下專案執行 BIM 安全規劃：1) 模擬高風險作業情境（高空、開挖、吊裝）；2) 建立安全防護設施的 3D 配置；3) 識別潛在危險源與墜落風險；4) 產生安全施工計畫與緊急應變程序。輸出安全模擬動畫與檢核表。</div>
+                  <div class="prompt en">You are a construction safety engineer. For the following project, plan BIM-based safety: 1) simulate high-risk scenarios (working at height, excavation, lifting); 2) lay out safety protection in 3D; 3) identify hazards and fall risks; 4) generate a safety plan and emergency procedures. Output a safety simulation animation and checklists.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">65%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=R2DaeELddEY" target="_blank" rel="noopener">▶ BIM for Construction Safety</a>
+                </div>
+              </div>
+            </details></div>
+        </section>
+        <section class="phase" data-phase="4">
+          <div class="phase-head" style="border-left-color:#f59e0b">
+            <h2 style="color:#f59e0b"><span class="zh">四、移交階段</span><span class="en">4. Handover</span></h2>
+            <span class="cnt">5 <span class="zh">項</span><span class="en">items</span></span>
           </div>
-        </details>
-        <details class="item" data-code="1E" data-zh="設計審查" data-en="3D Design Review">
-          <summary>
-            <span class="code" style="background:#3b82f633;color:#3b82f6">1E</span>
-            <span class="name">設計審查</span>
-            <span class="en">3D Design Review</span>
-            <span class="ai" title="AI 賦能比例">50%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位資深建築審查顧問。請針對以下 BIM 模型執行設計審查：1) 檢核建築法規符合性（防火避難、無障礙、綠建築指標）；2) 識別設計不合理處（淨高不足、動線交叉、維修空間不足）；3) 比對設計準則與業主要求的符合度；4) 產生審查意見書與問題追蹤表。請輸出專業審查報告。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">50%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=v3uDiV2eQt0" target="_blank" rel="noopener">▶ BIM 3D Design Review Process</a>
-            </div>
+          <div class="items">
+            <details class="item" data-code="4A" data-zh="竣工建模" data-en="As-Built Modeling">
+              <summary>
+                <span class="code" style="background:#f59e0b33;color:#f59e0b">4A</span>
+                <span class="name"><span class="zh">竣工建模</span><span class="en">As-Built Modeling</span></span>
+                <span class="en2 muted"><span class="zh">As-Built Modeling</span></span>
+                <span class="ai" title="AI ratio">70%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位竣工建模專家。請根據以下施工變更單與現場竣工資料，更新 BIM 模型：1) 將所有設計變更與現場簽證反映至模型；2) 建立竣工圖與模型的一致性驗證；3) 標註隱蔽工程位置與照片紀錄；4) 產生符合 LOD 500 的竣工模型。輸出竣工模型與變更追蹤報告。</div>
+                  <div class="prompt en">You are an as-built modeling expert. Based on the following change orders and site completion data, update the BIM model: 1) reflect all design changes and site sign-offs; 2) verify as-built drawings against the model; 3) flag concealed-work locations and photo records; 4) produce an LOD 500 as-built model. Output the as-built model and a change-tracking report.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">70%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=Ok8FAEZdUXg" target="_blank" rel="noopener">▶ As-Built BIM Modeling Process</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="4B" data-zh="記錄建模" data-en="Record Modeling">
+              <summary>
+                <span class="code" style="background:#f59e0b33;color:#f59e0b">4B</span>
+                <span class="name"><span class="zh">記錄建模</span><span class="en">Record Modeling</span></span>
+                <span class="en2 muted"><span class="zh">Record Modeling</span></span>
+                <span class="ai" title="AI ratio">65%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位設施記錄管理員。請針對以下建築建立記錄模型：1) 整合歷次裝修與改造紀錄；2) 建立空間與設備的歷史變更追蹤；3) 連結維護紀錄與設備履歷；4) 產生設施管理用簡化模型。輸出記錄模型與資料字典。</div>
+                  <div class="prompt en">You are a facility records manager. For the following building, build a record model: 1) integrate renovation and retrofit history; 2) track historical changes to spaces and equipment; 3) link maintenance records and asset history; 4) generate a simplified FM model. Output the record model and data dictionary.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">65%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=Ok8FAEZdUXg" target="_blank" rel="noopener">▶ Record Modeling for Facility Management</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="4C" data-zh="資產盤點" data-en="Asset Inventory">
+              <summary>
+                <span class="code" style="background:#f59e0b33;color:#f59e0b">4C</span>
+                <span class="name"><span class="zh">資產盤點</span><span class="en">Asset Inventory</span></span>
+                <span class="en2 muted"><span class="zh">Asset Inventory</span></span>
+                <span class="ai" title="AI ratio">80%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位資產管理顧問。請針對以下 BIM 模型執行資產盤點：1) 自動提取所有設備與構件清單；2) 建立資產分類編碼與位置標籤；3) 連結保固資訊與供應商資料；4) 產生符合 COBie/ISO 19650 的資產登錄表。輸出資產盤點報告與資料庫。</div>
+                  <div class="prompt en">You are an asset management consultant. For the following BIM model, run an asset inventory: 1) auto-extract all equipment and component lists; 2) build asset classification codes and location tags; 3) link warranty and supplier data; 4) generate a COBie/ISO 19650 asset register. Output the inventory report and database.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">80%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=sYxKLKjyR_g" target="_blank" rel="noopener">▶ BIM Asset Inventory Management</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="4D" data-zh="營運移交" data-en="FM Handover">
+              <summary>
+                <span class="code" style="background:#f59e0b33;color:#f59e0b">4D</span>
+                <span class="name"><span class="zh">營運移交</span><span class="en">FM Handover</span></span>
+                <span class="en2 muted"><span class="zh">FM Handover</span></span>
+                <span class="ai" title="AI ratio">75%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位設施管理顧問。請針對以下專案執行營運移交準備：1) 將 BIM 資料轉換為 FM 系統格式（Archibus/IBM Maximo）；2) 建立設備操作手冊與維護排程；3) 培訓營運團隊使用 BIM 模型查詢；4) 產生移交驗收文件。輸出 FM 移交包與系統上線計畫。</div>
+                  <div class="prompt en">You are a facility management consultant. For the following project, prepare FM handover: 1) convert BIM data to FM system formats (Archibus/IBM Maximo); 2) build equipment O&amp;M manuals and maintenance schedules; 3) train the operations team to query the BIM model; 4) generate handover acceptance documents. Output an FM handover package and a go-live plan.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">75%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=sYxKLKjyR_g" target="_blank" rel="noopener">▶ BIM to FM Handover Process</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="4E" data-zh="培訓模擬" data-en="Training Simulation">
+              <summary>
+                <span class="code" style="background:#f59e0b33;color:#f59e0b">4E</span>
+                <span class="name"><span class="zh">培訓模擬</span><span class="en">Training Simulation</span></span>
+                <span class="en2 muted"><span class="zh">Training Simulation</span></span>
+                <span class="ai" title="AI ratio">60%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位培訓發展專家。請針對以下設施建立培訓模擬：1) 使用 VR/AR 建立緊急應變演練情境；2) 建立設備操作互動式教學模組；3) 設計空間導覽與設施定位訓練；4) 產生培訓成效評估報告。輸出培訓模擬程式與課程大綱。</div>
+                  <div class="prompt en">You are a training development specialist. For the following facility, build training simulations: 1) create VR/AR emergency drills; 2) build interactive equipment-operation modules; 3) design spatial navigation and facility-orientation training; 4) generate training effectiveness reports. Output the training program and course outline.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">60%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=1McIY2JPDK8" target="_blank" rel="noopener">▶ VR Training with BIM Models</a>
+                </div>
+              </div>
+            </details></div>
+        </section>
+        <section class="phase" data-phase="5">
+          <div class="phase-head" style="border-left-color:#06b6d4">
+            <h2 style="color:#06b6d4"><span class="zh">五、營運維護</span><span class="en">5. Operation &amp; Maintenance</span></h2>
+            <span class="cnt">12 <span class="zh">項</span><span class="en">items</span></span>
           </div>
-        </details>
-        <details class="item" data-code="1F" data-zh="現況建模" data-en="As-Is Modeling">
-          <summary>
-            <span class="code" style="background:#3b82f633;color:#3b82f6">1F</span>
-            <span class="name">現況建模</span>
-            <span class="en">As-Is Modeling</span>
-            <span class="ai" title="AI 賦能比例">70%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位既有建築建模專家。請根據以下現場測量資料與照片，建立既有建築的 BIM 模型：1) 使用照片建模技術輔助幾何重建；2) 標註結構劣化與材料老化區域；3) 建立設備銘牌資料庫；4) 輸出現況模型與重建建議。請提供建模精度聲明與不確定區域清單。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">70%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=Ok8FAEZdUXg" target="_blank" rel="noopener">▶ As-Built Modeling with Revit</a>
-            </div>
+          <div class="items">
+            <details class="item" data-code="5A" data-zh="維護排程" data-en="Maintenance Scheduling">
+              <summary>
+                <span class="code" style="background:#06b6d433;color:#06b6d4">5A</span>
+                <span class="name"><span class="zh">維護排程</span><span class="en">Maintenance Scheduling</span></span>
+                <span class="en2 muted"><span class="zh">Maintenance Scheduling</span></span>
+                <span class="ai" title="AI ratio">85%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位設施維護經理。請針對以下建築建立 AI 維護排程：1) 根據設備類型與使用頻率建立預防性維護週期；2) 整合 IoT 感測器資料預測設備故障；3) 自動產生工單與人力調度建議；4) 優化維護成本與設備可用率。輸出維護排程系統與 KPI 儀表板。</div>
+                  <div class="prompt en">You are a facility maintenance manager. For the following building, build AI maintenance scheduling: 1) set preventive-maintenance cycles by equipment type and usage; 2) integrate IoT sensor data to predict failures; 3) auto-generate work orders and crew assignments; 4) optimize maintenance cost and equipment availability. Output a scheduling system and a KPI dashboard.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">85%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=R2DaeELddEY" target="_blank" rel="noopener">▶ AI-Powered Maintenance Scheduling</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="5B" data-zh="資產管理" data-en="Asset Management">
+              <summary>
+                <span class="code" style="background:#06b6d433;color:#06b6d4">5B</span>
+                <span class="name"><span class="zh">資產管理</span><span class="en">Asset Management</span></span>
+                <span class="en2 muted"><span class="zh">Asset Management</span></span>
+                <span class="ai" title="AI ratio">80%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位資產管理總監。請針對以下設施建立資產管理系統：1) 建立資產全生命週期追蹤機制；2) 計算每項資產的 TCO 與殘值；3) 預測資產更新與重置時間點；4) 產生資本支出規劃與預算建議。輸出資產管理策略與財務預測報告。</div>
+                  <div class="prompt en">You are an asset management director. For the following facility, build an asset management system: 1) track assets across the full lifecycle; 2) compute TCO and residual value per asset; 3) predict replacement timing; 4) generate capital-expenditure planning and budget recommendations. Output an asset strategy and financial forecast.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">80%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=sYxKLKjyR_g" target="_blank" rel="noopener">▶ BIM for Asset Lifecycle Management</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="5C" data-zh="空間管理" data-en="Space Management">
+              <summary>
+                <span class="code" style="background:#06b6d433;color:#06b6d4">5C</span>
+                <span class="name"><span class="zh">空間管理</span><span class="en">Space Management</span></span>
+                <span class="en2 muted"><span class="zh">Space Management</span></span>
+                <span class="ai" title="AI ratio">75%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位空間管理顧問。請針對以下建築執行空間管理：1) 建立即時空間使用率監控儀表板；2) 優化部門配置與工位分配；3) 模擬空間改造對營運的影響；4) 產生空間使用報告與租賃計價依據。輸出空間管理系統與配置建議。</div>
+                  <div class="prompt en">You are a space management consultant. For the following building, manage space: 1) build a real-time utilization dashboard; 2) optimize department and workstation allocation; 3) simulate the operational impact of reconfiguration; 4) generate space-usage reports and a lease-billing basis. Output a space management system and layout recommendations.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">75%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=Ll9JvkUiGoA" target="_blank" rel="noopener">▶ Space Management with BIM</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="5D" data-zh="災難規劃" data-en="Disaster Planning">
+              <summary>
+                <span class="code" style="background:#06b6d433;color:#06b6d4">5D</span>
+                <span class="name"><span class="zh">災難規劃</span><span class="en">Disaster Planning</span></span>
+                <span class="en2 muted"><span class="zh">Disaster Planning</span></span>
+                <span class="ai" title="AI ratio">70%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位災難應變顧問。請針對以下建築建立災難規劃：1) 模擬火災、地震、洪水疏散路徑；2) 建立緊急設備與避難設施定位系統；3) 整合建築自動化系統的緊急應變程序；4) 產生災難應變計畫與演練腳本。輸出疏散模擬與應變通訊計畫。</div>
+                  <div class="prompt en">You are a disaster response consultant. For the following building, build disaster planning: 1) simulate fire, earthquake, and flood evacuation routes; 2) locate emergency equipment and refuge facilities; 3) integrate building-automation emergency procedures; 4) generate a disaster response plan and drill scripts. Output evacuation simulations and a communication plan.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">70%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=ZuuY6Uwxaao" target="_blank" rel="noopener">▶ BIM for Emergency Evacuation Simulation</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="5E" data-zh="能源管理" data-en="Energy Management">
+              <summary>
+                <span class="code" style="background:#06b6d433;color:#06b6d4">5E</span>
+                <span class="name"><span class="zh">能源管理</span><span class="en">Energy Management</span></span>
+                <span class="en2 muted"><span class="zh">Energy Management</span></span>
+                <span class="ai" title="AI ratio">85%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位能源管理工程師。請針對以下建築建立 AI 能源管理系統：1) 整合 BMS 與智慧電表即時資料；2) 建立能耗基線與異常偵測演算法；3) 自動調整 HVAC 與照明排程；4) 產生節能成效報告與碳排追蹤。輸出能源管理儀表板與優化建議。</div>
+                  <div class="prompt en">You are an energy management engineer. For the following building, build an AI energy management system: 1) integrate BMS and smart-meter real-time data; 2) establish energy baselines and anomaly-detection algorithms; 3) auto-adjust HVAC and lighting schedules; 4) generate savings reports and carbon tracking. Output an energy dashboard and optimization recommendations.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">85%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=FLobArjPCCU" target="_blank" rel="noopener">▶ Smart Building Energy Management</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="5F" data-zh="租戶管理" data-en="Tenant Management">
+              <summary>
+                <span class="code" style="background:#06b6d433;color:#06b6d4">5F</span>
+                <span class="name"><span class="zh">租戶管理</span><span class="en">Tenant Management</span></span>
+                <span class="en2 muted"><span class="zh">Tenant Management</span></span>
+                <span class="ai" title="AI ratio">75%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位租戶關係經理。請針對以下建築建立租戶管理系統：1) 建立租戶空間配置與合約資料庫；2) 自動計算租金、管理費與能耗分攤；3) 管理租戶裝修申請與審查流程；4) 產生租戶滿意度分析與續約預測。輸出租戶管理儀表板與財務報表。</div>
+                  <div class="prompt en">You are a tenant relationship manager. For the following building, build a tenant management system: 1) create tenant space and contract databases; 2) auto-calculate rent, service fees, and energy apportionment; 3) manage tenant fit-out applications and review; 4) generate satisfaction analysis and renewal predictions. Output a tenant dashboard and financial statements.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">75%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=NvCjWUgqCXk" target="_blank" rel="noopener">▶ Tenant Management with IWMS</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="5G" data-zh="資本規劃" data-en="Capital Planning">
+              <summary>
+                <span class="code" style="background:#06b6d433;color:#06b6d4">5G</span>
+                <span class="name"><span class="zh">資本規劃</span><span class="en">Capital Planning</span></span>
+                <span class="en2 muted"><span class="zh">Capital Planning</span></span>
+                <span class="ai" title="AI ratio">70%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位資本規劃顧問。請針對以下設施建立長期資本規劃：1) 評估所有資產的剩餘壽命與更新成本；2) 建立 5/10/20 年資本支出預測模型；3) 模擬不同投資情境的財務影響；4) 產生資本計畫與優先順序建議。輸出資本規劃報告與董事會簡報。</div>
+                  <div class="prompt en">You are a capital planning consultant. For the following facility, build long-term capital planning: 1) assess the remaining life and replacement cost of all assets; 2) build 5/10/20-year capex forecast models; 3) simulate the financial impact of investment scenarios; 4) generate a capital plan and prioritization. Output a capital report and board presentation.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">70%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=sYxKLKjyR_g" target="_blank" rel="noopener">▶ Capital Planning for Facilities</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="5H" data-zh="系統分析" data-en="Systems Analysis">
+              <summary>
+                <span class="code" style="background:#06b6d433;color:#06b6d4">5H</span>
+                <span class="name"><span class="zh">系統分析</span><span class="en">Systems Analysis</span></span>
+                <span class="en2 muted"><span class="zh">Systems Analysis</span></span>
+                <span class="ai" title="AI ratio">80%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位機電系統分析師。請針對以下建築執行系統分析：1) 建立 HVAC、電氣、給排水系統的數位孿生；2) 模擬系統負載與效率表現；3) 識別系統瓶頸與故障模式；4) 產生系統優化與升級建議。輸出系統分析報告與改善方案。</div>
+                  <div class="prompt en">You are an MEP systems analyst. For the following building, run systems analysis: 1) build digital twins of HVAC, electrical, and plumbing systems; 2) simulate system loading and efficiency; 3) identify bottlenecks and failure modes; 4) generate optimization and upgrade recommendations. Output a systems analysis report and an improvement plan.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">80%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=Xhw2Ukij97Y" target="_blank" rel="noopener">▶ MEP Systems Analysis with BIM</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="5I" data-zh="智慧建築整合" data-en="Smart Building Integration">
+              <summary>
+                <span class="code" style="background:#06b6d433;color:#06b6d4">5I</span>
+                <span class="name"><span class="zh">智慧建築整合</span><span class="en">Smart Building Integration</span></span>
+                <span class="en2 muted"><span class="zh">Smart Building Integration</span></span>
+                <span class="ai" title="AI ratio">90%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位智慧建築整合顧問。請針對以下建築建立 IoT/BMS 整合架構：1) 設計感測器網路與資料收集架構；2) 建立建築數位孿生即時同步機制；3) 開發 AI 異常偵測與自動控制邏輯；4) 產生系統整合規格與廠商招標文件。輸出智慧建築藍圖與 ROI 分析。</div>
+                  <div class="prompt en">You are a smart-building integration consultant. For the following building, build the IoT/BMS integration architecture: 1) design the sensor network and data-collection architecture; 2) set up real-time digital-twin synchronization; 3) develop AI anomaly detection and auto-control logic; 4) generate integration specs and vendor tender documents. Output a smart-building blueprint and ROI analysis.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">90%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=sYxKLKjyR_g" target="_blank" rel="noopener">▶ Smart Building Digital Twin Integration</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="5J" data-zh="設施維護" data-en="Facility Maintenance">
+              <summary>
+                <span class="code" style="background:#06b6d433;color:#06b6d4">5J</span>
+                <span class="name"><span class="zh">設施維護</span><span class="en">Facility Maintenance</span></span>
+                <span class="en2 muted"><span class="zh">Facility Maintenance</span></span>
+                <span class="ai" title="AI ratio">80%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位設施維護主管。請針對以下建築建立維護作業系統：1) 建立設備 QR-code 與 BIM 模型連結；2) 設計行動工單與現場維護流程；3) 追蹤維護歷史與零件庫存；4) 產生維護 KPI 與成本分析。輸出維護作業手冊與行動應用規格。</div>
+                  <div class="prompt en">You are a facility maintenance supervisor. For the following building, build a maintenance operations system: 1) link equipment QR codes to the BIM model; 2) design mobile work orders and field procedures; 3) track maintenance history and parts inventory; 4) generate maintenance KPIs and cost analysis. Output an operations manual and a mobile-app spec.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">80%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=R2DaeELddEY" target="_blank" rel="noopener">▶ Mobile Facility Maintenance with BIM</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="5K" data-zh="空間利用率分析" data-en="Space Utilization Analysis">
+              <summary>
+                <span class="code" style="background:#06b6d433;color:#06b6d4">5K</span>
+                <span class="name"><span class="zh">空間利用率分析</span><span class="en">Space Utilization Analysis</span></span>
+                <span class="en2 muted"><span class="zh">Space Utilization Analysis</span></span>
+                <span class="ai" title="AI ratio">85%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位空間分析專家。請針對以下建築執行利用率分析：1) 整合感測器與排程系統資料；2) 建立空間使用率熱點圖與趨勢分析；3) 識別低效空間與重新配置機會；4) 產生空間優化建議與成本節省預估。輸出利用率分析儀表板與改善計畫。</div>
+                  <div class="prompt en">You are a space analytics expert. For the following building, run utilization analysis: 1) integrate sensor and scheduling data; 2) build utilization heat maps and trends; 3) identify low-efficiency spaces and reconfiguration opportunities; 4) generate optimization recommendations and savings estimates. Output a utilization dashboard and an improvement plan.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">85%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=Ll9JvkUiGoA" target="_blank" rel="noopener">▶ Space Utilization Analytics with BIM</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="5L" data-zh="搬遷與重置規劃" data-en="Move Management">
+              <summary>
+                <span class="code" style="background:#06b6d433;color:#06b6d4">5L</span>
+                <span class="name"><span class="zh">搬遷與重置規劃</span><span class="en">Move Management</span></span>
+                <span class="en2 muted"><span class="zh">Move Management</span></span>
+                <span class="ai" title="AI ratio">70%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位搬遷專案經理。請針對以下建築建立搬遷規劃：1) 建立部門搬遷的時程與順序模擬；2) 規劃家具與設備的搬遷路徑；3) 評估搬遷對日常營運的影響；4) 產生搬遷計畫與驗收清單。輸出搬遷模擬與專案管理文件。</div>
+                  <div class="prompt en">You are a move management project manager. For the following building, build a move plan: 1) simulate department move timing and sequence; 2) plan furniture and equipment routes; 3) assess the impact on daily operations; 4) generate a move plan and acceptance checklist. Output a move simulation and project documents.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">70%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=lVhj7TIxbgE" target="_blank" rel="noopener">▶ BIM for Move Management</a>
+                </div>
+              </div>
+            </details></div>
+        </section>
+        <section class="phase" data-phase="6">
+          <div class="phase-head" style="border-left-color:#f97316">
+            <h2 style="color:#f97316"><span class="zh">六、進階應用</span><span class="en">6. Advanced Applications</span></h2>
+            <span class="cnt">11 <span class="zh">項</span><span class="en">items</span></span>
           </div>
-        </details></div>
-    </section>
-    <section class="phase" data-phase="2">
-      <div class="phase-head" style="border-left-color:#8b5cf6">
-        <h2 style="color:#8b5cf6">二、設計階段（7 項）</h2>
-        <span class="cnt">7 項 · 平均 AI 66%</span>
-      </div>
-      <div class="items">
-        <details class="item" data-code="2A" data-zh="設計創作" data-en="Design Authoring">
-          <summary>
-            <span class="code" style="background:#8b5cf633;color:#8b5cf6">2A</span>
-            <span class="name">設計創作</span>
-            <span class="en">Design Authoring</span>
-            <span class="ai" title="AI 賦能比例">45%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位 BIM 設計師。請根據以下設計準則與概念草圖，使用 Revit 進行設計創作：1) 建立參數化族群與可重用元件；2) 確保模型符合 LOD 350 標準；3) 自動生成平面、立面、剖面圖紙；4) 建立設計變更追蹤機制。請輸出完整模型檔案、圖紙集與設計說明書。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">45%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=7cv78Xj38CA" target="_blank" rel="noopener">▶ Revit Design Authoring Basics</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="2B" data-zh="工程分析" data-en="Engineering Analysis">
-          <summary>
-            <span class="code" style="background:#8b5cf633;color:#8b5cf6">2B</span>
-            <span class="name">工程分析</span>
-            <span class="en">Engineering Analysis</span>
-            <span class="ai" title="AI 賦能比例">65%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位建築工程分析師。請針對以下 BIM 結構模型執行多物理場分析：1) 匯出至 ETABS/Robot 進行結構力學計算；2) 執行機電管線壓降與流量分析；3) 評估基礎沈陷與土壤互制；4) 產生分析結果視覺化與設計建議。輸出工程分析報告與優化建議。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">65%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=2v9CQHYqmMY" target="_blank" rel="noopener">▶ Structural Analysis with Revit + Robot</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="2C" data-zh="能源分析" data-en="Energy Analysis">
-          <summary>
-            <span class="code" style="background:#8b5cf633;color:#8b5cf6">2C</span>
-            <span class="name">能源分析</span>
-            <span class="en">Energy Analysis</span>
-            <span class="ai" title="AI 賦能比例">70%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位建築能源模擬專家。請針對以下 BIM 模型執行能源分析：1) 使用 Green Building Studio 或 Insight 進行全年能耗模擬；2) 分析外殼熱傳性能（U-value、日射量）；3) 模擬不同 HVAC 系統方案的能耗差異；4) 產生符合 ASHRAE 90.1 的比較基準報告。輸出 EUI 指標與節能策略建議。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">70%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=FLobArjPCCU" target="_blank" rel="noopener">▶ Revit Insight Energy Analysis</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="2D" data-zh="結構分析" data-en="Structural Analysis">
-          <summary>
-            <span class="code" style="background:#8b5cf633;color:#8b5cf6">2D</span>
-            <span class="name">結構分析</span>
-            <span class="en">Structural Analysis</span>
-            <span class="ai" title="AI 賦能比例">80%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位結構工程師。請針對以下 BIM 結構模型執行完整分析：1) 匯出至 SAP2000/ETABS 建立分析模型；2) 執行靜力、動力與地震反應譜分析；3) 檢核構件強度與變位是否符合規範；4) 自動標註超限構件並建議斷面調整。輸出結構計算書與配筋建議圖。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">80%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=Xhw2Ukij97Y" target="_blank" rel="noopener">▶ Revit to ETABS Structural Workflow</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="2E" data-zh="永續性評估" data-en="Sustainability Assessment">
-          <summary>
-            <span class="code" style="background:#8b5cf633;color:#8b5cf6">2E</span>
-            <span class="name">永續性評估</span>
-            <span class="en">Sustainability Assessment</span>
-            <span class="ai" title="AI 賦能比例">60%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位綠建築認證顧問。請針對以下 BIM 模型執行永續性評估：1) 計算 EEWH 或 LEED 積分預估；2) 分析材料蘊含碳與生命週期衝擊；3) 評估雨水回收與再生能源潛力；4) 產生綠建築得分卡與改善建議。輸出認證路徑規劃與成本效益分析。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">60%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=S8rpu9-OP4Y" target="_blank" rel="noopener">▶ BIM for LEED Certification</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="2F" data-zh="法規驗證" data-en="Code Compliance Checking">
-          <summary>
-            <span class="code" style="background:#8b5cf633;color:#8b5cf6">2F</span>
-            <span class="name">法規驗證</span>
-            <span class="en">Code Compliance Checking</span>
-            <span class="ai" title="AI 賦能比例">75%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位建築法規檢查專家。請針對以下 BIM 模型執行自動法規驗證：1) 使用 Solibri 或 BIMcollab 檢核建築技術規則；2) 驗證防火區劃、避難距離、無障礙設施；3) 檢查結構耐震與消防法規符合性；4) 產生法規檢核報告與不符合事項清單。輸出官方格式報告書。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">75%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=l489GxRcB3E" target="_blank" rel="noopener">▶ Automated Code Checking with BIM</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="2G" data-zh="照明分析" data-en="Lighting Analysis">
-          <summary>
-            <span class="code" style="background:#8b5cf633;color:#8b5cf6">2G</span>
-            <span class="name">照明分析</span>
-            <span class="en">Lighting Analysis</span>
-            <span class="ai" title="AI 賦能比例">65%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位照明設計顧問。請針對以下 BIM 模型執行照明分析：1) 使用 ElumTools 或 Dialux 模擬自然採光與人工照明；2) 計算各空間的照度、均勻度與眩光指數；3) 模擬不同時段與季節的採光表現；4) 產生照明配置建議與節能策略。輸出偽色圖分析與設備規格表。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">65%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=DnH5es0wPso" target="_blank" rel="noopener">▶ ElumTools Lighting Analysis in Revit</a>
-            </div>
-          </div>
-        </details></div>
-    </section>
-    <section class="phase" data-phase="3">
-      <div class="phase-head" style="border-left-color:#10b981">
-        <h2 style="color:#10b981">三、施工階段（10 項）</h2>
-        <span class="cnt">10 項 · 平均 AI 72%</span>
-      </div>
-      <div class="items">
-        <details class="item" data-code="3A" data-zh="場地利用規劃" data-en="Site Utilization Planning">
-          <summary>
-            <span class="code" style="background:#10b98133;color:#10b981">3A</span>
-            <span class="name">場地利用規劃</span>
-            <span class="en">Site Utilization Planning</span>
-            <span class="ai" title="AI 賦能比例">70%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位施工規劃工程師。請針對以下專案執行場地利用規劃：1) 使用 4D BIM 模擬施工各階段的場地配置；2) 規劃材料堆置區、塔吊位置與臨時設施；3) 模擬運輸路線與人車動線；4) 產生各階段場地平面圖與安全距離檢核。輸出施工場地配置動畫與管理計畫。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">70%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=PXfI5BtLc7I" target="_blank" rel="noopener">▶ 4D Site Logistics Planning</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="3B" data-zh="施工系統設計" data-en="Construction System Design">
-          <summary>
-            <span class="code" style="background:#10b98133;color:#10b981">3B</span>
-            <span class="name">施工系統設計</span>
-            <span class="en">Construction System Design</span>
-            <span class="ai" title="AI 賦能比例">55%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位施工系統設計專家。請針對以下專案設計施工系統：1) 建立虛擬樣板模型驗證複雜節點；2) 設計模板支撐系統與臨時結構；3) 模擬預鑄元件吊裝程序；4) 產生施工圖與安全檢核表。輸出系統設計報告與 3D 施工模擬。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">55%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=w48cOqx-q1w" target="_blank" rel="noopener">▶ Virtual Construction Mockups</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="3C" data-zh="數位製造" data-en="Digital Fabrication">
-          <summary>
-            <span class="code" style="background:#10b98133;color:#10b981">3C</span>
-            <span class="name">數位製造</span>
-            <span class="en">Digital Fabrication</span>
-            <span class="ai" title="AI 賦能比例">80%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位數位製造工程師。請針對以下 BIM 模型執行數位製造準備：1) 將複雜幾何轉換為 CNC/機器人可讀的 G-code；2) 優化切割路徑與材料利用率；3) 建立預鑄元件的生產排程；4) 產生製造圖與品管規範。輸出完整製造資料包與誤差容許分析。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">80%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=9ACBm0ZJq-E" target="_blank" rel="noopener">▶ BIM to Fabrication Workflow</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="3D" data-zh="3D 控制與規劃" data-en="3D Control &amp; Planning">
-          <summary>
-            <span class="code" style="background:#10b98133;color:#10b981">3D</span>
-            <span class="name">3D 控制與規劃</span>
-            <span class="en">3D Control &amp; Planning</span>
-            <span class="ai" title="AI 賦能比例">75%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位數位放樣工程師。請針對以下專案執行 3D 控制規劃：1) 使用全站儀與雷射掃描建立現場控制網；2) 將 BIM 座標轉換為施工放樣點位；3) 建立即時偏差比對機制；4) 產生放樣報告與精度驗證。輸出 3D 控制計畫與現場執行手冊。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">75%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=w48cOqx-q1w" target="_blank" rel="noopener">▶ BIM 3D Layout with Trimble</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="3E" data-zh="3D 協調" data-en="3D Coordination">
-          <summary>
-            <span class="code" style="background:#10b98133;color:#10b981">3E</span>
-            <span class="name">3D 協調</span>
-            <span class="en">3D Coordination</span>
-            <span class="ai" title="AI 賦能比例">85%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位 BIM 協調經理。請針對以下多專業模型執行 3D 協調：1) 統整建築、結構、機電、消防模型；2) 執行管線綜合與淨高分析；3) 自動產生衝突報告與協調會議議程；4) 追蹤衝突解決進度至零衝突。輸出協調報告與簽核紀錄。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">85%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=Nb5hFvV4gc4" target="_blank" rel="noopener">▶ MEP Coordination with BIM</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="3F" data-zh="階段規劃 4D" data-en="4D Scheduling">
-          <summary>
-            <span class="code" style="background:#10b98133;color:#10b981">3F</span>
-            <span class="name">階段規劃 4D</span>
-            <span class="en">4D Scheduling</span>
-            <span class="ai" title="AI 賦能比例">80%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位 4D BIM 規劃師。請針對以下專案建立 4D 施工模擬：1) 將 BIM 模型與 MS Project/Primavera 進度連結；2) 模擬各工項的時空衝突與資源需求；3) 優化施工順序與關鍵路徑；4) 產生 4D 動畫與進度報告。輸出 4D 模型與施工策略分析。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">80%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=_WLscRCMd6A" target="_blank" rel="noopener">▶ 4D BIM Construction Simulation</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="3G" data-zh="成本估算" data-en="Cost Estimation">
-          <summary>
-            <span class="code" style="background:#10b98133;color:#10b981">3G</span>
-            <span class="name">成本估算</span>
-            <span class="en">Cost Estimation</span>
-            <span class="ai" title="AI 賦能比例">75%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位 BIM 估算師。請針對以下 BIM 模型執行自動成本估算：1) 從模型自動提取工程量（混凝土、鋼筋、管線）；2) 連結單價資料庫計算直接與間接成本；3) 模擬設計變更對成本的影響；4) 產生詳細估算書與比較分析。輸出符合標準格式的成本報告。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">75%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=xqlslf_k9CQ" target="_blank" rel="noopener">▶ BIM 5D Cost Estimation Tutorial</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="3H" data-zh="施工審查" data-en="Construction Review">
-          <summary>
-            <span class="code" style="background:#10b98133;color:#10b981">3H</span>
-            <span class="name">施工審查</span>
-            <span class="en">Construction Review</span>
-            <span class="ai" title="AI 賦能比例">60%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位施工審查顧問。請針對以下施工方案執行 BIM 輔助審查：1) 檢核施工圖與 BIM 模型的一致性；2) 驗證臨時結構的安全性；3) 評估施工方法的可行性與風險；4) 產生審查意見與改善建議。輸出施工審查報告與追蹤表。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">60%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=v3uDiV2eQt0" target="_blank" rel="noopener">▶ Construction Drawing Review with BIM</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="3I" data-zh="數位交屋" data-en="Digital Handover">
-          <summary>
-            <span class="code" style="background:#10b98133;color:#10b981">3I</span>
-            <span class="name">數位交屋</span>
-            <span class="en">Digital Handover</span>
-            <span class="ai" title="AI 賦能比例">70%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位竣工交付經理。請針對以下專案執行數位交屋準備：1) 將施工過程變更整合為 As-built 模型；2) 建立 COBie 格式的設備資產資料；3) 產生符合業主要求的交付文件集；4) 建立設施管理系統的資料匯入程序。輸出數位交屋包與驗收清單。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">70%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=sYxKLKjyR_g" target="_blank" rel="noopener">▶ BIM Digital Handover COBie</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="3J" data-zh="安全規劃" data-en="Safety Planning">
-          <summary>
-            <span class="code" style="background:#10b98133;color:#10b981">3J</span>
-            <span class="name">安全規劃</span>
-            <span class="en">Safety Planning</span>
-            <span class="ai" title="AI 賦能比例">65%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位施工安全工程師。請針對以下專案執行 BIM 安全規劃：1) 模擬高風險作業情境（高空、開挖、吊裝）；2) 建立安全防護設施的 3D 配置；3) 識別潛在危險源與墜落風險；4) 產生安全施工計畫與緊急應變程序。輸出安全模擬動畫與檢核表。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">65%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=R2DaeELddEY" target="_blank" rel="noopener">▶ BIM for Construction Safety</a>
-            </div>
-          </div>
-        </details></div>
-    </section>
-    <section class="phase" data-phase="4">
-      <div class="phase-head" style="border-left-color:#f59e0b">
-        <h2 style="color:#f59e0b">四、移交階段（5 項）</h2>
-        <span class="cnt">5 項 · 平均 AI 70%</span>
-      </div>
-      <div class="items">
-        <details class="item" data-code="4A" data-zh="竣工建模" data-en="As-Built Modeling">
-          <summary>
-            <span class="code" style="background:#f59e0b33;color:#f59e0b">4A</span>
-            <span class="name">竣工建模</span>
-            <span class="en">As-Built Modeling</span>
-            <span class="ai" title="AI 賦能比例">70%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位竣工建模專家。請根據以下施工變更單與現場竣工資料，更新 BIM 模型：1) 將所有設計變更與現場簽證反映至模型；2) 建立竣工圖與模型的一致性驗證；3) 標註隱蔽工程位置與照片紀錄；4) 產生符合 LOD 500 的竣工模型。輸出竣工模型與變更追蹤報告。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">70%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=Ok8FAEZdUXg" target="_blank" rel="noopener">▶ As-Built BIM Modeling Process</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="4B" data-zh="記錄建模" data-en="Record Modeling">
-          <summary>
-            <span class="code" style="background:#f59e0b33;color:#f59e0b">4B</span>
-            <span class="name">記錄建模</span>
-            <span class="en">Record Modeling</span>
-            <span class="ai" title="AI 賦能比例">65%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位設施記錄管理員。請針對以下建築建立記錄模型：1) 整合歷次裝修與改造紀錄；2) 建立空間與設備的歷史變更追蹤；3) 連結維護紀錄與設備履歷；4) 產生設施管理用簡化模型。輸出記錄模型與資料字典。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">65%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=Ok8FAEZdUXg" target="_blank" rel="noopener">▶ Record Modeling for Facility Management</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="4C" data-zh="資產盤點" data-en="Asset Inventory">
-          <summary>
-            <span class="code" style="background:#f59e0b33;color:#f59e0b">4C</span>
-            <span class="name">資產盤點</span>
-            <span class="en">Asset Inventory</span>
-            <span class="ai" title="AI 賦能比例">80%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位資產管理顧問。請針對以下 BIM 模型執行資產盤點：1) 自動提取所有設備與構件清單；2) 建立資產分類編碼與位置標籤；3) 連結保固資訊與供應商資料；4) 產生符合 COBie/ISO 19650 的資產登錄表。輸出資產盤點報告與資料庫。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">80%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=sYxKLKjyR_g" target="_blank" rel="noopener">▶ BIM Asset Inventory Management</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="4D" data-zh="營運移交" data-en="FM Handover">
-          <summary>
-            <span class="code" style="background:#f59e0b33;color:#f59e0b">4D</span>
-            <span class="name">營運移交</span>
-            <span class="en">FM Handover</span>
-            <span class="ai" title="AI 賦能比例">75%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位設施管理顧問。請針對以下專案執行營運移交準備：1) 將 BIM 資料轉換為 FM 系統格式（Archibus/IBM Maximo）；2) 建立設備操作手冊與維護排程；3) 培訓營運團隊使用 BIM 模型查詢；4) 產生移交驗收文件。輸出 FM 移交包與系統上線計畫。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">75%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=sYxKLKjyR_g" target="_blank" rel="noopener">▶ BIM to FM Handover Process</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="4E" data-zh="培訓模擬" data-en="Training Simulation">
-          <summary>
-            <span class="code" style="background:#f59e0b33;color:#f59e0b">4E</span>
-            <span class="name">培訓模擬</span>
-            <span class="en">Training Simulation</span>
-            <span class="ai" title="AI 賦能比例">60%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位培訓發展專家。請針對以下設施建立培訓模擬：1) 使用 VR/AR 建立緊急應變演練情境；2) 建立設備操作互動式教學模組；3) 設計空間導覽與設施定位訓練；4) 產生培訓成效評估報告。輸出培訓模擬程式與課程大綱。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">60%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=1McIY2JPDK8" target="_blank" rel="noopener">▶ VR Training with BIM Models</a>
-            </div>
-          </div>
-        </details></div>
-    </section>
-    <section class="phase" data-phase="5">
-      <div class="phase-head" style="border-left-color:#06b6d4">
-        <h2 style="color:#06b6d4">五、營運維護（12 項）</h2>
-        <span class="cnt">12 項 · 平均 AI 79%</span>
-      </div>
-      <div class="items">
-        <details class="item" data-code="5A" data-zh="維護排程" data-en="Maintenance Scheduling">
-          <summary>
-            <span class="code" style="background:#06b6d433;color:#06b6d4">5A</span>
-            <span class="name">維護排程</span>
-            <span class="en">Maintenance Scheduling</span>
-            <span class="ai" title="AI 賦能比例">85%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位設施維護經理。請針對以下建築建立 AI 維護排程：1) 根據設備類型與使用頻率建立預防性維護週期；2) 整合 IoT 感測器資料預測設備故障；3) 自動產生工單與人力調度建議；4) 優化維護成本與設備可用率。輸出維護排程系統與 KPI 儀表板。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">85%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=R2DaeELddEY" target="_blank" rel="noopener">▶ AI-Powered Maintenance Scheduling</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="5B" data-zh="資產管理" data-en="Asset Management">
-          <summary>
-            <span class="code" style="background:#06b6d433;color:#06b6d4">5B</span>
-            <span class="name">資產管理</span>
-            <span class="en">Asset Management</span>
-            <span class="ai" title="AI 賦能比例">80%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位資產管理總監。請針對以下設施建立資產管理系統：1) 建立資產全生命週期追蹤機制；2) 計算每項資產的 TCO 與殘值；3) 預測資產更新與重置時間點；4) 產生資本支出規劃與預算建議。輸出資產管理策略與財務預測報告。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">80%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=sYxKLKjyR_g" target="_blank" rel="noopener">▶ BIM for Asset Lifecycle Management</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="5C" data-zh="空間管理" data-en="Space Management">
-          <summary>
-            <span class="code" style="background:#06b6d433;color:#06b6d4">5C</span>
-            <span class="name">空間管理</span>
-            <span class="en">Space Management</span>
-            <span class="ai" title="AI 賦能比例">75%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位空間管理顧問。請針對以下建築執行空間管理：1) 建立即時空間使用率監控儀表板；2) 優化部門配置與工位分配；3) 模擬空間改造對營運的影響；4) 產生空間使用報告與租賃計價依據。輸出空間管理系統與配置建議。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">75%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=Ll9JvkUiGoA" target="_blank" rel="noopener">▶ Space Management with BIM</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="5D" data-zh="災難規劃" data-en="Disaster Planning">
-          <summary>
-            <span class="code" style="background:#06b6d433;color:#06b6d4">5D</span>
-            <span class="name">災難規劃</span>
-            <span class="en">Disaster Planning</span>
-            <span class="ai" title="AI 賦能比例">70%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位災難應變顧問。請針對以下建築建立災難規劃：1) 模擬火災、地震、洪水疏散路徑；2) 建立緊急設備與避難設施定位系統；3) 整合建築自動化系統的緊急應變程序；4) 產生災難應變計畫與演練腳本。輸出疏散模擬與應變通訊計畫。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">70%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=ZuuY6Uwxaao" target="_blank" rel="noopener">▶ BIM for Emergency Evacuation Simulation</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="5E" data-zh="能源管理" data-en="Energy Management">
-          <summary>
-            <span class="code" style="background:#06b6d433;color:#06b6d4">5E</span>
-            <span class="name">能源管理</span>
-            <span class="en">Energy Management</span>
-            <span class="ai" title="AI 賦能比例">85%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位能源管理工程師。請針對以下建築建立 AI 能源管理系統：1) 整合 BMS 與智慧電表即時資料；2) 建立能耗基線與異常偵測演算法；3) 自動調整 HVAC 與照明排程；4) 產生節能成效報告與碳排追蹤。輸出能源管理儀表板與優化建議。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">85%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=FLobArjPCCU" target="_blank" rel="noopener">▶ Smart Building Energy Management</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="5F" data-zh="租戶管理" data-en="Tenant Management">
-          <summary>
-            <span class="code" style="background:#06b6d433;color:#06b6d4">5F</span>
-            <span class="name">租戶管理</span>
-            <span class="en">Tenant Management</span>
-            <span class="ai" title="AI 賦能比例">75%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位租戶關係經理。請針對以下建築建立租戶管理系統：1) 建立租戶空間配置與合約資料庫；2) 自動計算租金、管理費與能耗分攤；3) 管理租戶裝修申請與審查流程；4) 產生租戶滿意度分析與續約預測。輸出租戶管理儀表板與財務報表。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">75%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=NvCjWUgqCXk" target="_blank" rel="noopener">▶ Tenant Management with IWMS</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="5G" data-zh="資本規劃" data-en="Capital Planning">
-          <summary>
-            <span class="code" style="background:#06b6d433;color:#06b6d4">5G</span>
-            <span class="name">資本規劃</span>
-            <span class="en">Capital Planning</span>
-            <span class="ai" title="AI 賦能比例">70%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位資本規劃顧問。請針對以下設施建立長期資本規劃：1) 評估所有資產的剩餘壽命與更新成本；2) 建立 5/10/20 年資本支出預測模型；3) 模擬不同投資情境的財務影響；4) 產生資本計畫與優先順序建議。輸出資本規劃報告與董事會簡報。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">70%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=sYxKLKjyR_g" target="_blank" rel="noopener">▶ Capital Planning for Facilities</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="5H" data-zh="系統分析" data-en="Systems Analysis">
-          <summary>
-            <span class="code" style="background:#06b6d433;color:#06b6d4">5H</span>
-            <span class="name">系統分析</span>
-            <span class="en">Systems Analysis</span>
-            <span class="ai" title="AI 賦能比例">80%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位機電系統分析師。請針對以下建築執行系統分析：1) 建立 HVAC、電氣、給排水系統的數位孿生；2) 模擬系統負載與效率表現；3) 識別系統瓶頸與故障模式；4) 產生系統優化與升級建議。輸出系統分析報告與改善方案。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">80%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=Xhw2Ukij97Y" target="_blank" rel="noopener">▶ MEP Systems Analysis with BIM</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="5I" data-zh="智慧建築整合" data-en="Smart Building Integration">
-          <summary>
-            <span class="code" style="background:#06b6d433;color:#06b6d4">5I</span>
-            <span class="name">智慧建築整合</span>
-            <span class="en">Smart Building Integration</span>
-            <span class="ai" title="AI 賦能比例">90%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位智慧建築整合顧問。請針對以下建築建立 IoT/BMS 整合架構：1) 設計感測器網路與資料收集架構；2) 建立建築數位孿生即時同步機制；3) 開發 AI 異常偵測與自動控制邏輯；4) 產生系統整合規格與廠商招標文件。輸出智慧建築藍圖與 ROI 分析。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">90%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=sYxKLKjyR_g" target="_blank" rel="noopener">▶ Smart Building Digital Twin Integration</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="5J" data-zh="設施維護" data-en="Facility Maintenance">
-          <summary>
-            <span class="code" style="background:#06b6d433;color:#06b6d4">5J</span>
-            <span class="name">設施維護</span>
-            <span class="en">Facility Maintenance</span>
-            <span class="ai" title="AI 賦能比例">80%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位設施維護主管。請針對以下建築建立維護作業系統：1) 建立設備 QR-code 與 BIM 模型連結；2) 設計行動工單與現場維護流程；3) 追蹤維護歷史與零件庫存；4) 產生維護 KPI 與成本分析。輸出維護作業手冊與行動應用規格。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">80%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=R2DaeELddEY" target="_blank" rel="noopener">▶ Mobile Facility Maintenance with BIM</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="5K" data-zh="空間利用率分析" data-en="Space Utilization Analysis">
-          <summary>
-            <span class="code" style="background:#06b6d433;color:#06b6d4">5K</span>
-            <span class="name">空間利用率分析</span>
-            <span class="en">Space Utilization Analysis</span>
-            <span class="ai" title="AI 賦能比例">85%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位空間分析專家。請針對以下建築執行利用率分析：1) 整合感測器與排程系統資料；2) 建立空間使用率熱點圖與趨勢分析；3) 識別低效空間與重新配置機會；4) 產生空間優化建議與成本節省預估。輸出利用率分析儀表板與改善計畫。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">85%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=Ll9JvkUiGoA" target="_blank" rel="noopener">▶ Space Utilization Analytics with BIM</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="5L" data-zh="搬遷與重置規劃" data-en="Move Management">
-          <summary>
-            <span class="code" style="background:#06b6d433;color:#06b6d4">5L</span>
-            <span class="name">搬遷與重置規劃</span>
-            <span class="en">Move Management</span>
-            <span class="ai" title="AI 賦能比例">70%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位搬遷專案經理。請針對以下建築建立搬遷規劃：1) 建立部門搬遷的時程與順序模擬；2) 規劃家具與設備的搬遷路徑；3) 評估搬遷對日常營運的影響；4) 產生搬遷計畫與驗收清單。輸出搬遷模擬與專案管理文件。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">70%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=lVhj7TIxbgE" target="_blank" rel="noopener">▶ BIM for Move Management</a>
-            </div>
-          </div>
-        </details></div>
-    </section>
-    <section class="phase" data-phase="6">
-      <div class="phase-head" style="border-left-color:#f97316">
-        <h2 style="color:#f97316">六、進階應用（11 項）</h2>
-        <span class="cnt">11 項 · 平均 AI 83%</span>
-      </div>
-      <div class="items">
-        <details class="item" data-code="6A" data-zh="虛擬實境/擴增實境應用" data-en="VR/AR Applications">
-          <summary>
-            <span class="code" style="background:#f9731633;color:#f97316">6A</span>
-            <span class="name">虛擬實境/擴增實境應用</span>
-            <span class="en">VR/AR Applications</span>
-            <span class="ai" title="AI 賦能比例">70%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位 VR/AR 開發顧問。請針對以下 BIM 模型建立沉浸式應用：1) 將模型轉換為 Unity/Unreal 可讀格式；2) 設計虛擬導覽與設計審查場景；3) 開發 AR 現場施工輔助功能；4) 產生硬體需求規格與開發時程。輸出 VR/AR 應用程式與使用手冊。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">70%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=4n5xF7J52wE" target="_blank" rel="noopener">▶ VR Design Review with BIM</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="6B" data-zh="數位孿生" data-en="Digital Twin">
-          <summary>
-            <span class="code" style="background:#f9731633;color:#f97316">6B</span>
-            <span class="name">數位孿生</span>
-            <span class="en">Digital Twin</span>
-            <span class="ai" title="AI 賦能比例">90%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位數位孿生架構師。請針對以下建築建立數位孿生平台：1) 設計即時資料串流架構（IoT/BMS/外部系統）；2) 建立物理與數位模型的同步機制；3) 開發預測性分析與模擬功能；4) 產生平台規格與廠商評估報告。輸出數位孿生藍圖與實施路線圖。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">90%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=sYxKLKjyR_g" target="_blank" rel="noopener">▶ Digital Twin for Buildings</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="6C" data-zh="生成式設計" data-en="Generative Design">
-          <summary>
-            <span class="code" style="background:#f9731633;color:#f97316">6C</span>
-            <span class="name">生成式設計</span>
-            <span class="en">Generative Design</span>
-            <span class="ai" title="AI 賦能比例">85%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位生成式設計專家。請針對以下設計條件執行生成式設計：1) 定義設計目標與約束條件（成本、能耗、結構、美學）；2) 使用 Dynamo/Grasshopper 產生多個設計方案；3) 評估各方案的綜合表現；4) 產生最佳方案的詳細設計文件。輸出生成式設計報告與參數化模型。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">85%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=Ek8kTNU0Imw" target="_blank" rel="noopener">▶ Generative Design in Revit</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="6D" data-zh="機器學習預測分析" data-en="ML Predictive Analytics">
-          <summary>
-            <span class="code" style="background:#f9731633;color:#f97316">6D</span>
-            <span class="name">機器學習預測分析</span>
-            <span class="en">ML Predictive Analytics</span>
-            <span class="ai" title="AI 賦能比例">90%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位建築資料科學家。請針對以下建築資料建立 ML 預測模型：1) 收集歷史能耗、維護、使用資料；2) 建立異常偵測與故障預測演算法；3) 開發能源需求預測與負載平衡模型；4) 產生模型準確度報告與部署建議。輸出 ML 模型與 API 文件。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">90%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=9ACBm0ZJq-E" target="_blank" rel="noopener">▶ Machine Learning for Building Analytics</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="6E" data-zh="無人機航測與巡檢" data-en="Drone Survey &amp; Inspection">
-          <summary>
-            <span class="code" style="background:#f9731633;color:#f97316">6E</span>
-            <span class="name">無人機航測與巡檢</span>
-            <span class="en">Drone Survey &amp; Inspection</span>
-            <span class="ai" title="AI 賦能比例">80%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位無人機航測專家。請針對以下專案建立無人機應用流程：1) 規劃航測路線與拍攝參數；2) 使用 photogrammetry 產生 3D 模型與正射影像；3) 自動識別施工進度與品質問題；4) 產生巡檢報告與比對分析。輸出航測計畫與自動化檢測流程。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">80%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=Ok8FAEZdUXg" target="_blank" rel="noopener">▶ Drone Photogrammetry for Construction</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="6F" data-zh="自動化施工/機器人" data-en="Robotics &amp; Automation">
-          <summary>
-            <span class="code" style="background:#f9731633;color:#f97316">6F</span>
-            <span class="name">自動化施工/機器人</span>
-            <span class="en">Robotics &amp; Automation</span>
-            <span class="ai" title="AI 賦能比例">85%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位營建機器人工程師。請針對以下施工項目建立機器人應用方案：1) 評估焊接、砌磚、噴塗等工序的自動化可行性；2) 設計機器人工作路徑與安全圍籬；3) 整合 BIM 模型與機器人控制系統；4) 產生投資報酬分析與實施計畫。輸出機器人應用規格與風險評估。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">85%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=9ACBm0ZJq-E" target="_blank" rel="noopener">▶ Construction Robotics in BIM</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="6G" data-zh="區塊鏈資產溯源" data-en="Blockchain Asset Traceability">
-          <summary>
-            <span class="code" style="background:#f9731633;color:#f97316">6G</span>
-            <span class="name">區塊鏈資產溯源</span>
-            <span class="en">Blockchain Asset Traceability</span>
-            <span class="ai" title="AI 賦能比例">75%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位區塊鏈解決方案架構師。請針對以下建築資產建立溯源系統：1) 設計材料與設備的供應鏈追溯機制；2) 建立不可竄改的資產履歷存證；3) 整合 BIM 元素與區塊鏈智能合約；4) 產生系統架構與資安評估報告。輸出區塊鏈溯源藍圖與試點計畫。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">75%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=9ACBm0ZJq-E" target="_blank" rel="noopener">▶ Blockchain for Construction Supply Chain</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="6H" data-zh="雲端協作平台" data-en="Cloud Collaboration Platform">
-          <summary>
-            <span class="code" style="background:#f9731633;color:#f97316">6H</span>
-            <span class="name">雲端協作平台</span>
-            <span class="en">Cloud Collaboration Platform</span>
-            <span class="ai" title="AI 賦能比例">80%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位雲端協作顧問。請針對以下專案設計 BIM 協作平台：1) 評估 ACC/BIM 360/Trimble Connect 等平台適用性；2) 設計權限管理與版本控制流程；3) 建立跨專業模型整合與衝突管理機制；4) 產生平台導入計畫與教育訓練課程。輸出協作平台規格與 SLA 文件。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">80%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=9ACBm0ZJq-E" target="_blank" rel="noopener">▶ BIM 360 Collaboration Workflow</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="6I" data-zh="大數據分析" data-en="Big Data Analytics">
-          <summary>
-            <span class="code" style="background:#f9731633;color:#f97316">6I</span>
-            <span class="name">大數據分析</span>
-            <span class="en">Big Data Analytics</span>
-            <span class="ai" title="AI 賦能比例">90%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位建築大數據分析師。請針對以下建築群建立大數據分析平台：1) 整合多棟建築的營運資料至資料湖；2) 建立跨專案效能比較與基準分析；3) 開發預測模型識別最佳實踐；4) 產生企業級儀表板與決策支援報告。輸出大數據架構與分析成果。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">90%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=S8rpu9-OP4Y" target="_blank" rel="noopener">▶ Big Data in Smart Buildings</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="6J" data-zh="AI 輔助設計優化" data-en="AI Design Optimization">
-          <summary>
-            <span class="code" style="background:#f9731633;color:#f97316">6J</span>
-            <span class="name">AI 輔助設計優化</span>
-            <span class="en">AI Design Optimization</span>
-            <span class="ai" title="AI 賦能比例">85%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位 AI 設計研究員。請針對以下設計問題建立 AI 優化流程：1) 定義多目標優化函數（結構、能耗、成本、採光）；2) 使用演化演算法或強化學習產生優化方案；3) 驗證 AI 建議方案的可行性與法規符合性；4) 產生設計優化報告與參數調整建議。輸出 AI 優化模型與設計方案。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">85%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=7cv78Xj38CA" target="_blank" rel="noopener">▶ AI for Building Design Optimization</a>
-            </div>
-          </div>
-        </details>
-        <details class="item" data-code="6K" data-zh="3D 列印與積層製造" data-en="3D Printing &amp; Additive Manufacturing">
-          <summary>
-            <span class="code" style="background:#f9731633;color:#f97316">6K</span>
-            <span class="name">3D 列印與積層製造</span>
-            <span class="en">3D Printing &amp; Additive Manufacturing</span>
-            <span class="ai" title="AI 賦能比例">80%</span>
-          </summary>
-          <div class="body">
-            <div class="row"><span class="lbl">Prompt</span>
-              <div class="prompt">你是一位積層製造工程師。請針對以下 BIM 元件建立 3D 列印流程：1) 將複雜幾何轉換為可列印格式並優化支撐結構；2) 選擇適當材料（混凝土、金屬、聚合物）與列印參數；3) 模擬列印過程的應力與變形；4) 產生品質檢測計畫與成本分析。輸出 3D 列印製造包與測試報告。</div>
-            </div>
-            <div class="row meta">
-              <span class="lbl">AI 比例</span><span class="val">80%</span>
-              <a class="yt" href="https://www.youtube.com/watch?v=9ACBm0ZJq-E" target="_blank" rel="noopener">▶ 3D Printing Construction with BIM</a>
-            </div>
-          </div>
-        </details></div>
-    </section>
-  <footer>BIM Matrix V2.2 · 資料來源 jacky-ai-empowerment-v1.md · AECPrism</footer>
+          <div class="items">
+            <details class="item" data-code="6A" data-zh="虛擬實境/擴增實境應用" data-en="VR/AR Applications">
+              <summary>
+                <span class="code" style="background:#f9731633;color:#f97316">6A</span>
+                <span class="name"><span class="zh">虛擬實境/擴增實境應用</span><span class="en">VR/AR Applications</span></span>
+                <span class="en2 muted"><span class="zh">VR/AR Applications</span></span>
+                <span class="ai" title="AI ratio">70%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位 VR/AR 開發顧問。請針對以下 BIM 模型建立沉浸式應用：1) 將模型轉換為 Unity/Unreal 可讀格式；2) 設計虛擬導覽與設計審查場景；3) 開發 AR 現場施工輔助功能；4) 產生硬體需求規格與開發時程。輸出 VR/AR 應用程式與使用手冊。</div>
+                  <div class="prompt en">You are a VR/AR development consultant. For the following BIM model, build immersive applications: 1) convert the model to Unity/Unreal format; 2) design virtual walkthroughs and design reviews; 3) develop AR field construction aids; 4) generate hardware specs and a development timeline. Output the VR/AR application and user manual.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">70%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=4n5xF7J52wE" target="_blank" rel="noopener">▶ VR Design Review with BIM</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="6B" data-zh="數位孿生" data-en="Digital Twin">
+              <summary>
+                <span class="code" style="background:#f9731633;color:#f97316">6B</span>
+                <span class="name"><span class="zh">數位孿生</span><span class="en">Digital Twin</span></span>
+                <span class="en2 muted"><span class="zh">Digital Twin</span></span>
+                <span class="ai" title="AI ratio">90%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位數位孿生架構師。請針對以下建築建立數位孿生平台：1) 設計即時資料串流架構（IoT/BMS/外部系統）；2) 建立物理與數位模型的同步機制；3) 開發預測性分析與模擬功能；4) 產生平台規格與廠商評估報告。輸出數位孿生藍圖與實施路線圖。</div>
+                  <div class="prompt en">You are a digital-twin architect. For the following building, build a digital-twin platform: 1) design real-time data streaming (IoT/BMS/external systems); 2) set up physical-digital synchronization; 3) develop predictive analytics and simulation; 4) generate platform specs and a vendor evaluation. Output a digital-twin blueprint and implementation roadmap.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">90%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=sYxKLKjyR_g" target="_blank" rel="noopener">▶ Digital Twin for Buildings</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="6C" data-zh="生成式設計" data-en="Generative Design">
+              <summary>
+                <span class="code" style="background:#f9731633;color:#f97316">6C</span>
+                <span class="name"><span class="zh">生成式設計</span><span class="en">Generative Design</span></span>
+                <span class="en2 muted"><span class="zh">Generative Design</span></span>
+                <span class="ai" title="AI ratio">85%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位生成式設計專家。請針對以下設計條件執行生成式設計：1) 定義設計目標與約束條件（成本、能耗、結構、美學）；2) 使用 Dynamo/Grasshopper 產生多個設計方案；3) 評估各方案的綜合表現；4) 產生最佳方案的詳細設計文件。輸出生成式設計報告與參數化模型。</div>
+                  <div class="prompt en">You are a generative design expert. For the following design conditions, run generative design: 1) define goals and constraints (cost, energy, structure, aesthetics); 2) use Dynamo/Grasshopper to generate multiple options; 3) evaluate overall performance; 4) produce detailed design documents for the best option. Output a generative design report and a parametric model.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">85%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=Ek8kTNU0Imw" target="_blank" rel="noopener">▶ Generative Design in Revit</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="6D" data-zh="機器學習預測分析" data-en="ML Predictive Analytics">
+              <summary>
+                <span class="code" style="background:#f9731633;color:#f97316">6D</span>
+                <span class="name"><span class="zh">機器學習預測分析</span><span class="en">ML Predictive Analytics</span></span>
+                <span class="en2 muted"><span class="zh">ML Predictive Analytics</span></span>
+                <span class="ai" title="AI ratio">90%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位建築資料科學家。請針對以下建築資料建立 ML 預測模型：1) 收集歷史能耗、維護、使用資料；2) 建立異常偵測與故障預測演算法；3) 開發能源需求預測與負載平衡模型；4) 產生模型準確度報告與部署建議。輸出 ML 模型與 API 文件。</div>
+                  <div class="prompt en">You are a building data scientist. For the following building data, build ML prediction models: 1) collect historical energy, maintenance, and usage data; 2) build anomaly-detection and failure-prediction algorithms; 3) develop energy-demand forecasting and load-balancing models; 4) generate accuracy reports and deployment recommendations. Output the ML models and API documentation.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">90%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=9ACBm0ZJq-E" target="_blank" rel="noopener">▶ Machine Learning for Building Analytics</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="6E" data-zh="無人機航測與巡檢" data-en="Drone Survey &amp; Inspection">
+              <summary>
+                <span class="code" style="background:#f9731633;color:#f97316">6E</span>
+                <span class="name"><span class="zh">無人機航測與巡檢</span><span class="en">Drone Survey &amp; Inspection</span></span>
+                <span class="en2 muted"><span class="zh">Drone Survey &amp; Inspection</span></span>
+                <span class="ai" title="AI ratio">80%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位無人機航測專家。請針對以下專案建立無人機應用流程：1) 規劃航測路線與拍攝參數；2) 使用 photogrammetry 產生 3D 模型與正射影像；3) 自動識別施工進度與品質問題；4) 產生巡檢報告與比對分析。輸出航測計畫與自動化檢測流程。</div>
+                  <div class="prompt en">You are a drone survey expert. For the following project, build a drone workflow: 1) plan flight routes and camera parameters; 2) use photogrammetry to produce 3D models and orthophotos; 3) auto-identify progress and quality issues; 4) generate inspection reports and comparisons. Output a survey plan and an automated inspection workflow.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">80%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=Ok8FAEZdUXg" target="_blank" rel="noopener">▶ Drone Photogrammetry for Construction</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="6F" data-zh="自動化施工/機器人" data-en="Robotics &amp; Automation">
+              <summary>
+                <span class="code" style="background:#f9731633;color:#f97316">6F</span>
+                <span class="name"><span class="zh">自動化施工/機器人</span><span class="en">Robotics &amp; Automation</span></span>
+                <span class="en2 muted"><span class="zh">Robotics &amp; Automation</span></span>
+                <span class="ai" title="AI ratio">85%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位營建機器人工程師。請針對以下施工項目建立機器人應用方案：1) 評估焊接、砌磚、噴塗等工序的自動化可行性；2) 設計機器人工作路徑與安全圍籬；3) 整合 BIM 模型與機器人控制系統；4) 產生投資報酬分析與實施計畫。輸出機器人應用規格與風險評估。</div>
+                  <div class="prompt en">You are a construction robotics engineer. For the following work items, build a robotics application plan: 1) assess automation feasibility for welding, bricklaying, and spraying; 2) design robot paths and safety fencing; 3) integrate the BIM model with robot control; 4) generate ROI analysis and an implementation plan. Output robotics specs and a risk assessment.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">85%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=9ACBm0ZJq-E" target="_blank" rel="noopener">▶ Construction Robotics in BIM</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="6G" data-zh="區塊鏈資產溯源" data-en="Blockchain Asset Traceability">
+              <summary>
+                <span class="code" style="background:#f9731633;color:#f97316">6G</span>
+                <span class="name"><span class="zh">區塊鏈資產溯源</span><span class="en">Blockchain Asset Traceability</span></span>
+                <span class="en2 muted"><span class="zh">Blockchain Asset Traceability</span></span>
+                <span class="ai" title="AI ratio">75%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位區塊鏈解決方案架構師。請針對以下建築資產建立溯源系統：1) 設計材料與設備的供應鏈追溯機制；2) 建立不可竄改的資產履歷存證；3) 整合 BIM 元素與區塊鏈智能合約；4) 產生系統架構與資安評估報告。輸出區塊鏈溯源藍圖與試點計畫。</div>
+                  <div class="prompt en">You are a blockchain solution architect. For the following assets, build a traceability system: 1) design material and equipment supply-chain tracking; 2) create tamper-proof asset history; 3) integrate BIM elements with smart contracts; 4) generate a system architecture and security assessment. Output a blockchain blueprint and a pilot plan.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">75%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=9ACBm0ZJq-E" target="_blank" rel="noopener">▶ Blockchain for Construction Supply Chain</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="6H" data-zh="雲端協作平台" data-en="Cloud Collaboration Platform">
+              <summary>
+                <span class="code" style="background:#f9731633;color:#f97316">6H</span>
+                <span class="name"><span class="zh">雲端協作平台</span><span class="en">Cloud Collaboration Platform</span></span>
+                <span class="en2 muted"><span class="zh">Cloud Collaboration Platform</span></span>
+                <span class="ai" title="AI ratio">80%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位雲端協作顧問。請針對以下專案設計 BIM 協作平台：1) 評估 ACC/BIM 360/Trimble Connect 等平台適用性；2) 設計權限管理與版本控制流程；3) 建立跨專業模型整合與衝突管理機制；4) 產生平台導入計畫與教育訓練課程。輸出協作平台規格與 SLA 文件。</div>
+                  <div class="prompt en">You are a cloud collaboration consultant. For the following project, design the BIM collaboration platform: 1) assess ACC/BIM 360/Trimble Connect fit; 2) design permissions and version control; 3) set up multi-discipline model integration and clash management; 4) generate an adoption plan and training curriculum. Output platform specs and an SLA document.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">80%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=9ACBm0ZJq-E" target="_blank" rel="noopener">▶ BIM 360 Collaboration Workflow</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="6I" data-zh="大數據分析" data-en="Big Data Analytics">
+              <summary>
+                <span class="code" style="background:#f9731633;color:#f97316">6I</span>
+                <span class="name"><span class="zh">大數據分析</span><span class="en">Big Data Analytics</span></span>
+                <span class="en2 muted"><span class="zh">Big Data Analytics</span></span>
+                <span class="ai" title="AI ratio">90%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位建築大數據分析師。請針對以下建築群建立大數據分析平台：1) 整合多棟建築的營運資料至資料湖；2) 建立跨專案效能比較與基準分析；3) 開發預測模型識別最佳實踐；4) 產生企業級儀表板與決策支援報告。輸出大數據架構與分析成果。</div>
+                  <div class="prompt en">You are a building big-data analyst. For the following building portfolio, build a big-data platform: 1) integrate multi-building operational data into a data lake; 2) build cross-project performance comparison and benchmarks; 3) develop predictive models to identify best practices; 4) generate enterprise dashboards and decision-support reports. Output the big-data architecture and findings.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">90%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=S8rpu9-OP4Y" target="_blank" rel="noopener">▶ Big Data in Smart Buildings</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="6J" data-zh="AI 輔助設計優化" data-en="AI Design Optimization">
+              <summary>
+                <span class="code" style="background:#f9731633;color:#f97316">6J</span>
+                <span class="name"><span class="zh">AI 輔助設計優化</span><span class="en">AI Design Optimization</span></span>
+                <span class="en2 muted"><span class="zh">AI Design Optimization</span></span>
+                <span class="ai" title="AI ratio">85%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位 AI 設計研究員。請針對以下設計問題建立 AI 優化流程：1) 定義多目標優化函數（結構、能耗、成本、採光）；2) 使用演化演算法或強化學習產生優化方案；3) 驗證 AI 建議方案的可行性與法規符合性；4) 產生設計優化報告與參數調整建議。輸出 AI 優化模型與設計方案。</div>
+                  <div class="prompt en">You are an AI design researcher. For the following design problem, build an AI optimization workflow: 1) define multi-objective functions (structure, energy, cost, daylighting); 2) use evolutionary algorithms or reinforcement learning to generate optimized options; 3) validate feasibility and code compliance; 4) generate optimization reports and parameter recommendations. Output the AI model and design options.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">85%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=7cv78Xj38CA" target="_blank" rel="noopener">▶ AI for Building Design Optimization</a>
+                </div>
+              </div>
+            </details>
+            <details class="item" data-code="6K" data-zh="3D 列印與積層製造" data-en="3D Printing &amp; Additive Manufacturing">
+              <summary>
+                <span class="code" style="background:#f9731633;color:#f97316">6K</span>
+                <span class="name"><span class="zh">3D 列印與積層製造</span><span class="en">3D Printing &amp; Additive Manufacturing</span></span>
+                <span class="en2 muted"><span class="zh">3D Printing &amp; Additive Manufacturing</span></span>
+                <span class="ai" title="AI ratio">80%</span>
+              </summary>
+              <div class="body">
+                <div class="row"><span class="lbl"><span class="zh">Prompt</span><span class="en">Prompt</span></span>
+                  <div class="prompt zh">你是一位積層製造工程師。請針對以下 BIM 元件建立 3D 列印流程：1) 將複雜幾何轉換為可列印格式並優化支撐結構；2) 選擇適當材料（混凝土、金屬、聚合物）與列印參數；3) 模擬列印過程的應力與變形；4) 產生品質檢測計畫與成本分析。輸出 3D 列印製造包與測試報告。</div>
+                  <div class="prompt en">You are an additive manufacturing engineer. For the following BIM components, build a 3D-printing workflow: 1) convert complex geometry to printable format and optimize supports; 2) select materials (concrete, metal, polymer) and print parameters; 3) simulate print stress and deformation; 4) generate QC plans and cost analysis. Output a 3D-printing package and test report.</div>
+                </div>
+                <div class="row meta">
+                  <span class="lbl"><span class="zh">AI 比例</span><span class="en">AI ratio</span></span><span class="val">80%</span>
+                  <a class="yt" href="https://www.youtube.com/watch?v=9ACBm0ZJq-E" target="_blank" rel="noopener">▶ 3D Printing Construction with BIM</a>
+                </div>
+              </div>
+            </details></div>
+        </section>
+  <footer>BIM Matrix V2.2 · <span class="zh">資料來源 jacky-ai-empowerment-v1.md</span><span class="en">Source: jacky-ai-empowerment-v1.md</span> · AECPrism</footer>
 </div>
+
+<script>
+  function setLang(l){
+    document.body.classList.toggle('en', l==='en');
+    try{localStorage.setItem('bmLang',l);}catch(e){}
+    document.querySelectorAll('.langbar button').forEach(b=>b.classList.toggle('active', b.dataset.l===l));
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    var saved='zh'; try{saved=localStorage.getItem('bmLang')||'zh';}catch(e){}
+    setLang(saved);
+  });
+</script>
+
 <script>
   function filter(v){
     v=v.trim().toLowerCase();
