@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIM Matrix — AECPrism 全周期應用矩陣</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --border: #334155;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --accent: #f97316;
+    --must: #dc2626;
+    --phase-1: #3b82f6;
+    --phase-2: #8b5cf6;
+    --phase-3: #10b981;
+    --phase-4: #f59e0b;
+    --phase-5: #06b6d4;
+    --phase-6: #ec4899;
+    --phase-7: #f97316;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 2rem;
+    font-family: "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  header {
+    max-width: 1400px;
+    margin: 0 auto 2rem;
+  }
+  h1 { font-size: 2rem; margin: 0 0 0.5rem; }
+  .subtitle { color: var(--muted); font-size: 1rem; }
+  .meta {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .legend {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+    font-size: 0.85rem;
+  }
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 1.5rem;
+  }
+  .phase {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .phase-header {
+    padding: 1rem 1.2rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .phase-1 .phase-header { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .phase-2 .phase-header { background: rgba(139,92,246,0.15); color: #a78bfa; }
+  .phase-3 .phase-header { background: rgba(16,185,129,0.15); color: #34d399; }
+  .phase-4 .phase-header { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .phase-5 .phase-header { background: rgba(6,182,212,0.15); color: #22d3ee; }
+  .phase-6 .phase-header { background: rgba(236,72,153,0.15); color: #f472b6; }
+  .phase-7 .phase-header { background: rgba(249,115,22,0.15); color: #fb923c; }
+  .count { font-size: 0.85rem; color: var(--muted); font-weight: 500; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 0.7rem 1rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+  th { color: var(--muted); font-weight: 600; background: rgba(255,255,255,0.03); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.03); }
+  .code {
+    font-family: "SF Mono", "Consolas", monospace;
+    font-weight: 700;
+    font-size: 0.85rem;
+    min-width: 2.5rem;
+  }
+  .must { color: #fca5a5; }
+  .must::after {
+    content: "★";
+    color: var(--must);
+    margin-left: 0.4rem;
+    font-size: 0.75rem;
+  }
+  .ai-pct {
+    font-size: 0.8rem;
+    color: var(--muted);
+    min-width: 3.5rem;
+  }
+  .ai-pct.has { color: #86efac; font-weight: 600; }
+  footer {
+    max-width: 1400px;
+    margin: 2rem auto 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .note {
+    background: rgba(249,115,22,0.1);
+    border-left: 3px solid var(--accent);
+    padding: 0.8rem 1rem;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+  }
+  @media (max-width: 600px) {
+    body { padding: 1rem; }
+    .container { grid-template-columns: 1fr; }
+  }
+  .operate-btn {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #0f172a;
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .operate-btn:hover { filter: brightness(1.1); }
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    max-width: 640px;
+    width: 100%;
+    padding: 1.5rem;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal h2 { margin: 0 0 0.5rem; font-size: 1.25rem; }
+  .modal label { display: block; margin-top: 1rem; font-size: 0.85rem; color: var(--muted); }
+  .modal input[type=text], .modal textarea {
+    width: 100%;
+    margin-top: 0.4rem;
+    padding: 0.6rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-family: inherit;
+  }
+  .modal textarea { min-height: 180px; resize: vertical; }
+  .modal .actions { display: flex; gap: 0.75rem; margin-top: 1.25rem; }
+  .modal .actions button {
+    flex: 1;
+    padding: 0.6rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .modal .submit { background: var(--accent); color: #0f172a; }
+  .modal .cancel { background: var(--border); color: var(--text); }
+  .modal .status { margin-top: 0.75rem; font-size: 0.85rem; min-height: 1.2em; }
+  .modal .status.ok { color: #86efac; }
+  .modal .status.err { color: #fca5a5; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>BIM Matrix — 全周期應用矩陣</h1>
+  <p class="subtitle">AECPrism 51 項 BIM Use × 6 大階段 + 進階應用 + AI 文書自動化</p>
+  <div class="note">
+    ★ 標記為「主廚推薦」12 項必點應用（來源：群祥開發提案書）。AI% 僅提案書中有明確標示的項目才列出。
+  </div>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--phase-1)"></span>規劃</span>
+    <span><span class="dot" style="background:var(--phase-2)"></span>設計</span>
+    <span><span class="dot" style="background:var(--phase-3)"></span>施工</span>
+    <span><span class="dot" style="background:var(--phase-4)"></span>移交</span>
+    <span><span class="dot" style="background:var(--phase-5)"></span>營運</span>
+    <span><span class="dot" style="background:var(--phase-6)"></span>進階</span>
+    <span><span class="dot" style="background:var(--phase-7)"></span>文書自動化</span>
+  </div>
+  <div class="meta">
+    <span>資料來源：AgentVault `02_Projects/BIM_Matrix_vs_PCCES_品項對照藍圖.md`、群祥開發提案 HTML、BIM Matrix Skills</span>
+    <span>產生時間：2026-08-18</span>
+    <span>總項目數：54 項（51 + 3 文書自動化）</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="phase phase-1">
+    <div class="phase-header">
+      <span>規劃階段</span>
+      <span class="count">6 項</span>
+    </div>
+    <table>
+      <thead><tr><th>代碼</th><th>應用名稱</th><th class="ai-pct">AI%</th></tr></thead>
+      <tbody>
+        <tr><td class="code">1A</td><td class="">現況掃描建模</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">1B</td><td class="must">空間分析與規劃</td><td class="ai-pct has">60%</td></tr>
+        <tr><td class="code">1C</td><td class="">方案比對</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">1D</td><td class="must">設計協調與衝突檢測</td><td class="ai-pct has">85%</td></tr>
+        <tr><td class="code">1E</td><td class="">設計審查</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">1F</td><td class="">現況建模</td><td class="ai-pct">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="phase phase-2">
+    <div class="phase-header">
+      <span>設計階段</span>
+      <span class="count">7 項</span>
+    </div>
+    <table>
+      <thead><tr><th>代碼</th><th>應用名稱</th><th class="ai-pct">AI%</th></tr></thead>
+      <tbody>
+        <tr><td class="code">2A</td><td class="">設計創作</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">2B</td><td class="">工程分析</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">2C</td><td class="must">能源分析</td><td class="ai-pct has">70%</td></tr>
+        <tr><td class="code">2D</td><td class="">結構分析</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">2E</td><td class="must">永續性評估</td><td class="ai-pct has">60%</td></tr>
+        <tr><td class="code">2F</td><td class="must">法規驗證</td><td class="ai-pct has">75%</td></tr>
+        <tr><td class="code">2G</td><td class="">照明分析</td><td class="ai-pct">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="phase phase-3">
+    <div class="phase-header">
+      <span>施工階段</span>
+      <span class="count">10 項</span>
+    </div>
+    <table>
+      <thead><tr><th>代碼</th><th>應用名稱</th><th class="ai-pct">AI%</th></tr></thead>
+      <tbody>
+        <tr><td class="code">3A</td><td class="must">場地利用規劃</td><td class="ai-pct has">70%</td></tr>
+        <tr><td class="code">3B</td><td class="">施工系統設計</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">3C</td><td class="">數位製造</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">3D</td><td class="">3D 控制與規劃</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">3E</td><td class="must">3D 協調</td><td class="ai-pct has">85%</td></tr>
+        <tr><td class="code">3F</td><td class="">階段規劃 (4D)</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">3G</td><td class="must">成本估算</td><td class="ai-pct has">75%</td></tr>
+        <tr><td class="code">3H</td><td class="">施工審查</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">3I</td><td class="">數位交屋</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">3J</td><td class="">安全規劃</td><td class="ai-pct">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="phase phase-4">
+    <div class="phase-header">
+      <span>移交階段</span>
+      <span class="count">5 項</span>
+    </div>
+    <table>
+      <thead><tr><th>代碼</th><th>應用名稱</th><th class="ai-pct">AI%</th></tr></thead>
+      <tbody>
+        <tr><td class="code">4A</td><td class="">竣工建模</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">4B</td><td class="">記錄建模</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">4C</td><td class="must">資產盤點</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">4D</td><td class="must">營運移交</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">4E</td><td class="">培訓模擬</td><td class="ai-pct">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="phase phase-5">
+    <div class="phase-header">
+      <span>營運維護</span>
+      <span class="count">12 項</span>
+    </div>
+    <table>
+      <thead><tr><th>代碼</th><th>應用名稱</th><th class="ai-pct">AI%</th></tr></thead>
+      <tbody>
+        <tr><td class="code">5A</td><td class="">維護排程</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">5B</td><td class="">資產管理</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">5C</td><td class="">空間管理</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">5D</td><td class="">災難規劃</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">5E</td><td class="">能源管理</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">5F</td><td class="">租戶管理</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">5G</td><td class="">資本規劃</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">5H</td><td class="">系統分析</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">5I</td><td class="must">智慧建築整合</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">5J</td><td class="">設施維護</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">5K</td><td class="">空間利用率分析</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">5L</td><td class="">碳足跡管理</td><td class="ai-pct">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="phase phase-6">
+    <div class="phase-header">
+      <span>進階應用</span>
+      <span class="count">11 項</span>
+    </div>
+    <table>
+      <thead><tr><th>代碼</th><th>應用名稱</th><th class="ai-pct">AI%</th></tr></thead>
+      <tbody>
+        <tr><td class="code">6A</td><td class="">數位分身</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">6B</td><td class="">AR/VR 展示</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">6C</td><td class="">智慧工地</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">6D</td><td class="">供應鏈整合</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">6E</td><td class="">合約管理</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">6F</td><td class="">品質管理</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">6G</td><td class="">變更管理</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">6H</td><td class="">風險管理</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">6I</td><td class="">協同設計</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">6J</td><td class="">成本優化</td><td class="ai-pct">—</td></tr>
+        <tr><td class="code">6K</td><td class="">循環經濟</td><td class="ai-pct">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="phase phase-7">
+    <div class="phase-header">
+      <span>AI 文書自動化</span>
+      <span class="count">3 項</span>
+    </div>
+    <table>
+      <thead><tr><th>代碼</th><th>應用名稱</th><th class="ai-pct">AI%</th><th></th></tr></thead>
+      <tbody>
+        <tr><td class="code">7A</td><td class="must">BEP 自動生成</td><td class="ai-pct has">80%</td><td><button class="operate-btn" data-report="7A" data-name="BEP 自動生成">操作</button></td></tr>
+        <tr><td class="code">7B</td><td class="">月報／週報自動生成</td><td class="ai-pct has">70%</td><td><button class="operate-btn" data-report="7B" data-name="月報／週報自動生成">操作</button></td></tr>
+        <tr><td class="code">7C</td><td class="">結案報告自動生成</td><td class="ai-pct has">75%</td><td><button class="operate-btn" data-report="7C" data-name="結案報告自動生成">操作</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<footer>
+  <p><strong>狀態備註：</strong>正式 Vault 中的 BIM Matrix 對照藍圖最後更新於 2026-06-28，狀態仍為「規劃中」。TASK-20260726-001（PCCES ↔ 數量清單成本對應）因缺少 PCCES 匯出檔與工程數量清單，目前為 blocked。</p>
+  <p style="margin-top:0.5rem;">本頁為靜態 HTML，僅呈現矩陣架構；正式成本對應與報價需依 L5 核准流程執行。</p>
+</footer>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2 id="modalTitle">AI 文書自動化</h2>
+    <p style="color:var(--muted);font-size:0.85rem;margin:0;">貼入邀標書／服務建議書／進度／竣工資料，Joe 將依樣板產出草稿。</p>
+    <label>專案名稱（選填）
+      <input type="text" id="fProject" placeholder="例如：○○新建工程">
+    </label>
+    <label>輸入內容（與上傳檔案至少擇一）
+      <textarea id="fContent" placeholder="貼入邀標書／服務建議書／統需書／進度資料…"></textarea>
+    </label>
+    <label>上傳檔案（選填；docx／pdf／xlsx 等）
+      <input type="file" id="fFile" accept=".doc,.docx,.pdf,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar">
+    </label>
+    <div class="actions">
+      <button class="cancel" onclick="closeModal()">取消</button>
+      <button class="submit" id="fSubmit" onclick="submitForm()">送出產生</button>
+    </div>
+    <div class="status" id="fStatus"></div>
+  </div>
+</div>
+
+<script>
+let currentReport = null;
+function openModal(report, name) {
+  currentReport = report;
+  document.getElementById('modalTitle').textContent = 'AI 文書自動化 — ' + name;
+  document.getElementById('fStatus').className = 'status';
+  document.getElementById('fStatus').textContent = '';
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+document.querySelectorAll('.operate-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    openModal(btn.getAttribute('data-report'), btn.getAttribute('data-name'));
+  });
+});
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = () => reject(new Error('read failed'));
+    r.readAsDataURL(file);
+  });
+}
+async function submitForm() {
+  const content = document.getElementById('fContent').value.trim();
+  const project = document.getElementById('fProject').value.trim();
+  const status = document.getElementById('fStatus');
+  const fileInput = document.getElementById('fFile');
+  let filename = null, fileBase64 = null;
+  if (fileInput.files.length > 0) {
+    const file = fileInput.files[0];
+    filename = file.name;
+    try { fileBase64 = await fileToBase64(file); }
+    catch (e) { status.className = 'status err'; status.textContent = '檔案讀取失敗'; return; }
+  }
+  if (!content && !fileBase64) { status.className = 'status err'; status.textContent = '請填入內容或上傳檔案'; return; }
+  const btn = document.getElementById('fSubmit');
+  btn.disabled = true; btn.textContent = '送出中…';
+  status.className = 'status'; status.textContent = '';
+  try {
+    const res = await fetch('api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ report_type: currentReport, project_name: project, content: content, filename: filename, file_base64: fileBase64 })
+    });
+    const data = await res.json();
+    if (data.ok) { status.className = 'status ok'; status.textContent = data.msg; }
+    else { status.className = 'status err'; status.textContent = (data.error || '送出失敗'); }
+  } catch (e) {
+    status.className = 'status err'; status.textContent = '連線失敗：' + e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = '送出產生';
+  }
+}
+</script>
+
+</body>
+</html>
