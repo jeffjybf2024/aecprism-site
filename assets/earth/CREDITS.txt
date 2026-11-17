@@ -1,0 +1,21 @@
+Earth imagery in this folder comes from NASA (public domain) and, for the land round Taipei by day, from EOX (CC BY 4.0).
+
+night-4k.jpg, night-8k.jpg, night-asia.jpg, night-tw.jpg, night-tw2.jpg
+  Black Marble 2016 (Earth at night), NASA Earth Observatory images by Joshua Stevens, using Suomi NPP VIIRS data
+  from Miguel Román, NASA's Goddard Space Flight Center.
+
+day-2k.jpg
+  Blue Marble: Next Generation (December 2004, topography and bathymetry), NASA Earth Observatory,
+  Reto Stöckli.
+
+tw-s2-11.jpg, tw-s2-44.jpg, tw-s2-111.jpg, tw-s2-333.jpg
+  Sentinel-2 cloudless 2016: EOxCloudless https://cloudless.eox.at by EOX IT Services GmbH (Contains modified
+  Copernicus Sentinel data 2016), released under the Creative Commons Attribution 4.0 International License
+  (https://creativecommons.org/licenses/by/4.0/). Resampled; cut by scripts/make-zoom-maps.py. The homepage's footer
+  carries this credit.
+
+tw-glow.jpg
+  Black Marble 2016 (as above), softened: where the night's lights are, round Taiwan (scripts/make-zoom-maps.py).
+
+Resampled for the web by scripts/make-earth-textures.cjs; the three close-up maps around Taiwan (night-asia.jpg,
+night-tw.jpg, night-tw2.jpg) cut from the 500 m tile D1 by scripts/make-earth-patches.py.

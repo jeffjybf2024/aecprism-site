@@ -1,0 +1,76 @@
+/* Group D: metrics row, approach CTA, "why now" section. Use the --ui-* tokens from style.css. */
+
+/* both new sections float over the scene like the results; the fixed veil shades them (data-dim) */
+.metrics,.whynow{position:relative;isolation:isolate;color:var(--ui-fg);background:var(--ui-bg-solid)}
+body.veil-on .metrics,body.veil-on .whynow{background:transparent}
+.metrics .kicker,.whynow .kicker{color:var(--ui-accent)}
+.metrics .imm-p,.whynow .imm-p{color:var(--ui-dim)}
+
+/* metrics */
+.metrics{padding:120px 0 130px}
+.metrics .mega{font-size:clamp(30px,4.4vw,72px);margin-bottom:0}
+/* The figures as four dials of one kind: a ring of fine ticks, a hairline track, the arc with a small marker at its
+   head, and inside the circle the figure with its name under it. Each dial draws from two numbers that metrics.js
+   runs from 0 to 1 every time the section comes up: --a (the marks arrive) and --k (the arc goes round to its --v,
+   the figure counting with it). Both rest at 1, so without the script, or with reduced motion, the finished dials
+   are what shows. */
+.mx{--d:clamp(150px,13vw,196px);--mx-bar:rgba(13,27,61,.2);list-style:none;margin:clamp(36px,4.6vw,64px) 0 0;padding:0;
+  display:flex;flex-wrap:wrap;gap:clamp(20px,3vw,46px)}
+.mx-i{--a:1;--k:1;flex:none}
+.mx-dial{position:relative;width:var(--d);height:var(--d)}
+/* each dial has a face of frosted paper of its own, so it reads on the building where the reading wash thins (no
+   sheet behind the whole row: the film stays open between the dials) */
+.mx-dial::before{content:"";position:absolute;inset:-3%;border-radius:50%;background:rgba(var(--paper-rgb),.8);
+  -webkit-backdrop-filter:blur(12px) saturate(1.1);backdrop-filter:blur(12px) saturate(1.1);box-shadow:0 18px 46px rgba(13,27,61,.12);opacity:var(--a)}
+/* the arcs start at twelve o'clock; the head turns about the middle (user 0,0 of the centred viewBox) */
+.mx-dial svg{position:relative;display:block;width:100%;height:100%;overflow:visible;transform:rotate(-90deg)}
+.mx-dial circle{fill:none}
+.mx-rk{stroke:rgba(13,27,61,.32);stroke-width:3;stroke-dasharray:.2 1.8;opacity:var(--a)}
+.mx-rt{stroke:var(--mx-bar);stroke-width:1;opacity:var(--a)}
+.mx-ra,.mx-rg{stroke:var(--ui-accent);stroke-width:3;stroke-dasharray:100;stroke-dashoffset:calc(100 - var(--v) * var(--k) * 100)}
+.mx-rg{stroke-width:8;filter:blur(3px);opacity:0}
+.mx-dial .mx-rd{fill:var(--ui-bg-solid);stroke:var(--ui-accent-text);stroke-width:1.5;transform-origin:0 0;transform:rotate(calc(var(--v) * var(--k) * 360deg));opacity:var(--a)}
+/* inside the circle: the figure, its name under it */
+.mx-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--d) * .045);margin:0;padding-top:calc(var(--d) * .03);text-align:center}
+.mx b{display:flex;align-items:baseline;justify-content:center;gap:3px;font:500 calc(var(--d) * .27)/1 var(--display);color:var(--ui-accent);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.mx small{font-size:.38em;letter-spacing:0;color:var(--ui-dim)}
+/* a counting figure keeps the width of its final value (an unseen copy under it), so nothing beside it shifts */
+.mx-n{text-align:right}
+.mx-n::after{content:attr(data-to);display:block;height:0;overflow:hidden;visibility:hidden}
+.mx-l{display:block;max-width:calc(var(--d) * .62);font-size:clamp(13px,calc(var(--d) * .085),16px);line-height:1.3;letter-spacing:.04em;color:var(--ui-fg);opacity:var(--a)}
+
+/* after the entrance the dials keep a slow pulse, one after another: a glow under each arc.
+   metrics.js sets .is-live when the entrance is over and takes it off when the section leaves */
+@media (prefers-reduced-motion:no-preference){
+  .mx.is-live .mx-rg{animation:mx-breathe 5.2s ease-in-out infinite}
+  .mx.is-live .mx-i:nth-child(2) .mx-rg{animation-delay:-3.9s}
+  .mx.is-live .mx-i:nth-child(3) .mx-rg{animation-delay:-2.6s}
+  .mx.is-live .mx-i:nth-child(4) .mx-rg{animation-delay:-1.3s}
+}
+@keyframes mx-breathe{0%,100%{opacity:0}50%{opacity:.55}}
+
+/* how we work, folded into the contact section: three numbered lines under the intro */
+.flow-k{margin:48px 0 0}
+.howflow{list-style:none;counter-reset:howflow;margin:18px 0 0;padding:0;max-width:520px}
+.howflow li{counter-increment:howflow;display:grid;grid-template-columns:44px 1fr;column-gap:4px;row-gap:4px;padding:16px 0;border-top:1px solid var(--ui-line)}
+.howflow li:last-child{border-bottom:1px solid var(--ui-line)}
+.howflow li::before{content:"0" counter(howflow);grid-row:span 2;font:500 13px var(--mono);color:var(--ui-accent-text,var(--ui-accent));padding-top:5px}
+.howflow b{font:500 clamp(19px,1.6vw,23px)/1.3 var(--display);color:var(--ui-fg)}
+.howflow span{font-size:14px;line-height:1.6;color:var(--ui-dim)}
+
+/* why now */
+.whynow{padding:160px 0}
+.wn-body{display:grid;gap:26px;max-width:760px}
+.wn-lead{margin:0;font:500 clamp(20px,2vw,28px)/1.55 var(--display);color:var(--ui-fg)}
+.whynow .btn{margin-top:48px}
+
+/* the "start a conversation" button lands on the form, clear of the top bar */
+#bookingForm{scroll-margin-top:110px}
+
+@media (max-width:820px){
+  .metrics{padding:80px 0 90px}
+  /* phone: the dials two by two */
+  .mx{--d:min(40vw,168px);gap:22px 18px;margin-top:30px;justify-content:center}
+  .whynow{padding:100px 0}
+  .flow-k{margin-top:36px}
+}

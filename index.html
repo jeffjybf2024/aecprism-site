@@ -1,503 +1,425 @@
-<!DOCTYPE html>
-<html lang="en">
+﻿<!doctype html>
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AEC Prism — Where Building Data Refracts Into Decisions</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --orange: #f0883e; --cyan: #2ec4b6; --gold: #e2b04a; --purple: #a78bfa;
-      --white: #e8e8ec; --gray: #888; --bg: #050508;
-    }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--white);
-      overflow-x: hidden;
-    }
-
-    /* === PRISM BACKGROUND (fixed) === */
-    .bg {
-      position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
-    }
-    .bg-base { position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 50%, #0a0a14 0%, #050508 70%); }
-
-    .beam-white {
-      position: absolute; top: 45%; left: -5%; width: 40%; height: 3px;
-      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.1) 80%, transparent 100%);
-      box-shadow: 0 0 30px 8px rgba(255,255,255,0.08), 0 0 60px 16px rgba(255,255,255,0.04);
-      transform: rotate(2deg);
-    }
-    .beam-white::after {
-      content: ''; position: absolute; top: -1px; left: 10%; right: 10%; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
-    }
-
-    .prism-glass {
-      position: absolute; top: 15%; left: 35%; width: 0; height: 0;
-      border-left: 80px solid transparent; border-right: 80px solid transparent; border-bottom: 140px solid rgba(255,255,255,0.02);
-      filter: drop-shadow(0 0 20px rgba(255,255,255,0.03));
-    }
-    .prism-glass::before {
-      content: ''; position: absolute; top: 0; left: -80px; width: 160px; height: 140px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 50%, rgba(255,255,255,0.03) 100%);
-      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    }
-
-    .spectrum { position: absolute; top: 48%; left: 43%; transform-origin: left center; }
-    .ray { position: absolute; left: 0; height: 2px; border-radius: 1px; filter: blur(1px); }
-    .ray-1 { width: 55vw; background: linear-gradient(90deg, #ff4d4d, rgba(255,77,77,0.1)); transform: rotate(-35deg); opacity: 0.5; box-shadow: 0 0 20px 4px rgba(255,77,77,0.1); }
-    .ray-2 { width: 55vw; background: linear-gradient(90deg, #ff9f43, rgba(255,159,67,0.1)); transform: rotate(-24deg); opacity: 0.45; box-shadow: 0 0 20px 4px rgba(255,159,67,0.08); }
-    .ray-3 { width: 55vw; background: linear-gradient(90deg, #feca57, rgba(254,202,87,0.1)); transform: rotate(-13deg); opacity: 0.4; box-shadow: 0 0 20px 4px rgba(254,202,87,0.08); }
-    .ray-4 { width: 55vw; background: linear-gradient(90deg, #48dbfb, rgba(72,219,251,0.1)); transform: rotate(-2deg); opacity: 0.45; box-shadow: 0 0 20px 4px rgba(72,219,251,0.08); }
-    .ray-5 { width: 55vw; background: linear-gradient(90deg, #667eea, rgba(102,126,234,0.1)); transform: rotate(9deg); opacity: 0.5; box-shadow: 0 0 20px 4px rgba(102,126,234,0.1); }
-    .ray-6 { width: 55vw; background: linear-gradient(90deg, #a55eea, rgba(165,94,234,0.1)); transform: rotate(20deg); opacity: 0.45; box-shadow: 0 0 20px 4px rgba(165,94,234,0.08); }
-    .ray-7 { width: 55vw; background: linear-gradient(90deg, #f093fb, rgba(240,147,251,0.1)); transform: rotate(31deg); opacity: 0.4; box-shadow: 0 0 20px 4px rgba(240,147,251,0.08); }
-
-    .glow-spectrum {
-      position: absolute; top: 10%; right: 5%; width: 60vw; height: 80vh;
-      background: conic-gradient(from 200deg at 0% 50%, transparent 0deg, rgba(255,77,77,0.03) 5deg, rgba(255,159,67,0.03) 10deg, rgba(254,202,87,0.03) 15deg, rgba(72,219,251,0.03) 20deg, rgba(102,126,234,0.04) 25deg, rgba(165,94,234,0.03) 30deg, rgba(240,147,251,0.03) 35deg, transparent 40deg);
-      filter: blur(40px);
-    }
-    .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(5,5,8,0.7) 0%, rgba(5,5,8,0.3) 35%, transparent 65%); }
-
-    /* === TOP NAV === */
-    nav.top-nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 32px;
-      background: rgba(5,5,8,0.6); backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    .nav-logo { font-weight: 800; letter-spacing: 0.1em; font-size: 1.1rem; color: var(--white); }
-    .nav-links { display: flex; gap: 24px; align-items: center; }
-    .nav-links a {
-      color: var(--gray); text-decoration: none; font-size: 0.85rem; font-weight: 500;
-      transition: color 0.3s;
-    }
-    .nav-links a:hover { color: var(--white); }
-    .nav-links .nav-cta {
-      padding: 6px 16px; border: 1px solid rgba(102,126,234,0.4); border-radius: 6px;
-      color: var(--white); transition: all 0.3s;
-    }
-    .nav-links .nav-cta:hover { background: rgba(102,126,234,0.15); }
-
-    /* === SECTIONS === */
-    section { position: relative; z-index: 1; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 100px 32px 80px; }
-
-    /* Hero */
-    #hero { min-height: 100vh; flex-direction: column; text-align: center; }
-    .logo-icon { width: 80px; height: 80px; margin: 0 auto 2rem; filter: drop-shadow(0 0 20px rgba(102,126,234,0.3)); }
-    .logo-icon svg { width: 100%; height: 100%; }
-    .hero-title {
-      font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 900; letter-spacing: 0.12em;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 35%, #f093fb 70%, #f5576c 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-      filter: drop-shadow(0 2px 12px rgba(102,126,234,0.3));
-    }
-    .hero-tagline { font-size: clamp(1rem, 2.5vw, 1.4rem); color: var(--gray); font-weight: 300; letter-spacing: 0.06em; margin-top: 0.8rem; }
-    .hero-divider { width: 80px; height: 1px; background: linear-gradient(90deg, transparent, #667eea, transparent); margin: 2rem auto; }
-    .hero-sub { font-size: 0.85rem; color: #444; text-transform: uppercase; letter-spacing: 0.35em; margin-bottom: 3rem; }
-    .cta-btn {
-      display: inline-block; padding: 14px 36px; border: 1px solid rgba(102,126,234,0.4);
-      border-radius: 8px; color: var(--white); text-decoration: none; font-size: 0.9rem;
-      letter-spacing: 0.1em; transition: all 0.3s; background: rgba(102,126,234,0.08);
-    }
-    .cta-btn:hover { background: rgba(102,126,234,0.2); border-color: #667eea; transform: translateY(-2px); }
-
-    /* Story sections */
-    .story { max-width: 900px; width: 100%; }
-    .story h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 1rem; line-height: 1.3; }
-    .story h2 .o { color: var(--orange); } .story h2 .c { color: var(--cyan); } .story h2 .g { color: var(--gold); }
-    .story p { font-size: 1.1rem; line-height: 1.8; color: #aaa; max-width: 700px; }
-    .story .accent { color: var(--white); font-weight: 600; }
-    .story .divider-small { width: 48px; height: 2px; background: linear-gradient(90deg, var(--orange), var(--cyan)); border-radius: 1px; margin: 1.5rem 0; }
-
-    /* Cards grid */
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; width: 100%; max-width: 1000px; margin-top: 2rem; }
-    .card {
-      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 14px; padding: 24px; transition: all 0.3s;
-    }
-    .card:hover { border-color: rgba(102,126,234,0.3); background: rgba(255,255,255,0.05); transform: translateY(-2px); }
-    .card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
-    .card p { font-size: 0.9rem; color: var(--gray); line-height: 1.6; }
-    .card .icon { font-size: 28px; margin-bottom: 12px; }
-
-    /* Spectrum bar */
-    .spectrum-bar { display: flex; gap: 4px; width: 100%; max-width: 700px; height: 6px; border-radius: 3px; margin: 2rem 0; overflow: hidden; }
-    .spectrum-bar div { flex: 1; }
-    .sb-1 { background: #ff4d4d; } .sb-2 { background: #ff9f43; } .sb-3 { background: #feca57; }
-    .sb-4 { background: #48dbfb; } .sb-5 { background: #667eea; } .sb-6 { background: #a55eea; } .sb-7 { background: #f093fb; }
-
-    /* Nav dots */
-    .nav-dots { position: fixed; right: 24px; top: 50%; transform: translateY(-50%); z-index: 100; display: flex; flex-direction: column; gap: 12px; }
-    .nav-dots a { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s; display: block; }
-    .nav-dots a:hover, .nav-dots a.active { background: #667eea; box-shadow: 0 0 8px rgba(102,126,234,0.5); }
-
-    /* Footer */
-    footer { position: relative; z-index: 1; text-align: center; padding: 40px 24px; font-size: 0.8rem; color: #333; }
-    footer a { color: #667eea; text-decoration: none; }
-
-    @media (max-width: 768px) {
-      .story { padding: 0 8px; }
-      .cards { grid-template-columns: 1fr; }
-      .nav-dots { display: none; }
-    }
-
-    /* === HERO BUILDING MODEL (CSS positioned) === */
-    .hero-building {
-      position: absolute;
-      left: 3%;
-      top: 8%;
-      width: 28%;
-      height: auto;
-      opacity: 0.35;
-      filter: drop-shadow(0 0 8px rgba(255,255,255,0.35));
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    /* === INTERACTIVE BACKGROUND CANVAS === */
-    #interactive-bg {
-      position: fixed; inset: 0; z-index: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AEC PRISM</title>
+<meta name="description" content="AEC PRISM：不做傳統 BIM。以 AI 建築應用，協助業主與決策者完成土地評估、環境分析、智慧工地、自動化流程、成本管理、物業與設備管理。">
+<meta name="keywords" content="BIM, 新一代 BIM, AI BIM, 建築資訊模型, ISO 19650, BEP, EIR, 智慧建築, 智慧工地, 土地評估, 環境分析">
+<link rel="icon" href="assets/img/logo-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css?v=46">
+<link rel="stylesheet" href="assets/css/story.css?v=16">
+<link rel="stylesheet" href="assets/css/services.css?v=8">
+<link rel="stylesheet" href="assets/css/more.css?v=6">
+<link rel="stylesheet" href="assets/css/overview.css?v=4">
+<link rel="stylesheet" href="assets/css/earth.css?v=8">
 </head>
 <body>
+<div class="bgfx" aria-hidden="true"><canvas class="gl" id="gl"></canvas><canvas class="gl" id="gl3"></canvas><div class="veil" id="veil"><i class="vf"></i><i class="vl"></i><i class="vs"></i></div><div class="mlabels" id="mlabels"></div><div class="floortip mono" id="floorTip"></div><div class="earth-host" id="earthHost"></div></div>
 
-<!-- Top Navigation -->
-<nav class="top-nav">
-  <div class="nav-logo">AEC PRISM</div>
-  <div class="nav-links">
-    <a href="#vision">Vision</a>
-    <a href="#spectrum">Spectrum</a>
-    <a href="#case">Case Study</a>
-    <a href="#future" class="nav-cta">Contact</a>
-  </div>
-</nav>
+<header class="topbar">
+  <a class="brand" href="#top" aria-label="AEC PRISM"><img src="assets/img/logo-word.png" alt="AEC PRISM"></a>
+  <nav>
+    <a href="#overview" data-i18n="nav.services">服務</a>
+    <a href="team.html" target="_blank" rel="noopener" data-i18n="nav.about">關於我們</a>
+    <a href="#contact" data-i18n="nav.booking">開始對話</a>
+    <button class="lang" id="lang" type="button" aria-label="Language">EN</button>
+    <button class="fs" id="fs" type="button" aria-label="全螢幕" title="全螢幕" hidden><svg class="fs-in" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg><svg class="fs-out" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5V6H2.5M13.5 6H10V2.5M10 13.5V10h3.5M2.5 10H6v3.5"/></svg></button>
+  </nav>
+</header>
 
-<!-- Fixed background -->
-<div class="bg">
-  <div class="bg-base"></div>
-  <!-- Building model (inside bg, above dark gradient) -->
-  <img src="assets/building_cropped.png" class="hero-building" alt="">
-  <div class="beam-white"></div>
-  <div class="prism-glass"></div>
-  <div class="spectrum">
-    <div class="ray ray-1"></div><div class="ray ray-2"></div><div class="ray ray-3"></div>
-    <div class="ray ray-4"></div><div class="ray ray-5"></div><div class="ray ray-6"></div><div class="ray ray-7"></div>
-  </div>
-  <div class="glow-spectrum"></div>
-  <div class="vignette"></div>
-
-<!-- Interactive mouse-reveal canvas -->
-<canvas id="interactive-bg"></canvas>
-
-</div>
-
-<!-- Nav dots -->
-<nav class="nav-dots">
-  <a href="#hero" title="Home"></a>
-  <a href="#vision" title="Vision"></a>
-  <a href="#spectrum" title="Spectrum"></a>
-    <a href="#case" title="Case Study"></a>
-  <a href="#future" title="Future"></a>
-</nav>
-
-<!-- ═══ HERO ═══ -->
-<section id="hero">
-  <div class="logo-icon">
-    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <line x1="0" y1="42" x2="30" y2="42" stroke="url(#bg)" stroke-width="2"/>
-      <polygon points="40,12 50,65 30,65" fill="rgba(255,255,255,0.03)" stroke="url(#ps)" stroke-width="1.5"/>
-      <line x1="42" y1="44" x2="78" y2="16" stroke="#ff4d4d" stroke-width="1.5" opacity="0.7"/>
-      <line x1="42" y1="47" x2="78" y2="28" stroke="#ff9f43" stroke-width="1.5" opacity="0.6"/>
-      <line x1="42" y1="50" x2="78" y2="40" stroke="#feca57" stroke-width="1.5" opacity="0.5"/>
-      <line x1="42" y1="53" x2="78" y2="52" stroke="#667eea" stroke-width="1.5" opacity="0.6"/>
-      <line x1="42" y1="56" x2="78" y2="64" stroke="#a55eea" stroke-width="1.5" opacity="0.5"/>
-      <line x1="42" y1="58" x2="78" y2="72" stroke="#f093fb" stroke-width="1.5" opacity="0.4"/>
-      <defs>
-        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="transparent"/><stop offset="100%" stop-color="white"/></linearGradient>
-        <linearGradient id="ps" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="rgba(255,255,255,0.2)"/><stop offset="100%" stop-color="rgba(255,255,255,0.05)"/></linearGradient>
-      </defs>
-    </svg>
-  </div>
-  <div class="hero-title">AEC PRISM</div>
-  <div class="hero-tagline">Where Building Data Refracts Into Decisions</div>
-  <div class="hero-divider"></div>
-  <div class="hero-sub">AI-Driven BIM Intelligence Platform</div>
-  <a href="#vision" class="cta-btn">DISCOVER ↓</a>
-</section>
-
-<!-- ═══ VISION ═══ -->
-<section id="vision">
-  <div class="story">
-    <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--gray); margin-bottom: 0.5rem;">THE VISION</p>
-    <h2>One Beam of Light.<br><span class="o">Seven Decisions.</span></h2>
-    <div class="divider-small"></div>
-    <p>
-      In architecture, engineering, and construction — <span class="accent">data is light</span>.
-      Raw, white, overwhelming. It enters the project as drawings, specs, schedules, budgets.
-      Without a prism, it scatters — lost in silos, buried in emails, evaporated at handover.
-    </p>
-    <br>
-    <p>
-      <span class="accent">AEC Prism is that prism.</span>
-      We take the chaos of building data and refract it into clear, actionable spectrum:
-      <span class="o">planning</span>, <span class="c">design</span>,
-      <span class="g">construction</span>, <span class="o">handover</span>,
-      <span class="c">operations</span>, <span class="g">intelligence</span>.
-    </p>
-    <div class="spectrum-bar" style="margin-top: 2rem;">
-      <div class="sb-1"></div><div class="sb-2"></div><div class="sb-3"></div>
-      <div class="sb-4"></div><div class="sb-5"></div><div class="sb-6"></div><div class="sb-7"></div>
+<!-- ============ CINEMATIC SCROLL ============ -->
+<main id="top">
+<section class="film" id="film">
+  <div class="stage">
+    <div class="layers" id="layers">
     </div>
-    <p style="font-size: 0.85rem; color: #555;">Six phases. Fifty-one applications. One platform.</p>
-  </div>
-</section>
+    <div class="vignette"></div>
 
-<!-- ═══ SPECTRUM ═══ -->
-<section id="spectrum">
-  <div class="story" style="max-width: 1000px;">
-    <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--gray); margin-bottom: 0.5rem;">THE SPECTRUM</p>
-    <h2>From White Light to<br><span class="c">Actionable Intelligence</span></h2>
-    <div class="divider-small"></div>
-    <div class="cards">
-      <div class="card">
-        <div class="icon">📐</div>
-        <h3>Planning & Design</h3>
-        <p>Scan-to-BIM, clash detection, code compliance, energy analysis, lighting simulation</p>
+    <!-- opening (plays by itself): the words hang in the air and the camera flies through them -->
+    <div class="fly" id="fly">
+      <div class="fw fw-hello" data-s="0"><h1 class="fw-h" data-i18n="fw1">你好，</h1></div>
+      <div class="fw" data-s="1"><p class="fw-h" data-i18n="fw2">我們是</p></div>
+      <div class="fw fw-name" data-from="2" data-s="3">
+        <img class="fw-word" src="assets/img/logo-word.png" alt="AEC PRISM" width="1077" height="89">
+        <p class="fw-tag mono" lang="en">FROM DATA TO A SMARTER BUILT ENVIRONMENT</p>
       </div>
-      <div class="card">
-        <div class="icon">🏗️</div>
-        <h3>Construction</h3>
-        <p>4D scheduling, 5D cost estimation, digital fabrication, safety planning, site logistics</p>
-      </div>
-      <div class="card">
-        <div class="icon">📋</div>
-        <h3>Handover</h3>
-        <p>As-built modeling, asset inventory, digital handover, training simulation</p>
-      </div>
-      <div class="card">
-        <div class="icon">🏠</div>
-        <h3>Facility Management</h3>
-        <p>Maintenance scheduling, asset management, space optimization, energy management</p>
-      </div>
-      <div class="card">
-        <div class="icon">🤖</div>
-        <h3>AI & Intelligence</h3>
-        <p>Digital twin, AR/VR presentation, smart construction, predictive maintenance, risk management</p>
-      </div>
-      <div class="card" style="border-color: rgba(102,126,234,0.3); background: rgba(102,126,234,0.05);">
-        <div class="icon">🔮</div>
-        <h3>The Platform</h3>
-        <p>BIM Matrix — the data backbone that connects all phases, powered by AI agents</p>
+      <!-- positioning: over the first realistic frame, before the services -->
+      <div class="fw fw-pos" data-s="4">
+        <h2 class="fw-h" data-i18n="pos.h">我們不做傳統 BIM。</h2>
+        <p class="fw-sub" data-i18n="pos.p">讓資訊直接成為決策依據。</p>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- ═══ CASE STUDY ═══ -->
-<section id="case">
-  <div class="story" style="text-align: center;">
-    <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--gray); margin-bottom: 0.5rem;">CASE STUDY</p>
-    <h2>The <span class="g">Xuefu Project</span><br><span style="font-size:0.8em;">Taipei's Most Ambitious BIM Deployment</span></h2>
-    <div class="divider-small" style="margin: 1.5rem auto;"></div>
-    <p style="max-width: 600px; margin: 0 auto;">
-      A full-lifecycle BIM upgrade for a flagship residential development —
-      from LiDAR scan-to-BIM and 4D construction verification to consumer-facing digital contracts.
-    </p>
-    <a href="#" class="cta-btn" style="margin-top: 1.5rem;" onclick="const pw=prompt('請輸入展示密碼'); if(pw==='yulin2026') window.location='xuefu.html'; else if(pw!==null) alert('密碼錯誤'); return false;">查看玉霖簡報 →</a>
-  </div>
-</section>
+    <!-- services (stations 5-9): an overview, then four service lines over the rendered storyboard (assets/js/services.js).
+         The scene keeps the left of the screen; on the right an AI workspace scrolls up through each line: the decision
+         question, your team's request typed into a dark bubble (three requests to choose from), the AI team members lighting
+         up one by one with their work log, then what you receive as cards (each opens the line's pop-up). The scene reacts
+         on a canvas over the left (a scan band, a faint grid, data points, a leader from the log to the object, corner
+         brackets on "you receive"); a small guide on the far left jumps between the lines. -->
+    <div class="svc" id="svc">
+      <div class="svo" data-line="overview" aria-hidden="true">
+        <p class="svc-k mono" data-i18n="svc.k">SERVICES</p>
+        <h2 class="svo-h" data-i18n="svc.o.h">從一塊地，<br>到一棟每天在運轉的建築</h2>
+        <p class="svo-p" data-i18n="svc.o.p">在每個階段，你的團隊做決定，我們把需要的資料處理好。</p>
+      </div>
+      <canvas class="svo-fg" aria-hidden="true"></canvas>
+      <canvas class="svc-fx" aria-hidden="true"></canvas>
+      <div class="svs-tags" aria-hidden="true"></div>
+      <!-- words the workspace puts together itself ({n} a number of members, {r} a rank, {s} a score) -->
+      <div class="svc-tx" hidden><span data-k="idle" data-i18n="svc.st.idle">待命</span><span data-k="run" data-i18n="svc.st.run">分析中</span><span data-k="done" data-i18n="svc.st.done">完成</span><span data-k="rank" data-i18n="svc.rank">第 {r} 名 · 評分 {s}</span><span data-k="open" data-i18n="svc.more">看這條服務線</span><span data-k="write" data-i18n="svc.st.write">整理回覆</span><span data-k="call" data-i18n="svc.call">啟動了 {n} 個 AI 成員</span><span data-k="pts" data-i18n="svc.a.pts">重點發現</span><span data-k="rec" data-i18n="svc.a.rec">建議</span><span data-k="reply" data-i18n="svc.a.reply">AI 的回覆</span></div>
 
-<!-- ═══ FUTURE ═══ -->
-<section id="future">
-  <div class="story" style="text-align: center;">
-    <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.3em; color: var(--gray); margin-bottom: 0.5rem;">THE FUTURE</p>
-    <h2>The <span class="o">Nexus</span> of AEC</h2>
-    <div class="divider-small" style="margin: 1.5rem auto;"></div>
-    <p style="max-width: 600px; margin: 0 auto;">
-      We don't just deliver BIM models. We deliver <span class="accent">data infrastructure</span> —
-      the kind that turns a construction company into a technology company.
-      One project at a time. One beam at a time.
-    </p>
-    <div class="spectrum-bar" style="margin: 2rem auto; max-width: 400px;">
-      <div class="sb-1"></div><div class="sb-2"></div><div class="sb-3"></div>
-      <div class="sb-4"></div><div class="sb-5"></div><div class="sb-6"></div><div class="sb-7"></div>
+      <!-- each line's workspace plays by itself once the line is on screen: the request is typed into the dark bubble, the AI
+           team members it takes start one by one (spinning, then ticked), the answer streams into the panel under them
+           (assets/js/services-data.js: a conclusion, findings, a small table, a recommendation), then the documents. The
+           panel keeps one height and scrolls inside; after a pause the next of the three requests plays. The scroll only
+           moves the camera. -->
+    <article class="svl" data-line="dev" aria-hidden="true">
+      <div class="svw">
+        <div class="svw-hd"><p class="svw-k mono"><span data-i18n="svc.dev.n">開發</span><span>· SERVICES</span></p></div>
+        <h3 class="svw-q" data-i18n="svc.dev.q">這塊地買不買？蓋什麼最賺？</h3>
+        <p class="svw-for"><small class="mono" data-i18n="svc.for">對象</small><span data-i18n="svc.dev.for">建商開發部</span></p>
+        <div class="svw-ask"><div class="svw-top"><p class="svw-who mono" data-i18n="svc.you">你的團隊</p><button class="svw-swap" type="button" tabindex="-1"><span aria-hidden="true">⇄</span><span data-i18n="svc.try">換個需求</span><small>1／3</small></button></div><p class="svw-say"><span class="svw-typed"></span><i class="svw-caret" aria-hidden="true"></i></p>
+          <span class="svw-asks" hidden><span data-i18n="svc.dev.ask1">幫我在市中心找 500 坪以上、可以蓋住宅的地</span><span data-i18n="svc.dev.ask2">幫我在市中心找 500 坪以上、可以蓋辦公的地</span><span data-i18n="svc.dev.ask3">幫我在市中心找 500 坪以上、可以蓋商場的地</span></span></div>
+        <div class="svw-ai">
+          <p class="svw-ai-k mono"><b>AEC PRISM</b><span class="svw-call"></span><span class="svw-st"></span></p>
+          <div class="svw-body" tabindex="-1">
+          <ul class="svw-mem"><li><i></i><span class="svw-mn"><b data-i18n="svc.dev.m1">找地篩選</b><small></small></span><em></em></li><li><i></i><span class="svw-mn"><b data-i18n="svc.dev.m2">法規與容積試算</b><small></small></span><em></em></li><li><i></i><span class="svw-mn"><b data-i18n="svc.dev.m3">周邊機能評分</b><small></small></span><em></em></li><li><i></i><span class="svw-mn"><b data-i18n="svc.dev.m4">量體方案</b><small></small></span><em></em></li><li><i></i><span class="svw-mn"><b data-i18n="svc.dev.m5">財務試算</b><small></small></span><em></em></li></ul>
+          <div class="svw-ans"></div>
+          <div class="svw-out"><p class="svw-out-k mono" data-i18n="svc.c3">你拿到</p><div class="svw-cards">
+            <button class="svw-card" type="button" tabindex="-1" data-k="0"><canvas aria-hidden="true"></canvas><b data-i18n="svc.dev.r1">潛力地報告</b><small data-i18n="svc.dev.r1s">前三名與評分依據</small></button>
+            <button class="svw-card" type="button" tabindex="-1" data-k="1"><canvas aria-hidden="true"></canvas><b data-i18n="svc.dev.r2">量體方案比較</b><small data-i18n="svc.dev.r2s">3 個方案 · 容積率 400%</small></button>
+            <button class="svw-card" type="button" tabindex="-1" data-k="2"><canvas aria-hidden="true"></canvas><b data-i18n="svc.dev.r3">3D 方案網頁</b><small data-i18n="svc.dev.r3s">可互動、可分享</small></button>
+          </div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+
+    <article class="svl" data-line="design" aria-hidden="true">
+      <div class="svw">
+        <div class="svw-hd"><p class="svw-k mono"><span data-i18n="svc.design.n">設計</span><span>· SERVICES</span></p></div>
+        <h3 class="svw-q" data-i18n="svc.design.q">哪個方案過得了、蓋得出來、成本控得住？</h3>
+        <p class="svw-for"><small class="mono" data-i18n="svc.for">對象</small><span data-i18n="svc.design.for">建築師、業主設計管理</span></p>
+        <div class="svw-ask"><div class="svw-top"><p class="svw-who mono" data-i18n="svc.you">你的團隊</p><button class="svw-swap" type="button" tabindex="-1"><span aria-hidden="true">⇄</span><span data-i18n="svc.try">換個需求</span><small>1／3</small></button></div><p class="svw-say"><span class="svw-typed"></span><i class="svw-caret" aria-hidden="true"></i></p>
+          <span class="svw-asks" hidden><span data-i18n="svc.design.ask1">比較這 3 個方案的法規和日照</span><span data-i18n="svc.design.ask2">哪個方案最省成本？</span><span data-i18n="svc.design.ask3">結構和機電有沒有衝突？</span></span></div>
+        <div class="svw-ai">
+          <p class="svw-ai-k mono"><b>AEC PRISM</b><span class="svw-call"></span><span class="svw-st"></span></p>
+          <div class="svw-body" tabindex="-1">
+          <ul class="svw-mem"><li><i></i><span class="svw-mn"><b data-i18n="svc.design.m1">法規檢討</b><small></small></span><em></em></li><li><i></i><span class="svw-mn"><b data-i18n="svc.design.m2">日照風場模擬</b><small></small></span><em></em></li><li><i></i><span class="svw-mn"><b data-i18n="svc.design.m3">衝突檢查</b><small></small></span><em></em></li><li><i></i><span class="svw-mn"><b data-i18n="svc.design.m4">數量概算</b><small></small></span><em></em></li><li><i></i><span class="svw-mn"><b data-i18n="svc.design.m5">BEP</b><small></small></span><em></em></li></ul>
+          <div class="svw-ans"></div>
+          <div class="svw-out"><p class="svw-out-k mono" data-i18n="svc.c3">你拿到</p><div class="svw-cards">
+            <button class="svw-card" type="button" tabindex="-1" data-k="0"><canvas aria-hidden="true"></canvas><b data-i18n="svc.design.r1">法規檢討表</b><small data-i18n="svc.design.r1s">退縮、高度、容積 18 條</small></button>
+            <button class="svw-card" type="button" tabindex="-1" data-k="1"><canvas aria-hidden="true"></canvas><b data-i18n="svc.design.r2">方案比較</b><small data-i18n="svc.design.r2s">日照與陰影 · 方案 A／B／C</small></button>
+            <button class="svw-card" type="button" tabindex="-1" data-k="2"><canvas aria-hidden="true"></canvas><b data-i18n="svc.design.r3">衝突檢查報告</b><small data-i18n="svc.design.r3s">23 處結構與管線衝突</small></button>
+            <button class="svw-card" type="button" tabindex="-1" data-k="3"><canvas aria-hidden="true"></canvas><b data-i18n="svc.design.r4">概算</b><small data-i18n="svc.design.r4s">方案 A 比 B 省 6%</small></button>
+          </div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="svl" data-line="build" aria-hidden="true">
+      <div class="svw">
+        <div class="svw-hd"><p class="svw-k mono"><span data-i18n="svc.build.n">營造</span><span>· SERVICES</span></p></div>
+        <h3 class="svw-q" data-i18n="svc.build.q">進度落後沒？做得跟圖一樣嗎？這期該付多少？</h3>
+        <p class="svw-for"><small class="mono" data-i18n="svc.for">對象</small><span data-i18n="svc.build.for">營造廠、業主工務</span></p>
+        <div class="svw-ask"><div class="svw-top"><p class="svw-who mono" data-i18n="svc.you">你的團隊</p><button class="svw-swap" type="button" tabindex="-1"><span aria-hidden="true">⇄</span><span data-i18n="svc.try">換個需求</span><small>1／3</small></button></div><p class="svw-say"><span class="svw-typed"></span><i class="svw-caret" aria-hidden="true"></i></p>
+          <span class="svw-asks" hidden><span data-i18n="svc.build.ask1">這個月進度有沒有落後？</span><span data-i18n="svc.build.ask2">現場做得跟圖一樣嗎？</span><span data-i18n="svc.build.ask3">這期該付多少？</span></span></div>
+        <div class="svw-ai">
+          <p class="svw-ai-k mono"><b>AEC PRISM</b><span class="svw-call"></span><span class="svw-st"></span></p>
+          <div class="svw-body" tabindex="-1">
+          <ul class="svw-mem"><li><i></i><span class="svw-mn"><b data-i18n="svc.build.m1">掃描比對</b><small></small></span><em></em></li><li><i></i><span class="svw-mn"><b data-i18n="svc.build.m2">進度追蹤</b><small></small></span><em></em></li><li><i></i><span class="svw-mn"><b data-i18n="svc.build.m3">計價試算</b><small></small></span><em></em></li><li><i></i><span class="svw-mn"><b data-i18n="svc.build.m4">工作日誌</b><small></small></span><em></em></li><li><i></i><span class="svw-mn"><b data-i18n="svc.build.m5">審查意見回覆</b><small></small></span><em></em></li></ul>
+          <div class="svw-ans"></div>
+          <div class="svw-out"><p class="svw-out-k mono" data-i18n="svc.c3">你拿到</p><div class="svw-cards">
+            <button class="svw-card" type="button" tabindex="-1" data-k="0"><canvas aria-hidden="true"></canvas><b data-i18n="svc.build.r1">品質報告</b><small data-i18n="svc.build.r1s">柱位偏移 18 mm · 6 處</small></button>
+            <button class="svw-card" type="button" tabindex="-1" data-k="1"><canvas aria-hidden="true"></canvas><b data-i18n="svc.build.r2">進度報告</b><small data-i18n="svc.build.r2s">7F 樓板落後 4 天</small></button>
+            <button class="svw-card" type="button" tabindex="-1" data-k="2"><canvas aria-hidden="true"></canvas><b data-i18n="svc.build.r3">計價報告</b><small data-i18n="svc.build.r3s">本期完成 62%</small></button>
+          </div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="svl" data-line="ops" aria-hidden="true">
+      <div class="svw">
+        <div class="svw-hd"><p class="svw-k mono"><span data-i18n="svc.ops.n">營運</span><span>· SERVICES</span></p></div>
+        <h3 class="svw-q" data-i18n="svc.ops.q">設備什麼時候該修？營運成本怎麼壓？</h3>
+        <p class="svw-for"><small class="mono" data-i18n="svc.for">對象</small><span data-i18n="svc.ops.for">業主、物管</span></p>
+        <div class="svw-ask"><div class="svw-top"><p class="svw-who mono" data-i18n="svc.you">你的團隊</p><button class="svw-swap" type="button" tabindex="-1"><span aria-hidden="true">⇄</span><span data-i18n="svc.try">換個需求</span><small>1／3</small></button></div><p class="svw-say"><span class="svw-typed"></span><i class="svw-caret" aria-hidden="true"></i></p>
+          <span class="svw-asks" hidden><span data-i18n="svc.ops.ask1">排出明年的設備維護計畫</span><span data-i18n="svc.ops.ask2">哪些設備最該先換？</span><span data-i18n="svc.ops.ask3">營運成本可以怎麼壓？</span></span></div>
+        <div class="svw-ai">
+          <p class="svw-ai-k mono"><b>AEC PRISM</b><span class="svw-call"></span><span class="svw-st"></span></p>
+          <div class="svw-body" tabindex="-1">
+          <ul class="svw-mem"><li><i></i><span class="svw-mn"><b data-i18n="svc.ops.m1">竣工資料彙整</b><small></small></span><em></em></li><li><i></i><span class="svw-mn"><b data-i18n="svc.ops.m2">設備履歷</b><small></small></span><em></em></li><li><i></i><span class="svw-mn"><b data-i18n="svc.ops.m3">維護排程</b><small></small></span><em></em></li><li><i></i><span class="svw-mn"><b data-i18n="svc.ops.m4">優先順序</b><small></small></span><em></em></li></ul>
+          <div class="svw-ans"></div>
+          <div class="svw-out"><p class="svw-out-k mono" data-i18n="svc.c3">你拿到</p><div class="svw-cards">
+            <button class="svw-card" type="button" tabindex="-1" data-k="0"><canvas aria-hidden="true"></canvas><b data-i18n="svc.ops.r1">設備履歷</b><small data-i18n="svc.ops.r1s">312 台設備</small></button>
+            <button class="svw-card" type="button" tabindex="-1" data-k="1"><canvas aria-hidden="true"></canvas><b data-i18n="svc.ops.r2">維護排程</b><small data-i18n="svc.ops.r2s">CH-2 · 第 3 週保養</small></button>
+            <button class="svw-card" type="button" tabindex="-1" data-k="2"><canvas aria-hidden="true"></canvas><b data-i18n="svc.ops.r3">物業管理報表</b><small data-i18n="svc.ops.r3s">12 項優先更新</small></button>
+          </div></div>
+          </div>
+        </div>
+      </div>
+    </article>
     </div>
-    <p style="font-size: 0.85rem; color: #555; margin-bottom: 2rem;">Concord Tech · AEC Prism · Coming Soon</p>
-    <a href="mailto:jeff@ctc.com.tw" class="cta-btn">CONTACT US</a>
+    <div class="hint mono" id="hint" aria-hidden="true"><span data-i18n="hint">向下捲動</span><i class="hint-line"></i></div>
+  </div>
+
+  <!-- a service line opened up: the storyboard plays on top (later the client's MP4), its five steps below -->
+  <div class="svx" id="svx" hidden>
+    <div class="svx-bg" data-close></div>
+    <div class="svx-box" role="dialog" aria-modal="true" tabindex="-1">
+      <button class="svx-x" type="button" data-close aria-label="Close">×</button>
+      <div class="svx-media">
+        <canvas class="svx-cv" aria-hidden="true"></canvas>
+        <video class="svx-v" muted playsinline loop preload="none" aria-hidden="true" hidden></video>
+        <img class="svx-img" alt="" hidden>
+        <button class="svx-re mono" type="button" hidden><i aria-hidden="true">↻</i><span data-i18n="svc.replay">重播</span></button>
+      </div>
+      <div class="svx-body">
+        <article class="svx-p" data-line="dev" hidden>
+          <p class="svx-tag mono"><span>01</span><span data-i18n="svc.dev.for">建商開發部</span></p>
+          <h3 class="svx-h" data-i18n="svc.dev.n">開發</h3>
+          <p class="svx-q" data-i18n="svc.dev.q">這塊地買不買？蓋什麼最賺？</p>
+          <ol class="svx-steps">
+            <li><button type="button" data-k="0"><span class="mono">1</span><span data-i18n="svc.dev.s1">開發部提出找地條件：區域、規模、產品類型。</span></button></li>
+            <li><button type="button" data-k="1"><span class="mono">2</span><span data-i18n="svc.dev.s2">AI 成員找出符合條件的潛力地，附上評分依據。</span></button></li>
+            <li><button type="button" data-k="2"><span class="mono">3</span><span data-i18n="svc.dev.s3">開發部挑出想深入看的地。</span></button></li>
+            <li><button type="button" data-k="3"><span class="mono">4</span><span data-i18n="svc.dev.s4">AI 成員跑法規、容積、量體方案和財務試算。</span></button></li>
+            <li><button type="button" data-k="4"><span class="mono">5</span><span data-i18n="svc.dev.s5">開發部拿到潛力地報告和可互動的 3D 方案網頁，決定要不要出價。</span></button></li>
+          </ol>
+        </article>
+        <!-- 建議稿待核 -->
+        <article class="svx-p" data-line="design" hidden>
+          <p class="svx-tag mono"><span>02</span><span data-i18n="svc.design.for">建築師、業主設計管理</span></p>
+          <h3 class="svx-h" data-i18n="svc.design.n">設計</h3>
+          <p class="svx-q" data-i18n="svc.design.q">哪個方案過得了、蓋得出來、成本控得住？</p>
+          <ol class="svx-steps">
+            <li><button type="button" data-k="0"><span class="mono">1</span><span data-i18n="svc.design.s1">你的團隊提出 2–3 個方案，訂出要比較的條件。</span></button></li>
+            <li><button type="button" data-k="1"><span class="mono">2</span><span data-i18n="svc.design.s2">AI 成員做法規檢討：退縮、高度、容積，標出不符合的地方。</span></button></li>
+            <li><button type="button" data-k="2"><span class="mono">3</span><span data-i18n="svc.design.s3">AI 成員跑日照和風場模擬，比較各方案的陰影與通風。</span></button></li>
+            <li><button type="button" data-k="3"><span class="mono">4</span><span data-i18n="svc.design.s4">AI 成員做衝突檢查和數量概算，找出結構與管線衝突的位置，並整理 BEP。</span></button></li>
+            <li><button type="button" data-k="4"><span class="mono">5</span><span data-i18n="svc.design.s5">你拿到法規檢討表、方案比較、衝突檢查報告和概算，決定設計方案。</span></button></li>
+          </ol>
+        </article>
+        <!-- 建議稿待核 -->
+        <article class="svx-p" data-line="build" hidden>
+          <p class="svx-tag mono"><span>03</span><span data-i18n="svc.build.for">營造廠、業主工務</span></p>
+          <h3 class="svx-h" data-i18n="svc.build.n">營造</h3>
+          <p class="svx-q" data-i18n="svc.build.q">進度落後沒？做得跟圖一樣嗎？這期該付多少？</p>
+          <ol class="svx-steps">
+            <li><button type="button" data-k="0"><span class="mono">1</span><span data-i18n="svc.build.s1">你的團隊訂出要追蹤的工項、進度基準和計價規則。</span></button></li>
+            <li><button type="button" data-k="1"><span class="mono">2</span><span data-i18n="svc.build.s2">AI 成員把現場掃描和模型比對，標出和圖面不一致的地方。</span></button></li>
+            <li><button type="button" data-k="2"><span class="mono">3</span><span data-i18n="svc.build.s3">AI 成員比對計畫和實際進度，找出落後的工項。</span></button></li>
+            <li><button type="button" data-k="3"><span class="mono">4</span><span data-i18n="svc.build.s4">AI 成員依完成比例試算本期計價，並整理工作日誌和審查意見回覆。</span></button></li>
+            <li><button type="button" data-k="4"><span class="mono">5</span><span data-i18n="svc.build.s5">你拿到品質、進度、計價三份報告和例行文件，決定趕工、修正和付款。</span></button></li>
+          </ol>
+        </article>
+        <!-- 建議稿待核 -->
+        <article class="svx-p" data-line="ops" hidden>
+          <p class="svx-tag mono"><span>04</span><span data-i18n="svc.ops.for">業主、物管</span></p>
+          <h3 class="svx-h" data-i18n="svc.ops.n">營運</h3>
+          <p class="svx-q" data-i18n="svc.ops.q">設備什麼時候該修？營運成本怎麼壓？</p>
+          <ol class="svx-steps">
+            <li><button type="button" data-k="0"><span class="mono">1</span><span data-i18n="svc.ops.s1">你的團隊匯入竣工資料，訂出要管理的設備範圍。</span></button></li>
+            <li><button type="button" data-k="1"><span class="mono">2</span><span data-i18n="svc.ops.s2">AI 成員整理設備履歷，把每台設備對到建築裡的位置。</span></button></li>
+            <li><button type="button" data-k="2"><span class="mono">3</span><span data-i18n="svc.ops.s3">AI 成員依使用年限和維修紀錄排出維護排程。</span></button></li>
+            <li><button type="button" data-k="3"><span class="mono">4</span><span data-i18n="svc.ops.s4">AI 成員依風險和成本排出維修與更新的優先順序。</span></button></li>
+            <li><button type="button" data-k="4"><span class="mono">5</span><span data-i18n="svc.ops.s5">你拿到設備與物業管理報表，決定維修順序和預算。</span></button></li>
+          </ol>
+        </article>
+        <a class="btn svx-cta" href="#contact" data-i18n="svc.cta">聊聊這條服務線 →</a>
+      </div>
+    </div>
   </div>
 </section>
 
-<footer>
-  <div style="margin-bottom: 16px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-    <a href="mailto:jeff@ctc.com.tw">jeff@ctc.com.tw</a>
-    <span style="color:#444;">|</span>
-    <a href="https://www.ctc.com.tw" target="_blank">Concord Tech Co., Ltd.</a>
-    <span style="color:#444;">|</span>
-    <span>Taipei, Taiwan</span>
+<!-- ============ SERVICES OVERVIEW ============ -->
+<!-- One circuit board (assets/js/overview.js draws it): AEC PRISM in the middle, the four phases round it, each with
+     its roles and their work. It has no station of its own in the film: it is tall, its stage stays put, and the film
+     behind keeps turning from the last service line towards VISION while it is up. -->
+<section class="ovw" id="overview" data-dim="0.86" aria-labelledby="ovwTitle">
+  <div class="ovw-pin">
+    <div class="ovw-scene top" id="ovwScene"><div class="ovw-tilt" id="ovwTilt"><canvas id="ovwFx" aria-hidden="true"></canvas><div class="ovw-world" id="ovwWorld"></div></div></div>
+    <div class="ovw-vig" aria-hidden="true"></div>
+    <header class="ovw-hd">
+      <p class="kicker mono">SERVICES</p>
+      <h2 class="ovw-title" id="ovwTitle" data-i18n="ov.h">服務總覽</h2>
+      <ol class="ovw-crumb" id="ovwCrumb"></ol>
+    </header>
+    <canvas class="ovw-mini" id="ovwMini" width="372" height="236" aria-hidden="true"></canvas>
+    <p class="ovw-legend" id="ovwLegend"><span data-i18n="ov.l1">要做的事</span><span data-i18n="ov.l2">AI 怎麼幫</span><span data-i18n="ov.l3">你拿到</span></p>
+    <p class="ovw-hint" id="ovwHint"></p>
+    <aside class="ovw-sheet" id="ovwSheet"><button type="button" id="ovwSheetX" aria-label="Close">×</button><h3></h3><p></p><ol></ol></aside>
   </div>
-  <p style="color: #2a2a30; font-size: 0.75rem;">© 2026 AEC Prism. All rights reserved.</p>
+  <section class="ovw-hold" data-s="9.2" aria-hidden="true"></section>
+</section>
+
+<!-- ============ MANIFESTO ============ -->
+<section class="imm manifesto" id="manifesto" data-s="10" data-dim="0.82">
+  <div class="imm-bg" style="background-image:url(assets/frames/bg-skyline.jpg)"></div>
+  <div class="wrap wide imm-in">
+    <p class="kicker mono" data-i18n="m.k">VISION</p>
+    <h2 class="mega" data-i18n="m.v">讓建築資訊，<br>成為決策的依據。</h2>
+    <p class="imm-p" data-i18n="m.vp">建築產業累積了大量資訊，但多數仍停留在檔案中。AEC PRISM 的目標，是讓這些資訊能被查詢、檢核與使用，成為日常決策的依據。</p>
+    <p class="m-sub"><span data-i18n="m.h1">我們不賣現成的軟體。</span><em data-i18n="m.h2">我們為你的專案，客製 AI 建築應用。</em></p>
+  </div>
+</section>
+
+<!-- ============ PLATFORMS (results) ============ -->
+<section class="showcase" id="platforms" data-dim="1.05" data-s="11">
+  <div class="wrap wide">
+    <p class="kicker mono" data-i18n="p.k">RESULTS</p>
+    <h2 class="huge" data-i18n="p.h">這些已經有的服務。</h2>
+    <div class="chipbar"><div class="chiprow" id="chiprow"><button class="chip on" type="button" data-slide="0" data-i18n="rs1.c">潛力尋地</button><button class="chip" type="button" data-slide="1" data-i18n="rs2.c">機能分析報告</button><button class="chip" type="button" data-slide="2" data-i18n="rs3.c">法規檢討報告</button><button class="chip" type="button" data-slide="3" data-i18n="rs4.c">環境分析報告</button><button class="chip" type="button" data-slide="4" data-i18n="rs5.c">市場分析報告</button></div><a class="btn ghost" href="#contact" data-i18n="p.cta">聊聊你的需求 →</a></div>
+  </div>
+  <div class="carousel" id="carousel">
+    <div class="track" id="track">
+      <figure class="slide on" data-i="0"><img src="assets/shots/land-2.jpg" alt="潛力尋地：依分數排出全市前三名" loading="eager"></figure>
+      <figure class="slide" data-i="1"><img src="assets/shots/land-1.jpg" alt="機能分析：在 3D 城市地圖上檢視周邊機能" loading="eager"></figure>
+      <figure class="slide" data-i="2"><img src="assets/shots/land-4.jpg" alt="法規檢討：3D 互動式量體與法規評估" loading="lazy"></figure>
+      <figure class="slide" data-i="3"><img src="assets/shots/land-5.jpg" alt="環境分析：依季節情境檢視風場流線與風向" loading="lazy"></figure>
+      <figure class="slide" data-i="4"><img src="assets/shots/land-3.jpg" alt="市場分析：面積、建蔽率與容積率並排比較" loading="lazy"></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ METRICS ============ -->
+<section class="metrics" id="impact" data-dim="0.8" data-s="12">
+  <div class="wrap wide">
+    <p class="kicker mono" data-i18n="mx.k">IMPACT</p>
+    <h2 class="mega" data-i18n="mx.h">把時間和成本，<br>花在真正的決策上。</h2>
+    <ul class="mx" id="metrics">
+      <!-- --v is how far round each dial goes (4.9 of 5 is 98%) -->
+      <li class="mx-i" style="--v:.3">
+        <div class="mx-dial">
+          <svg viewBox="-60 -60 120 120" aria-hidden="true" focusable="false"><circle class="mx-rk" r="57" pathLength="120"/><circle class="mx-rt" r="49"/><circle class="mx-rg" r="49" pathLength="100"/><circle class="mx-ra" r="49" pathLength="100"/><circle class="mx-rd" cx="49" r="3"/></svg>
+          <p class="mx-c"><b><span class="mx-n" data-to="30">30</span><small>%</small></b><span class="mx-l" data-i18n="mx1">節省成本</span></p>
+        </div>
+      </li>
+      <li class="mx-i" style="--v:.6">
+        <div class="mx-dial">
+          <svg viewBox="-60 -60 120 120" aria-hidden="true" focusable="false"><circle class="mx-rk" r="57" pathLength="120"/><circle class="mx-rt" r="49"/><circle class="mx-rg" r="49" pathLength="100"/><circle class="mx-ra" r="49" pathLength="100"/><circle class="mx-rd" cx="49" r="3"/></svg>
+          <p class="mx-c"><b><span class="mx-n" data-to="60">60</span><small>%</small></b><span class="mx-l" data-i18n="mx2">節省時間</span></p>
+        </div>
+      </li>
+      <li class="mx-i" style="--v:.95">
+        <div class="mx-dial">
+          <svg viewBox="-60 -60 120 120" aria-hidden="true" focusable="false"><circle class="mx-rk" r="57" pathLength="120"/><circle class="mx-rt" r="49"/><circle class="mx-rg" r="49" pathLength="100"/><circle class="mx-ra" r="49" pathLength="100"/><circle class="mx-rd" cx="49" r="3"/></svg>
+          <p class="mx-c"><b><span class="mx-n" data-to="95">95</span><small>%</small></b><span class="mx-l" data-i18n="mx3">準確度</span></p>
+        </div>
+      </li>
+      <li class="mx-i" style="--v:.98">
+        <div class="mx-dial">
+          <svg viewBox="-60 -60 120 120" aria-hidden="true" focusable="false"><circle class="mx-rk" r="57" pathLength="120"/><circle class="mx-rt" r="49"/><circle class="mx-rg" r="49" pathLength="100"/><circle class="mx-ra" r="49" pathLength="100"/><circle class="mx-rd" cx="49" r="3"/></svg>
+          <p class="mx-c"><b><span class="mx-n" data-to="4.9">4.9</span><small>/ 5</small></b><span class="mx-l" data-i18n="mx4">合作滿意度</span></p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ WHY NOW ============ -->
+<section class="whynow" id="why-now" data-dim="0.92" data-s="13">
+  <div class="wrap wide">
+    <p class="kicker mono" data-i18n="wn.k">WHY NOW</p>
+    <h2 class="mega" data-i18n="wn.h">為什麼是現在？</h2>
+    <div class="wn-body">
+      <p class="imm-p" data-i18n="wn.p1">AI 的能力正以月為單位快速進步。建築產業累積多年的圖面、模型與文件，終於能真正被查詢、比對與使用。</p>
+      <p class="wn-lead" data-i18n="wn.p2">不做傳統 BIM。現在開始，讓團隊比別人早一步，把資訊變成決策的依據。</p>
+    </div>
+    <a class="btn" href="#bookingForm" data-i18n="wn.cta">開始對話 →</a>
+  </div>
+</section>
+
+<!-- the climb from the site up through the cloud to the earth at night has this stretch of scroll to itself
+     (earth-site.js; WHY NOW's station is before it, TEAM's after it) -->
+<div class="asc-gap" aria-hidden="true"></div>
+
+<!-- ============ TEAM ============ -->
+<section class="imm teamteaser" id="team" data-s="14" data-dim="0.95" data-in="0.14">
+  <div class="imm-bg" style="background-image:url(assets/frames/bg-site.jpg)"></div>
+  <div class="wrap wide imm-in">
+    <p class="kicker mono" data-i18n="tt.k">TEAM</p>
+    <h2 class="mega" data-i18n="tt.h2">一支跨越三地的團隊。</h2>
+    <p class="imm-p" data-i18n="tt.p">成員背景橫跨布吉納法索、台灣與紐西蘭，結合 BIM、AI 與建築專業，在台灣匯聚成 AEC PRISM。</p>
+    <ul class="facts">
+      <li><b class="mono">3</b><span data-i18n="tt.f1">個國家的背景，一個團隊</span></li>
+      <li><b class="mono">30+</b><span data-i18n="tt.f2">年 BIM 實務累積</span></li>
+      <li><b class="mono">AI × BIM</b><span data-i18n="tt.f3">結合建築專業的跨領域團隊</span></li>
+    </ul>
+    <a class="btn" href="team.html" data-i18n="tt.b">認識團隊 →</a>
+  </div>
+</section>
+
+<!-- ============ CONTACT + HOW WE WORK ============ -->
+<section class="imm contact-sec" id="contact" data-s="15" data-dim="0.95">
+  <div class="imm-bg" style="background-image:url(assets/frames/bg-roof.jpg)"></div>
+  <div class="wrap two imm-in">
+    <div>
+      <p class="kicker mono" data-i18n="ct.k">START A CONVERSATION</p>
+      <h2 class="mega" data-i18n="ct.h">開始對話。</h2>
+      <p class="imm-p" data-i18n="ct.p">從一個問題開始就好。我們會先確認你的需求，再說明可行的做法。</p>
+      <!-- how we work, in three short lines beside the form -->
+      <p class="kicker mono flow-k" data-i18n="ap.k">HOW WE WORK</p>
+      <ol class="howflow">
+        <li><b data-i18n="ap1.h">我們來聊聊</b><span data-i18n="ap1.s">告訴我們專案卡在哪裡。</span></li>
+        <li><b data-i18n="ap2.h">一起打造</b><span data-i18n="ap2.s">用你的真實案例，邊做邊調整。</span></li>
+        <li><b data-i18n="ap3.h">給你答案</b><span data-i18n="ap3.s">結果、依據與可用的文件交到你手上，遠端合作。</span></li>
+      </ol>
+    </div>
+    <form id="bookingForm" class="form glass" novalidate>
+      <label><span data-i18n="f.name">姓名</span><input name="name" required autocomplete="name"></label>
+      <label><span data-i18n="f.company">公司</span><input name="company" autocomplete="organization"></label>
+      <label><span data-i18n="f.email">Email</span><input name="email" type="email" required autocomplete="email"></label>
+      <label><span data-i18n="f.type">想談的主題</span>
+        <select name="type">
+          <option value="land" data-i18n="sc.land.n">土地評估</option>
+          <option value="env" data-i18n="sc.env.n">環境分析</option>
+          <option value="site" data-i18n="sc.site.n">智慧工地</option>
+          <option value="auto" data-i18n="sc.auto.n">自動化流程</option>
+          <option value="cost" data-i18n="sc.cost.n">成本管理</option>
+          <option value="property" data-i18n="sc.property.n">物業管理</option>
+          <option value="facility" data-i18n="sc.facility.n">設備管理</option>
+          <option value="custom" data-i18n="ty5">客製化 AI 流程</option>
+          <option value="other" data-i18n="f.t4">其他</option>
+        </select></label>
+      <label><span data-i18n="f.msg">訊息</span><textarea name="message" rows="4"></textarea></label>
+      <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button class="submit btn" type="submit" data-i18n="f.send2">送出</button>
+      <p class="status" id="formStatus" role="status"></p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <p class="mono">© AEC PRISM. All Rights Reserved.</p>
+  <p class="mono foot-src">Earth imagery: NASA Earth Observatory · EOxCloudless <a href="https://cloudless.eox.at" target="_blank" rel="noopener">cloudless.eox.at</a> by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2016)</p>
 </footer>
 
-<script>
-  // Active nav dot on scroll
-  const sections = document.querySelectorAll('section');
-  const dots = document.querySelectorAll('.nav-dots a');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        dots.forEach(d => d.classList.remove('active'));
-        const active = document.querySelector(`.nav-dots a[href="#${entry.target.id}"]`);
-        if (active) active.classList.add('active');
-      }
-    });
-  }, { threshold: 0.5 });
-  sections.forEach(s => observer.observe(s));
-</script>
-
-<script>
-/* === INTERACTIVE MOUSE-REVEAL BACKGROUND === */
-(function() {
-  const canvas = document.getElementById('interactive-bg');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let W, H;
-  let mouse = { x: W / 2, y: H / 2 };
-  let cursor = { x: W / 2, y: H / 2 };
-
-  const bimUses = [
-    "1A Existing Conditions Scanning", "1B Spatial Analysis & Planning", "1C Optioneering", "1D Design Coordination & Clash Detection", "1E Design Review", "1F Existing Conditions Modeling",
-    "2A Design Authoring", "2B Engineering Analysis", "2C Energy Analysis", "2D Structural Analysis", "2E Sustainability Assessment", "2F Code Compliance", "2G Lighting Analysis",
-    "3A Site Utilization Planning", "3B Construction System Design", "3C Digital Fabrication", "3D 3D Control & Planning", "3E 3D Coordination", "3F 4D Scheduling", "3G Cost Estimation", "3H Construction Review", "3I Digital Handover", "3J Safety Planning",
-    "4A As-Built Modeling", "4B Record Modeling", "4C Asset Inventory", "4D Operations Handover", "4E Training Simulation",
-    "5A Maintenance Scheduling", "5B Asset Management", "5C Space Management", "5D Disaster Planning", "5E Energy Management", "5F Tenant Management", "5G Capital Planning", "5H Systems Analysis", "5I Smart Building Integration", "5J Facility Maintenance", "5K Space Utilization Analysis", "5L Relocation & Reset Planning",
-    "6A VR/AR Applications", "6B Digital Twin", "6C Generative Design", "6D ML Predictive Analysis", "6E Drone Survey & Inspection", "6F Automated Construction / Robotics", "6G Blockchain Asset Traceability", "6H Cloud Collaboration Platform", "6I Big Data Analytics", "6J AI-Assisted Design Optimization", "6K 3D Printing / Additive Manufacturing"
-  ];
-
-  const labels = bimUses.map((text, i) => ({
-    text,
-    x: 0.52 + Math.random() * 0.38,
-    y: 0.1 + Math.random() * 0.85,
-    phase: Math.random() * Math.PI * 2,
-    speed: 0.2 + Math.random() * 0.4
-  }));
-
-  function resize() {
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-    mouse.x = cursor.x = W / 2;
-    mouse.y = cursor.y = H / 2;
-  }
-
-  function onMove(e) {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  }
-
-  // Preload BIM building image (cropped to remove transparent padding)
-  const contentCanvas = document.createElement('canvas');
-  const contentCtx = contentCanvas.getContext('2d');
-  const maskCanvas = document.createElement('canvas');
-  const maskCtx = maskCanvas.getContext('2d');
-
-  function drawContent() {
-    contentCanvas.width = W;
-    contentCanvas.height = H;
-    const c = contentCtx;
-    c.clearRect(0, 0, W, H);
-
-    // Building model now rendered via CSS .hero-building — no canvas draw needed
-
-    // Right side: BIM USE labels
-    c.font = '500 10px Inter, sans-serif';
-    c.textAlign = 'left';
-    c.textBaseline = 'middle';
-    labels.forEach(lbl => {
-      const x = lbl.x * W;
-      const y = lbl.y * H;
-      const hue = (lbl.x * 360 + 200) % 360;
-      c.shadowColor = `hsla(${hue}, 50%, 40%, 0.15)`;
-      c.shadowBlur = 4;
-      c.fillStyle = `hsla(${hue}, 35%, 45%, 0.45)`;
-      c.fillText(lbl.text, x, y);
-      c.shadowBlur = 0;
-    });
-
-    // Label title
-    c.font = '700 12px Inter, sans-serif';
-    c.fillStyle = 'rgba(140,160,255,0.45)';
-    c.shadowColor = 'rgba(102,126,234,0.25)';
-    c.shadowBlur = 6;
-    c.fillText('BIM Matrix Uses', W * 0.82, H * 0.06);
-    c.shadowBlur = 0;
-  }
-
-  function drawMask() {
-    maskCanvas.width = W;
-    maskCanvas.height = H;
-    const m = maskCtx;
-    m.clearRect(0, 0, W, H);
-
-    const r = Math.min(W, H) * 0.30;
-    const g = m.createRadialGradient(cursor.x, cursor.y, 0, cursor.x, cursor.y, r);
-    g.addColorStop(0, 'rgba(255,255,255,1)');
-    g.addColorStop(0.45, 'rgba(255,255,255,0.5)');
-    g.addColorStop(1, 'rgba(255,255,255,0)');
-    m.fillStyle = g;
-    m.fillRect(0, 0, W, H);
-  }
-
-  function animate() {
-    // Smooth cursor following
-    cursor.x += (mouse.x - cursor.x) * 0.12;
-    cursor.y += (mouse.y - cursor.y) * 0.12;
-
-    // Animate labels subtly
-    const t = Date.now() / 1000;
-    labels.forEach(lbl => {
-      lbl.y += Math.sin(t * lbl.speed + lbl.phase) * 0.0003;
-    });
-
-    // Redraw content if labels moved (subtle)
-    drawContent();
-    drawMask();
-
-    // Clear main canvas
-    ctx.clearRect(0, 0, W, H);
-
-    // Draw faint baseline everywhere
-    ctx.globalAlpha = 0.32;
-    ctx.drawImage(contentCanvas, 0, 0);
-
-    // Create bright reveal masked to cursor radius
-    const temp = document.createElement('canvas');
-    temp.width = W; temp.height = H;
-    const tctx = temp.getContext('2d');
-    tctx.drawImage(maskCanvas, 0, 0);
-    tctx.globalCompositeOperation = 'source-in';
-    tctx.drawImage(contentCanvas, 0, 0);
-
-    ctx.globalAlpha = 1;
-    ctx.drawImage(temp, 0, 0);
-
-    requestAnimationFrame(animate);
-  }
-
-  window.addEventListener('resize', () => { resize(); drawContent(); });
-  window.addEventListener('mousemove', onMove, { passive: true });
-  resize();
-  animate();
-})();
-</script>
-
+<script src="assets/js/i18n.js?v=3"></script>
+<script src="assets/js/i18n2.js?v=14"></script>
+<script src="assets/js/i18n-story.js?v=5"></script>
+<script src="assets/js/i18n-more.js?v=5"></script>
+<script src="assets/js/i18n-services.js?v=10"></script>
+<script src="assets/js/intro.js?v=3"></script>
+<script src="assets/vendor/three.min.js"></script>
+<script src="assets/js/model.js?v=19"></script>
+<script src="assets/js/film3d.js?v=16"></script>
+<script src="assets/js/main.js?v=43"></script>
+<script src="assets/js/services-data.js?v=1"></script>
+<script src="assets/js/services.js?v=9"></script>
+<script src="assets/js/metrics.js?v=4"></script>
+<script src="assets/js/overview-data.js?v=2"></script>
+<script src="assets/js/overview.js?v=5"></script>
+<script src="assets/js/logo-shape.js?v=1"></script>
+<script src="assets/js/earth.js?v=8"></script>
+<script src="assets/js/earth-site.js?v=8"></script>
 </body>
 </html>
+

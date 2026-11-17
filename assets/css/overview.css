@@ -1,0 +1,139 @@
+/* The services overview: one circuit board, between the services film and VISION (assets/js/overview.js).
+   AEC PRISM is the large chip in the middle, the four phases stand in the four quarters (clockwise: the life of a
+   building), each with its roles and, out from every role, its work as words on one trace: what has to be done ->
+   what the AI does -> what comes out. The whole board shows at first; choosing a chip flies the view to it and in (the
+   board never rearranges itself), and what falls outside the screen fades at the edges.
+   The section is taller than the screen and its stage stays put while it passes (.ovw-pin); the film behind holds
+   still for that time (.ovw-hold) and turns on towards VISION afterwards. The chips are buttons in .ovw-world (scaled and moved
+   by the view); traces, words and the light running along the traces are drawn on the canvas in screen pixels from
+   the same view, so they stay sharp at every zoom. */
+.ovw{position:relative;height:260vh;background:transparent;padding:0}
+.ovw-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;color:var(--ink,#0d1b3d)}
+/* paper over the film, so glass and fine lines read on it: most of it is the page's own full-screen wash (data-dim on
+   the section, main.js), which has no edge as the stage arrives; a little more here, soft at the top for the same reason */
+.ovw-pin::before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(var(--paper-rgb),0),rgba(var(--paper-rgb),.3) 26%);pointer-events:none}
+/* the board is held and moved with the left button (a phone moves it sideways; up and down stays the page's scroll) */
+.ovw-scene{position:absolute;inset:0;perspective:1800px;perspective-origin:50% 45%;overflow:hidden;cursor:grab;touch-action:pan-y;-webkit-user-select:none;user-select:none}
+.ovw-scene.drag{cursor:grabbing}
+.ovw-scene.drag .ov-n{cursor:grabbing}
+.ovw-scene img{pointer-events:none;-webkit-user-drag:none}
+/* a mark for the film's place (main.js reads every section[data-s] as a station): station 9.2, a fifth of the way
+   from the film's last station (9) to VISION (10), put a fifth of a screen after the stage lets go (210vh). So the
+   film's place only creeps from 9 to 9.2 while the board is up, and from there to VISION it is where it was when the
+   film stood still here: VISION's words and the wash behind them come in at the same scroll as before. The picture
+   itself does not wait for that: the camera turns evenly over the whole scroll from station 9 to VISION, on the frames
+   rendered for this stretch (assets/story/lead, main.js scrollShare) */
+.ovw-hold{position:absolute;left:0;top:230vh;width:1px;height:0;pointer-events:none}
+.ovw-tilt{position:absolute;inset:0;transform-origin:50% 50%;will-change:transform}
+.ovw-tilt canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.ovw-world{position:absolute;left:0;top:0;width:0;height:0;transform-origin:0 0;will-change:transform}
+/* the board runs on past the screen: its edges fade into the paper */
+.ovw-vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 86% 82% at 50% 54%,transparent 54%,rgba(var(--paper-rgb),.6) 84%,rgba(var(--paper-rgb),.94))}
+
+.ovw-hd{position:absolute;left:clamp(18px,3.2vw,48px);top:clamp(84px,11vh,112px);z-index:2;pointer-events:none}
+.ovw-hd>*{pointer-events:auto;position:relative}
+/* the title stands on a soft patch of paper, so the board passing under it does not run into the words */
+.ovw-hd::before{content:"";position:absolute;left:-300px;top:-210px;width:900px;height:560px;pointer-events:none;background:radial-gradient(closest-side,rgba(var(--paper-rgb),.97) 0 46%,rgba(var(--paper-rgb),0) 100%)}
+.ovw-hd .kicker{margin:0 0 12px;color:var(--acc-text)}
+.ovw-title{margin:0;font:400 clamp(30px,3.6vw,60px)/1.15 var(--display);letter-spacing:.045em}
+html[lang=en] .ovw-title{letter-spacing:.005em}
+.ovw-crumb{display:flex;align-items:center;gap:8px;margin:14px 0 0;padding:0;list-style:none;font-size:13px;line-height:1;letter-spacing:.06em;color:var(--ui-dim);min-height:26px}
+.ovw-crumb button{border:0;background:none;padding:6px 0;font:inherit;letter-spacing:inherit;cursor:pointer;color:var(--ui-dim);border-bottom:1px solid transparent}
+.ovw-crumb button:hover{color:var(--ink);border-bottom-color:currentColor}
+.ovw-crumb li:last-child button{color:var(--ink);font-weight:700;cursor:default;border-bottom-color:transparent}
+.ovw-crumb li+li::before{content:"›";margin-right:8px;opacity:.5}
+.ovw-hint{position:absolute;right:clamp(18px,3.2vw,48px);bottom:clamp(16px,3vh,34px);z-index:2;margin:0;font-size:13px;color:var(--ui-dim);pointer-events:none;
+  text-shadow:0 0 12px rgba(var(--paper-rgb),1),0 0 6px rgba(var(--paper-rgb),1),0 0 2px rgba(var(--paper-rgb),1)}
+/* what the three stretches of a row of work are */
+.ovw-legend{position:absolute;left:50%;bottom:clamp(16px,3vh,34px);z-index:2;transform:translateX(-50%);display:flex;gap:22px;margin:0;padding:9px 18px;border-radius:99px;font-size:13px;letter-spacing:.06em;white-space:nowrap;
+  background:rgba(255,255,255,.66);border:1px solid rgba(255,255,255,.9);box-shadow:0 0 0 1px rgba(13,27,61,.08);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:0;transition:opacity .5s;pointer-events:none}
+.ovw-legend.on{opacity:1}
+.ovw-legend span{display:flex;align-items:center;gap:8px}
+/* (each quarter draws its rows in its own colour; what tells the three stretches apart is their strength) */
+.ovw-legend span::before{content:"";width:22px;height:2px;border-radius:2px;background:var(--ink);opacity:.35}
+.ovw-legend span:nth-child(2)::before{height:3px;opacity:.65}
+.ovw-legend span:nth-child(3)::before{height:4px;opacity:1}
+/* the small map in the corner: the whole board and the part in view (once the view has gone in) */
+.ovw-mini{position:absolute;left:clamp(18px,3.2vw,48px);bottom:clamp(16px,3vh,34px);z-index:2;width:186px;height:118px;border-radius:10px;cursor:pointer;
+  background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.9);box-shadow:0 0 0 1px rgba(13,27,61,.1),0 12px 30px rgba(13,27,61,.12);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .5s}
+.ovw-mini.on{opacity:1;pointer-events:auto}
+
+/* a chip: a square body with pins on its sides (the script sets where and how large, in board units) */
+.ov-n{position:absolute;padding:0;border:0;background:none;font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ov-n:focus-visible{outline:none}
+.ov-n::before,.ov-n::after{content:"";position:absolute;pointer-events:none}
+.ov-n::before{left:calc(var(--pin) * -1);right:calc(var(--pin) * -1);top:14%;bottom:14%;background:repeating-linear-gradient(180deg,rgba(13,27,61,.6) 0 calc(var(--pw) * 1px),transparent calc(var(--pw) * 1px) calc(var(--pw) * 3.4px))}
+.ov-n::after{top:calc(var(--pin) * -1);bottom:calc(var(--pin) * -1);left:14%;right:14%;background:repeating-linear-gradient(90deg,rgba(13,27,61,.6) 0 calc(var(--pw) * 1px),transparent calc(var(--pw) * 1px) calc(var(--pw) * 3.4px))}
+.ov-f{position:absolute;inset:0;z-index:1;display:grid;place-items:center;text-align:center;border-radius:var(--r);border:2px solid rgba(255,255,255,.95);overflow:hidden;
+  background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(238,244,255,.5) 52%,rgba(204,221,250,.58));
+  -webkit-backdrop-filter:blur(9px) saturate(1.25);backdrop-filter:blur(9px) saturate(1.25);
+  box-shadow:0 0 0 2px rgba(13,27,61,.16),inset 0 2px 0 rgba(255,255,255,.95),inset 0 -18px 30px rgba(90,140,255,.12),0 26px 50px rgba(13,27,61,.16);
+  transition:box-shadow .35s,border-color .35s}
+/* the marking on the package: a fine frame, the dot by pin one; and a sheen that crosses the glass now and then */
+.ov-f::before{content:"";position:absolute;inset:9%;border:1px solid rgba(13,27,61,.14);border-radius:calc(var(--r) * .6);pointer-events:none;
+  background:radial-gradient(circle at calc(var(--r) * .9) calc(var(--r) * .9),rgba(13,27,61,.35) 0 calc(var(--r) * .22),transparent calc(var(--r) * .24))}
+.ov-f::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.6) 50%,transparent 58%) 0 0/260% 100% no-repeat;animation:ov-sheen var(--sd,7s) cubic-bezier(.4,0,.2,1) var(--fo,0s) infinite}
+@keyframes ov-sheen{0%,58%{background-position:130% 0}100%{background-position:-60% 0}}
+.ov-f>span{position:relative}
+.ov-lb{display:block;font:400 60px/1.2 var(--display);letter-spacing:.1em;color:var(--ink)}
+.ov-n small{display:block;margin-top:12px;font:500 17px/1 "JetBrains Mono",ui-monospace,Consolas,monospace;letter-spacing:.16em;color:var(--ui-dim)}
+.ov-n:hover .ov-f,.ov-n:focus-visible .ov-f{box-shadow:0 0 0 3px rgba(240,166,74,.8),inset 0 2px 0 rgba(255,255,255,.95),inset 0 -18px 30px rgba(240,166,74,.16),0 0 60px rgba(240,166,74,.4),0 26px 50px rgba(13,27,61,.16)}
+.ov-n.cur .ov-f{box-shadow:0 0 0 3px var(--acc),inset 0 2px 0 rgba(255,255,255,.95),inset 0 -18px 30px rgba(240,166,74,.18),0 0 70px rgba(240,166,74,.5),0 26px 50px rgba(13,27,61,.16)}
+
+/* AEC PRISM: the one dark chip, deep blue glass with the mark on it; it breathes */
+.ov-n.root{--pin:20px;--pw:7;--r:46px}
+.ov-n.root::before,.ov-n.root::after{background-image:repeating-linear-gradient(var(--dir,180deg),rgba(13,27,61,.78) 0 7px,transparent 7px 22px)}
+.ov-n.root::after{--dir:90deg}
+.ov-n.root .ov-f{border-color:rgba(190,215,255,.85);background:linear-gradient(150deg,#27489c 0,#12265e 46%,#0a1535);-webkit-backdrop-filter:none;backdrop-filter:none;animation:ov-breathe 4.8s ease-in-out infinite}
+@keyframes ov-breathe{0%,100%{box-shadow:0 0 0 2px rgba(13,27,61,.3),inset 0 2px 0 rgba(200,225,255,.4),0 0 40px rgba(63,125,255,.3),0 34px 70px rgba(13,27,61,.3)}
+  50%{box-shadow:0 0 0 2px rgba(13,27,61,.3),inset 0 2px 0 rgba(200,225,255,.4),0 0 110px 14px rgba(63,125,255,.6),0 34px 70px rgba(13,27,61,.3)}}
+.ov-n.root .ov-f::before{border-color:rgba(190,215,255,.3);background:radial-gradient(circle at 30px 30px,rgba(190,215,255,.7) 0 8px,transparent 9px)}
+.ov-n.root img{display:block;margin:0 auto;max-width:none}
+.ov-n.root .ov-mark{width:210px;filter:brightness(0) invert(1)}
+.ov-n.root .ov-word{width:340px;margin-top:44px;filter:brightness(0) invert(1);opacity:.95}
+.ov-n.phase{--pin:12px;--pw:5;--r:26px}
+/* each quarter in its own colour (--c, set by the script): the glass of its chips takes a light tint of it, their rim,
+   their pins and their glow when chosen are that colour */
+.ov-n.phase .ov-f,.ov-n.role .ov-f{background:linear-gradient(145deg,rgba(255,255,255,.86),rgba(var(--c),.14) 50%,rgba(var(--c),.3));
+  box-shadow:0 0 0 2px rgba(var(--c),.55),inset 0 2px 0 rgba(255,255,255,.95),inset 0 -18px 30px rgba(var(--c),.14),0 26px 50px rgba(13,27,61,.14)}
+.ov-n.phase::before,.ov-n.phase::after,.ov-n.role::before{background-image:repeating-linear-gradient(var(--dir,180deg),rgba(var(--c),.95) 0 calc(var(--pw) * 1px),transparent calc(var(--pw) * 1px) calc(var(--pw) * 3.4px))}
+.ov-n.phase::after{--dir:90deg}
+.ov-n.phase:hover .ov-f,.ov-n.role:hover .ov-f,.ov-n.phase:focus-visible .ov-f,.ov-n.role:focus-visible .ov-f,.ov-n.phase.cur .ov-f,.ov-n.role.cur .ov-f{
+  box-shadow:0 0 0 3px rgb(var(--c)),inset 0 2px 0 rgba(255,255,255,.95),inset 0 -18px 30px rgba(var(--c),.2),0 0 64px rgba(var(--c),.55),0 26px 50px rgba(13,27,61,.14)}
+.ov-n.role{--pin:10px;--pw:4;--r:14px}
+/* (the nineteen role chips are plain frosted plates: blurring what is behind each of them costs too much while the
+   board moves) */
+.ov-n.role .ov-f{-webkit-backdrop-filter:none;backdrop-filter:none;background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(255,255,255,.7) 46%,rgba(var(--c),.3)),#f4f3ef}
+.ov-n.role::after{display:none}
+.ov-n.role .ov-lb{font-size:34px;letter-spacing:.06em}
+.ov-n.role small{margin-top:7px;font-size:13px}
+.ov-n.role .ov-f::before{inset:8% 4%}
+/* Latin names are longer and need no tracking */
+html[lang=en] .ov-lb{letter-spacing:.01em;font-size:52px}
+html[lang=en] .ov-n.role .ov-lb{font-size:24px;line-height:1.1;letter-spacing:0;padding:0 14px}
+html[lang=en] .ov-n small{letter-spacing:.08em}
+
+/* a phone: what a role does comes up from the bottom as a sheet (words and lines, as on the board) */
+.ovw-sheet{position:absolute;left:0;right:0;bottom:0;z-index:4;max-height:66%;overflow:auto;padding:18px 18px 26px;border-radius:20px 20px 0 0;background:rgba(250,249,245,.95);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 -18px 50px rgba(13,27,61,.2);transform:translateY(105%);transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.ovw-sheet.on{transform:none}
+.ovw-sheet h3{margin:0 0 4px;font:400 24px/1.2 var(--display);letter-spacing:.06em}
+.ovw-sheet p{margin:0 0 14px;font-size:12px;color:var(--ui-dim);letter-spacing:.08em}
+.ovw-sheet ol{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.ovw-sheet li{padding:2px 0 12px;border-bottom:1px solid rgba(13,27,61,.1)}
+.ovw-sheet li span{position:relative;display:flex;gap:10px;align-items:center;padding:7px 0 7px 16px;font-size:14.5px;line-height:1.35}
+.ovw-sheet li span::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:2px;border-radius:2px;background:rgba(13,27,61,.4)}
+.ovw-sheet li span i{flex:none;font:500 10px/1 "JetBrains Mono",ui-monospace,Consolas,monospace;font-style:normal;letter-spacing:.1em;color:var(--ui-dim)}
+.ovw-sheet li span:nth-child(2){color:#2456cc}.ovw-sheet li span:nth-child(2)::before{background:#3f7dff;box-shadow:0 0 8px #3f7dff}.ovw-sheet li span:nth-child(2) i{color:#2456cc}
+.ovw-sheet li span:nth-child(3){color:var(--acc-text)}.ovw-sheet li span:nth-child(3)::before{background:var(--acc);box-shadow:0 0 8px var(--acc)}.ovw-sheet li span:nth-child(3) i{color:var(--acc-text)}
+.ovw-sheet button{position:absolute;right:14px;top:12px;border:0;background:none;font-size:22px;line-height:1;padding:6px;cursor:pointer;color:var(--ui-dim)}
+
+@media (max-width:759px){
+  .ovw-hd{top:74px}
+  .ovw-hd::before{width:150vw;height:340px;left:-40vw;top:-130px}
+  .ovw-title{font-size:26px}.ovw-hd .kicker{margin-bottom:8px;font-size:10px}
+  .ovw-crumb{margin-top:8px;font-size:12px;gap:6px}
+  .ovw-hint{left:0;right:0;text-align:center;font-size:12px}
+  .ovw-mini,.ovw-legend{display:none}
+}
+@media (prefers-reduced-motion:reduce){.ov-f,.ov-f::after{animation:none !important}}

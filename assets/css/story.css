@@ -1,0 +1,72 @@
+/* Group B: image-sequence player and the positioning line (the services are in services.css). Use the --ui-* tokens from style.css. */
+
+/* ---------- realistic image sequence behind the page ---------- */
+/* one whole frame at a time, never moved or scaled, so a resting page is always sharp */
+.bgfx .story{z-index:1;visibility:hidden}
+body.story-on .film{background:transparent}
+/* One full-viewport reading wash, separate from the moving, masked text containers.
+   It has no section-sized rectangle to clip when the text fades beneath the navigation. */
+/* It sits behind the text column on the left and is gone by two thirds across, so the building and the night keep
+   their own light (a wash over the whole screen made the night read as fog) */
+.veil .vn{background:linear-gradient(100deg,rgba(var(--paper-rgb),.94) 0%,rgba(var(--paper-rgb),.82) 30%,rgba(var(--paper-rgb),.42) 50%,rgba(var(--paper-rgb),.1) 60%,rgba(var(--paper-rgb),0) 68%)}
+@media(max-width:760px){.veil .vn{background:linear-gradient(180deg,rgba(var(--paper-rgb),.5),rgba(var(--paper-rgb),.84) 20%,rgba(var(--paper-rgb),.8) 84%,rgba(var(--paper-rgb),.35))}}
+/* #services lands here: the first step of the film */
+.st-mark{position:absolute;left:0;width:1px;height:1px;pointer-events:none}
+
+/* ---------- positioning line (station 4): flies in like the opening words ---------- */
+.fw-pos{padding:0 24px}
+.fw-pos .fw-h{white-space:normal;font-size:clamp(40px,6.4vw,118px);line-height:1.08;letter-spacing:.01em}
+.fw-sub{margin:30px 0 0;max-width:30em;font-size:clamp(22px,2.2vw,34px);line-height:1.5;font-weight:500;letter-spacing:.04em;text-shadow:0 1px 16px rgba(4,9,22,.55);opacity:0;transition:opacity .8s .35s}
+.fw-pos.in .fw-sub{opacity:.94}
+body.tone-light .fw-pos{color:#141821}
+body.tone-light .fw-pos .fw-h,body.tone-light .fw-sub{text-shadow:none}
+
+@media (max-width:820px){
+  .fw-pos .fw-h{font-size:clamp(34px,10vw,60px)}
+  .fw-sub{margin-top:22px}
+}
+
+/* ---------- the opening words ----------
+   "你好，" and "我們是" in the middle of the screen, coming in from far away towards the camera (main.js: scale and
+   opacity by depth); the AEC PRISM group centred on a line under the drawn logo (78% down, lower if the logo needs it:
+   --fw-y), fading in where it stands. The group's box has no height, its content centred on that line */
+.fly .fw-hello{top:0;bottom:0;height:auto;padding:0 20px}
+.fly .fw-name{--fw-w:clamp(270px,33vw,580px);top:var(--fw-y,78%);bottom:auto;left:0;right:0;height:0;padding:0;justify-content:center;overflow:visible}
+.fly .fw-name .fw-word{width:var(--fw-w)}
+/* the tagline over the pale ground of the lot: ink with a soft paper halo (white type was lost on it) */
+.fly .fw-name .fw-tag{color:var(--ink);text-shadow:0 0 14px rgba(var(--paper-rgb),.95),0 0 4px rgba(var(--paper-rgb),.9)}
+/* It is one line set flush with the word mark at both ends: its type scales with the word mark's width (--fw-w), its
+   box is that wide, and the line is justified, so the six word gaps take up whatever the letters leave (any font, any
+   rounding). The box is trimmed to what is seen rather than to the boxes: the picture's strokes run from 1 px to
+   1075 px of its 1077 (.99721 of the width, .00046 off centre), "F" starts .08em into its cell, the last "T" ends
+   .04em short of its own and carries the letter-spacing after it */
+.fly .fw-name .fw-tag{--fw-ls:.06em;position:relative;left:calc(var(--fw-ls)/2 - .02em - var(--fw-w)*.00046);box-sizing:content-box;
+  width:calc(var(--fw-w)*.99721 + .12em + var(--fw-ls));max-width:none;margin-top:.95em;padding:0;
+  font-size:calc(var(--fw-w)*.036);letter-spacing:var(--fw-ls);white-space:nowrap;text-align:justify;text-align-last:justify}
+@media (max-width:820px) and (orientation:portrait){
+  /* a narrow word mark: the line keeps its size by closing up its letters a little */
+  .fly .fw-name{--fw-w:min(78vw,360px);padding:0 20px}
+  .fly .fw-name .fw-tag{--fw-ls:.03em;font-size:calc(var(--fw-w)*.038)}
+  /* "向下捲動" under the brand group, not beside it */
+  .hint{right:auto;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%)}
+}
+/* ---------- the sections after the film: one at a time ----------
+   each at least a screen tall, its content in the middle of the screen when its station comes (main.js postTick fades
+   the content in and out by the film's station, so one section's words never share the screen with the next's) */
+main>section[data-s]{min-height:100vh;padding-top:12vh;padding-bottom:12vh;display:flex;flex-direction:column;justify-content:center}
+main>section[data-s]>.wrap,main>section[data-s]>.carousel{width:100%;flex:none}
+@media (max-width:760px){main>section[data-s]{padding-top:10vh;padding-bottom:10vh}}
+
+/* the positioning line fades in where it stands too (no zoom); its subtitle with it */
+.fw-pos .fw-sub{transition:opacity .6s ease .15s}
+
+/* small type in the day sections keeps a soft paper glow of its own, so it reads over the busier parts of the frame
+   (and over the night) without a wash across the whole screen */
+body.veil-on :is(#manifesto,#impact,#why-now,#team,#contact) :is(p,li,small,label,.tt-n,.mx li>span,.kicker){
+  text-shadow:0 0 14px rgba(var(--paper-rgb),.95),0 0 6px rgba(var(--paper-rgb),.85),0 0 2px rgba(var(--paper-rgb),.8)}
+/* the rows of figures keep to the text side too (the wash is gone by two thirds across: a figure out there stood on
+   the bare night), a little smaller so each still fits its column */
+@media (min-width:821px){
+  body.veil-on #team .facts{max-width:62vw}
+  body.veil-on #team .facts b{font-size:clamp(36px,4vw,68px)}
+}

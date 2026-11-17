@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About · AEC PRISM</title>
+<link rel="icon" href="assets/img/logo-mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css?v=46">
+<link rel="stylesheet" href="assets/css/earth.css?v=8">
+</head>
+<body class="page-team page-about">
+<div class="bgfx" aria-hidden="true"><canvas class="gl" id="gl"></canvas></div>
+<header class="topbar">
+  <a class="brand" href="index.html" aria-label="AEC PRISM"><img src="assets/img/logo-word.png" alt="AEC PRISM"></a>
+  <nav>
+    <a href="index.html" data-i18n="nav.home">首頁</a>
+    <a href="index.html#contact" data-i18n="nav.booking">開始對話</a>
+    <button class="lang" id="lang" type="button" aria-label="Language">EN</button>
+    <button class="fs" id="fs" type="button" aria-label="全螢幕" title="全螢幕" hidden><svg class="fs-in" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg><svg class="fs-out" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.5V6H2.5M13.5 6H10V2.5M10 13.5V10h3.5M2.5 10H6v3.5"/></svg></button>
+  </nav>
+</header>
+
+<main>
+<!-- ============ ORIGIN: the 30-year film runs behind the headline ============ -->
+<section class="ab-hero" id="origin">
+  <video class="ab-hero-video" id="journey" src="assets/video/journey.mp4" poster="assets/img/journey-poster.jpg" muted loop playsinline autoplay preload="auto"></video>
+  <div class="ab-hero-shade"></div>
+  <div class="wrap wide ab-hero-in">
+    <p class="kicker mono" data-i18n="ab.ok">ORIGIN</p>
+    <h1 class="mega" data-i18n="ab.oh">三十年 BIM，<br>走向 AI。</h1>
+    <p class="imm-p" data-i18n="ab.op">AEC PRISM 因應 AI 演進而成立，承接三十多年的 BIM 實務累積。更多資料、更多模型、更多協調之後，我們從資訊走向智慧。</p>
+    <div class="acts"><button class="btn" id="watch" type="button" data-i18n="ab.watch">觀看完整影片 ▶</button></div>
+  </div>
+  <div class="ab-scroll mono" data-i18n="hint">向下捲動 ↓</div>
+</section>
+
+<!-- ============ PRINCIPLES ============ -->
+<section class="imm principles ab-prin" data-s="0">
+  <div class="imm-bg" style="background-image:url(assets/frames/bg-facade.jpg)"></div>
+  <div class="wrap wide imm-in">
+    <p class="kicker mono" data-i18n="pr.k">PRINCIPLES</p>
+    <ul class="prin">
+      <li><b data-i18n="pr1.h">從你的流程出發，而不是從技術出發。</b><span data-i18n="pr1.p">先理解團隊現在怎麼做事，工具長成你的流程的樣子。</span></li>
+      <li><b data-i18n="pr2.h">AI 加速判斷，專業的人做決定。</b><span data-i18n="pr2.p">AI 負責整理、比對與運算，最後的決定屬於專業的人。</span></li>
+      <li><b data-i18n="pr3.h">每個結論，都可驗證、可追溯。</b><span data-i18n="pr3.p">結果可以回溯到資料與規則，不是黑盒子裡的答案。</span></li>
+      <li><b data-i18n="pr4.h">以標準為基礎，成果可以延續維護。</b><span data-i18n="pr4.p">以 ISO 19650 等標準為依據，讓成果能被各方接受、持續維護。</span></li>
+      <li><b data-i18n="pr5.h">誠實說明成熟度與限制。</b><span data-i18n="pr5.p">哪些已經可靠、哪些還在驗證，我們一開始就說清楚。</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ TEAM: cut-out portraits on glowing light ============ -->
+<section class="imm ab-team" id="team" data-s="1">
+  <div class="imm-bg" style="background-image:url(assets/frames/bg-studio.jpg)"></div>
+  <div class="wrap wide imm-in">
+    <p class="kicker mono" data-i18n="t.mk">TEAM</p>
+    <h2 class="mega" data-i18n="ab.th">三個人，三個起點，<br>一個團隊。</h2>
+    <ul class="crew">
+      <li class="mate c1">
+        <div class="fig"><span class="glow"></span><img src="assets/img/team-reisen.png" alt="Reisen Lu"></div>
+        <div class="info">
+          <h3>Reisen Lu <small>盧鼎鈞</small></h3>
+          <p class="role mono">Smart Building Innovation Lead</p>
+          <p class="meta mono"><span data-i18n="ab.tw">台灣</span><span data-i18n="ab.y10">經驗 10+ 年</span></p>
+          <p class="bio" data-i18n="m1.p">專注 BIM 技術與資訊管理，熟悉 ISO 19650 與 BEP／EIR 制定，把 BIM 流程與檢核自動化，讓模型成為可以查詢、可以決策的資料。</p>
+          <ul class="cats mono"><li>BIM</li><li>ISO 19650</li><li>BEP / EIR</li><li data-i18n="ab.tg1">自動化</li></ul>
+        </div>
+      </li>
+      <li class="mate c2">
+        <div class="fig"><span class="glow"></span><img src="assets/img/team-ele.png" alt="Eleazare Nikiema"></div>
+        <div class="info">
+          <h3>Eleazare Nikiema <small>白文德</small></h3>
+          <p class="role mono">Smart Building Innovation Lead</p>
+          <p class="meta mono"><span data-i18n="ab.bf">台灣 · 來自布吉納法索</span><span data-i18n="ab.y7">經驗 7+ 年</span></p>
+          <p class="bio" data-i18n="m3.p">以運算設計與設計科技見長，負責量體與可行性分析、環境模擬與視覺化，把設計條件轉成可以比較、可以決策的方案。</p>
+          <ul class="cats mono"><li data-i18n="ab.tg2">運算設計</li><li data-i18n="ab.tg3">量體與可行性</li><li data-i18n="ab.tg4">環境分析</li><li data-i18n="ab.tg5">視覺化</li></ul>
+        </div>
+      </li>
+      <li class="mate c3">
+        <div class="fig"><span class="glow"></span><img src="assets/img/team-rosei.png" alt="Rosivia Liao"></div>
+        <div class="info">
+          <h3>Rosivia Liao <small>廖珍瑩</small></h3>
+          <p class="role mono">Smart Building Innovation Lead</p>
+          <p class="meta mono"><span data-i18n="ab.nz">台灣 · 來自紐西蘭</span><span data-i18n="ab.y10">經驗 10+ 年</span></p>
+          <p class="bio" data-i18n="m2.p">負責解決方案規劃，從需求訪談開始釐清問題與資料，規劃平台與系統整合，確保交付的工具真正解決客戶的問題。</p>
+          <ul class="cats mono"><li data-i18n="ab.tg6">解決方案</li><li data-i18n="ab.tg7">需求釐清</li><li data-i18n="ab.tg8">平台整合</li><li data-i18n="ab.tg9">專案交付</li></ul>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ THREE ORIGINS: the earth at night, the same globe as the homepage (earth.js) ============ -->
+<section class="imm ab-map" data-s="2">
+  <div class="imm-bg" style="background-image:url(assets/frames/bg-night.jpg)"></div>
+  <div class="wrap wide imm-in">
+    <p class="kicker mono" data-i18n="ab.mk">THREE ORIGINS</p>
+    <h2 class="mega" data-i18n="ab.mh">一支跨越三地的團隊。</h2>
+    <p class="imm-p" data-i18n="ab.mp">成員背景橫跨布吉納法索、台灣與紐西蘭，在台灣匯聚成 AEC PRISM。</p>
+    <div class="gframe" id="globeFrame"></div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="imm ab-cta" data-s="3">
+  <div class="imm-bg" style="background-image:url(assets/frames/bg-roof.jpg)"></div>
+  <div class="wrap wide imm-in">
+    <h2 class="mega" data-i18n="ab.xh">從一個流程開始討論。</h2>
+    <p class="imm-p" data-i18n="ab.xp">說明你的專案階段與目前遇到的問題，我們協助判斷合適的切入點。</p>
+    <div class="acts"><a class="btn big-btn" href="index.html#contact" data-i18n="ab.x1">開始對話 →</a></div>
+  </div>
+</section>
+</main>
+
+<!-- full film, with sound and controls -->
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lb-close mono" id="lbClose" type="button" aria-label="Close">✕</button>
+  <video id="lbVideo" src="assets/video/journey.mp4" controls playsinline></video>
+</div>
+
+<footer class="foot">
+  <img src="assets/img/logo-full.png" alt="AEC PRISM">
+  <p class="mono">© AEC PRISM</p>
+</footer>
+<script src="assets/js/i18n.js?v=3"></script>
+<script src="assets/js/i18n2.js?v=14"></script>
+<script src="assets/js/i18n-about.js?v=3"></script>
+<script>window.PRISM_I18N_ONLY = true;</script>
+<script src="assets/js/main.js?v=43"></script>
+<script src="assets/js/film3d.js?v=16"></script>
+<script src="assets/vendor/three.min.js"></script>
+<script src="assets/js/earth.js?v=8"></script>
+<script src="assets/js/earth-site.js?v=8"></script>
+<script src="assets/js/about.js?v=3"></script>
+</body>
+</html>
