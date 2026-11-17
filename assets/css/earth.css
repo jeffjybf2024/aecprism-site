@@ -61,5 +61,5 @@ body.earth-dark .topbar .brand img,body.earth-dark.tone-light .topbar .brand img
 /* the foot of the page stays in the night */
 body:not(.page-about):not(.page-team) .foot{background:none}
 body:not(.page-about):not(.page-team) .foot p{color:rgba(205,215,238,.7)}
-.foot .foot-src{margin-top:8px;font-size:10.5px;letter-spacing:.02em;opacity:.72}
-.foot .foot-src a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+/* the credit for the land's imagery (earth.js), in a corner of the view only while that imagery is on screen */
+.earth-credit{position:absolute;right:14px;bottom:10px;max-width:calc(100% - 28px);text-align:right;opacity:0;font:10px/1.35 var(--mono,ui-monospace,Consolas,monospace);letter-spacing:.02em;color:rgba(222,230,246,.62);text-shadow:0 0 6px rgba(2,5,14,.9)}

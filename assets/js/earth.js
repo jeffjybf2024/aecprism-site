@@ -20,6 +20,7 @@
    cloud 0..1  how much cloud there is on the way up and out (see CLOUD_FS), tone 0..1 its light (sunlit white ->
                the last light -> the moon's); veil 0..1: one soft cloud over the whole view (the plain way from the
                film to the earth, where the way out from close by is not shown)
+   aim({lat, lon}) turns the globe to face a place (null: back to its slow swing).
    Every value eases to what was set; now({...}) sets values at once (what follows the scroll exactly).
    ground({ src, site: {x, y}, frame: {x, y, w, h}, ppk, rot }): the film's top frame and how it stands on screen (CSS
    px; ppk: px to a kilometre of ground; rot: which way the ground's x axis points). film({ x, y, ppk, rot } | null):
@@ -200,6 +201,10 @@
     renderer.setClearColor(0x02040b, 1); renderer.autoClear = false;
     var ccanvas = document.createElement("canvas"), crend = null, cu = null, cscene = null, ccam = null, cW = 0;
     ccanvas.className = "earth-cloud"; ccanvas.style.visibility = "hidden"; host.appendChild(ccanvas);
+    // the land's imagery is CC BY: its credit stands in a corner of the view while it is on screen (GROUND_FS)
+    var credit = document.createElement("div"), creditA = -1;
+    credit.className = "earth-credit"; credit.textContent = "Imagery: EOxCloudless cloudless.eox.at by EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2016)";
+    host.appendChild(credit);
     try {
       crend = new T.WebGLRenderer({ canvas: ccanvas, antialias: false, alpha: true, premultipliedAlpha: true });
       crend.setClearColor(0x000000, 0);
@@ -330,6 +335,7 @@
       var k2 = new T.DirectionalLight(0xffc27a, 0.45); k2.position.set(2.2, -1.0, 1.4); lscene.add(k2);
     })();
 
+    var aimP = null;
     var tgt = { show: 0, team: 0, logo: 0, cx: 0.5, cy: 0.5, r: 0.36, dim: 0, shade: 0, sx: -0.4, near: 0, gz: 0, on: 0, cloud: 0, tone: 0, veil: 0 }, cur = {}, first = true, key0;
     for (key0 in tgt) cur[key0] = tgt[key0];
     var W = 0, H = 0, lon = (VIEW_A.lon + VIEW_B.lon) / 2, lat = 6, clock = 0, cclock = 0, lclock = 0, lon0 = false, last = 0, fadeIn = 0, raf = 0, v3 = new T.Vector3(), m3 = new T.Matrix3();
@@ -364,6 +370,8 @@
           crend.render(cscene, ccam);
         } else if (cur.cloud <= 0.004 && cur.veil <= 0.004 && ccanvas.style.visibility !== "hidden") ccanvas.style.visibility = "hidden";
       }
+      var ca = gOn ? Math.round(sm(0, 0.13, cur.gz) * 100) / 100 : 0;
+      if (ca !== creditA) { creditA = ca; credit.style.opacity = String(ca); }
       if (cur.show < 0.004 && tgt.show === 0 && !tgt.on && !gOn) { if (canvas.style.visibility !== "hidden") { canvas.style.visibility = "hidden"; over.style.visibility = "hidden"; } return; }
       if (canvas.style.visibility === "hidden") { canvas.style.visibility = ""; over.style.visibility = ""; }
       if (document.hidden || !W) return;
@@ -375,6 +383,7 @@
       // how much the view is still Taiwan's: all of it from close by, less as the view widens (so the island stays in sight)
       var z1 = rPx / (NEAR_R * H), nr = cur.near > 0.001 && z1 < 1 ? 1 - Math.pow(clamp((rPx / rNear - z1) / (1 - z1), 0, 1), 2) : 0;
       lonT += (VIEW_NEAR.lon - lonT) * nr; latT += (VIEW_NEAR.lat - latT) * nr;   // from close by: over Taiwan, where the climb began
+      if (aimP) { lonT = aimP.lon; latT = aimP.lat; }   // a place the page asked to face (aim)
       var dl = ((lonT - lon) % 360 + 540) % 360 - 180, pull = 1 - Math.exp(-dt * (1.6 + 7 * nr));
       lon += dl * pull * (1 - L) - (still ? 0 : SPIN * dt * L); lat += ((latT * (1 - L) + 12 * L) - lat) * pull;
       tilt.rotation.x = lat * RAD; spin.rotation.y = -Math.PI / 2 - lon * RAD; stars.rotation.y = -lon * RAD * 0.25;
@@ -422,10 +431,12 @@
       set: function (o) { for (var k in o) if (k in tgt) tgt[k] = +o[k]; },
       now: function (o) { for (var k in o) if (k in tgt) tgt[k] = cur[k] = +o[k]; },
       ground: ground,
+      // aim({ lat, lon }): the globe turns to face that place, as fast as it follows the view; aim(null): back to its swing
+      aim: function (p) { aimP = p && isFinite(p.lat) && isFinite(p.lon) ? { lat: +p.lat - 8, lon: +p.lon } : null; },
       film: function (o) { fg = o && o.ppk > 0 ? { x: +o.x, y: +o.y, ppk: +o.ppk, rot: +o.rot || 0 } : null; },
       jump: function () { first = true; },
       state: function () { return { cur: cur, lon: lon, lat: lat, loaded: loaded, big: big, w: W, h: H, rPx: Math.min(cur.r * H, 0.6 * W), kmNear: KM_NEAR, nearR: NEAR_R, ground: !!G && gleft === 0 }; },
-      destroy: function () { cancelAnimationFrame(raf); window.removeEventListener("resize", size); renderer.dispose(); if (crend) crend.dispose(); host.removeChild(canvas); host.removeChild(over); host.removeChild(ccanvas); }
+      destroy: function () { cancelAnimationFrame(raf); window.removeEventListener("resize", size); renderer.dispose(); if (crend) crend.dispose(); host.removeChild(canvas); host.removeChild(over); host.removeChild(ccanvas); host.removeChild(credit); }
     };
   }
   window.PRISM_EARTH = { mount: mount, places: PLACES };

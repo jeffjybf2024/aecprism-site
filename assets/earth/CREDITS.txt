@@ -11,8 +11,8 @@ day-2k.jpg
 tw-s2-11.jpg, tw-s2-44.jpg, tw-s2-111.jpg, tw-s2-333.jpg
   Sentinel-2 cloudless 2016: EOxCloudless https://cloudless.eox.at by EOX IT Services GmbH (Contains modified
   Copernicus Sentinel data 2016), released under the Creative Commons Attribution 4.0 International License
-  (https://creativecommons.org/licenses/by/4.0/). Resampled; cut by scripts/make-zoom-maps.py. The homepage's footer
-  carries this credit.
+  (https://creativecommons.org/licenses/by/4.0/). Resampled; cut by scripts/make-zoom-maps.py. The homepage shows this
+  credit in a corner of the view while the imagery is on screen (assets/js/earth.js).
 
 tw-glow.jpg
   Black Marble 2016 (as above), softened: where the night's lights are, round Taiwan (scripts/make-zoom-maps.py).

@@ -36,3 +36,26 @@ Object.assign(window.PRISM_EN, {
   "ab.xh": "Start with one workflow.", "ab.xp": "Tell us your project stage and the problems you face, and we will help find the right place to start.",
   "ab.x1": "Start a conversation →", "ab.x2": "Proof of concept"
 });
+
+// the About page as it is now (team.html, the a2.* strings)
+Object.assign(window.PRISM_EN, {
+  "a2.ok": "ABOUT AEC PRISM", "a2.oh": "Thirty-eight years of BIM,<br>a new beginning.",
+  "a2.op": "AEC PRISM is a new unit from Concord Tech (協勤資訊). It carries on Concord Tech's thirty-eight years of BIM and digital engineering practice, and brings AI into the design, construction and operation of buildings.",
+  "a2.f1": "years of BIM and digital engineering", "a2.f2": "Taiwan's first project with BIM across its whole process", "a2.f3": "AEC PRISM founded",
+  "a2.bk": "BACKGROUND", "a2.bh": "From drawings, all the way to intelligence.",
+  "a2.t1": "Concord Tech is founded in Taipei, starting from CAD.",
+  "a2.t2": "Takes on Taiwan's first project to apply BIM across a building's whole process.",
+  "a2.t3": "Becomes Taiwan's distributor of Cubicost 5D BIM quantity take-off.",
+  "a2.t4": "Wins the Engineering Digital Innovation Application Award.",
+  "a2.t5": "Joins the Autodesk Platinum Club.",
+  "a2.t6": "AEC PRISM is founded, bringing AI into BIM workflows.",
+  "a2.watch": "Watch thirty years of BIM ▶",
+  "a2.tk": "TEAM",
+  "a2.m1": "Focused on BIM technology and information management, with deep experience of ISO 19650 and writing BEP / EIR documents. Automates BIM workflows and checks, so models become data you can query and decide on.",
+  "a2.m2": "Strong in computational design and design technology. Leads massing and feasibility studies, environmental simulation and visualisation, turning design conditions into options that can be compared and decided on.",
+  "a2.m3": "Leads solution planning: starts from interviews to pin down the problem and the data, plans platforms and system integration, and makes sure the tools delivered actually solve the client's problem.",
+  "a2.dsm": "AI teammate", "a2.dm1": "In the cloud", "a2.dm2": "Always on",
+  "a2.m4": "AEC PRISM's AI teammate, in charge of the team's project management: she tracks progress and deadlines, keeps meeting notes and to-do lists, and reminds everyone of their next step, so the three of us can spend our time on professional judgement.",
+  "a2.dt1": "Project management", "a2.dt2": "Progress tracking", "a2.dt3": "Meeting notes", "a2.dt4": "Reminders",
+  "a2.xh": "Start with one question."
+});
